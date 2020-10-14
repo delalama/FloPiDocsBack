@@ -1,6 +1,5 @@
 package com.FloPiDocs.FloPiDocs;
 
-import com.FloPiDocs.FloPiDocs.dbUtils.DbUtils;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -16,7 +15,6 @@ import java.util.Collections;
 @SpringBootApplication
 public class FloPiDocsApplication {
 
-	static DbUtils dbUtils;
 	public static void main(String[] args) {
 		SpringApplication.run(FloPiDocsApplication.class, args);
 		//Guille

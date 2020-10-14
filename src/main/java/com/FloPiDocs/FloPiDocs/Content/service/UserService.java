@@ -11,4 +11,5 @@ public interface UserService {
     public abstract User findById(String id);
     public abstract List<User> findAll();
     public abstract boolean emailExists(String email);
+    public abstract void deleteAll();
 }

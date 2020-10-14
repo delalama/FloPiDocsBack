@@ -5,8 +5,10 @@ import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -29,7 +31,7 @@ public class DocumentController {
 
 
         //cómo hacer que pete el controlador cuando le pasas más parámetros de los esperados?
-        @PostMapping("/createDocument")
+        @PostMapping(value = "/createDocument", produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity<String> createDocument(
                 @RequestParam("userId") String userId,
                 @RequestParam("title") String title ,
