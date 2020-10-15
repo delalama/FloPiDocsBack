@@ -3,8 +3,6 @@ package com.FloPiDocs.FloPiDocs.Content.controller;
 import com.FloPiDocs.FloPiDocs.Content.entities.User;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
 import com.FloPiDocs.FloPiDocs.FloPiDocsApplication;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -51,7 +49,7 @@ public class UserController {
                         System.out.println(email);
                         return new ResponseEntity<>("Invalid email" , HttpStatus.CONFLICT);
                 }else{
-                        long usersNum = userService.count();
+                        String usersNum = Long.toString(userService.count());
                         userService.createUser(new User(usersNum,firstName,lastName,email));
                         return new ResponseEntity<>("Added user: " + firstName + " " + lastName + " " + email, HttpStatus.OK);
                 }
@@ -65,15 +63,14 @@ public class UserController {
                 return new ResponseEntity<>(userList, HttpStatus.OK);
         }
 
-        //NO POSSIBILITY TO CHANGE EMAIL
+        //TODO VALORES EMPTY
         @PostMapping("/updateUser")
         public ResponseEntity<String> updateUser(
-                @RequestParam("userId") Long userId,
+                @RequestParam("userId") String userId,
                 @RequestParam("firstName") String firstName,
                 @RequestParam("lastName") String lastName) {
                 FloPiDocsApplication.logger.info("user - updateUser");
-                //TODO VALORES EMPTY
-                User userToUpdate = userService.findById(userId);
+                User userToUpdate = userService.findByUserId(userId);
                 userService.save(new User(userId, firstName, lastName, userToUpdate.getEmail()));
                 return new ResponseEntity<>("User updated", HttpStatus.OK);
         }
@@ -81,10 +78,10 @@ public class UserController {
         //TODO CHANGE EMAIL
         @PostMapping("/updateUserEmail")
         public ResponseEntity<String> updateUserEmail(
-                @RequestParam("userId") Long userId,
+                @RequestParam("userId") String userId,
                 @RequestParam("email") String email) {
                 FloPiDocsApplication.logger.info("user - updateUser");
-                User userToUpdate = userService.findById(userId);
+                User userToUpdate = userService.findByUserId(userId);
                 //TODO email EMPTY, Guille algo habrá para que el controlador no acepte valores empty
                 userService.save(new User(userId, userToUpdate.getFirstName(), userToUpdate.getLastName(), email));
                 return new ResponseEntity<>("Email updated", HttpStatus.OK);

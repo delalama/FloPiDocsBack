@@ -26,11 +26,6 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public Document findByAuthor(String s) {
-        return null;
-    }
-
-    @Override
     public List<Document> findByTitle(String title) {
         return documentRepository.findByTitle(title);
     }
@@ -46,7 +41,7 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public List<Document> findByUserId(Long userId) {
+    public List<Document> findByUserId(String userId) {
         return documentRepository.findByUserId(userId);
 
     }
@@ -57,7 +52,7 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public void deleteByUserId(Long userId) {
+    public void deleteByUserId(String userId) {
         documentRepository.deleteByUserId(userId);
     }
 

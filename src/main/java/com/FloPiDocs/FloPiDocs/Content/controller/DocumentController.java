@@ -3,6 +3,7 @@ package com.FloPiDocs.FloPiDocs.Content.controller;
 import com.FloPiDocs.FloPiDocs.Content.entities.Document;
 import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,11 +30,11 @@ public class DocumentController {
         //TODO cómo hacer que pete el controlador cuando le pasas más parámetros de los esperados?
         @PostMapping(value = "/createDocument", produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity<String> createDocument(
-                @RequestParam("userId") Long userId,
+                @RequestParam("userId") String userId,
                 @RequestParam("title") String title ,
                 @RequestParam("purpose") String purpose) {
                 logger.info("document - createDocument");
-                if( userId == null){
+                if( userId == ""){
                         return new ResponseEntity<>("Empty userId", HttpStatus.CONFLICT);
                 }else if( title == ""){
                         return new ResponseEntity<>("Empty title", HttpStatus.CONFLICT);
@@ -64,7 +65,7 @@ public class DocumentController {
 
         @GetMapping("/getAllDocumentsByUserId")
         public ResponseEntity<List<Document>> getDocumentsByUserId(
-                @RequestParam("userId") Long userId) {
+                @RequestParam("userId") String userId) {
                 logger.info("document - getAllDocumentsByUserId");
                 List<Document> documentList = documentService.findByUserId(userId);
                 System.out.println(documentList);
@@ -82,7 +83,7 @@ public class DocumentController {
         //TODO
         @DeleteMapping("/deleteAllByUserId")
         public ResponseEntity<String> deleteAllByUserId(
-                @RequestParam("userId") Long userId) {
+                @RequestParam("userId") String userId) {
                 logger.info("document - deleteAllByUserId");
                 documentService.deleteByUserId(userId);
                 return new ResponseEntity<>( HttpStatus.OK);
@@ -96,13 +97,15 @@ public class DocumentController {
                 return new ResponseEntity<>( HttpStatus.OK);
         }
 
-        //TODO
+        //TODO actual focus
         @PostMapping(value = "/updateDocumentContent", produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity<String> updateDocumentContent(
-                @RequestParam("documentId") Long documentId,
+                @RequestParam("documentId") String userId,
                 @RequestParam("content") String content) {
-                logger.info("document - createDocument");
-                Document document = new Document(documentId,  content);
+                logger.info("document - updateDocumentContent");
+                List<Document> doc = documentService.findByUserId(userId);
+                Document doc2 = doc.get(0);
+                Document document = new Document(doc2.getId(), userId,doc2.getTitle(), doc2.getPurpose(), doc2.getDate(), content );
                 documentService.save(document);
                 return new ResponseEntity<>("Content updated: " , HttpStatus.OK);
         }

@@ -4,12 +4,15 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 @NoArgsConstructor
 @Getter
 @Setter
 public class User {
-  private Long id;
+  @Indexed(unique = true)
+  @Id
+  private String userId;
   private String firstName;
   private String lastName;
   private String email;
@@ -21,20 +24,17 @@ public class User {
     this.email = email;
   }
 
-  public User( Long id , String firstName, String lastName, String email) {
-    this.id = id;
+  public User(String id, String firstName, String lastName, String email) {
+    this.userId = id;
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
   }
 
-  public Long getId() {
-    return id;
-  }
 
-  public void setId(Long id) {
-    this.id = id;
-  }
+  public void setUserId(String userId) { this.userId = userId; }
+
+  public String getUserId() { return userId; }
 
   public String getFirstName() {
     return firstName;

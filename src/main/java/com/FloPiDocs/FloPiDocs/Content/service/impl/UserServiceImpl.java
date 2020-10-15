@@ -6,6 +6,7 @@ import com.FloPiDocs.FloPiDocs.Content.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -24,11 +25,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean emailExists(String email){
         User user = userRepository.findByEmail(email);
-        if ( user != null ) {
-            return true;
-        }else{
-            return false;
-        }
+        return user != null;
     }
 
     @Override
@@ -41,8 +38,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findById(Long id) {
-        return userRepository.findById(id);
+    public User findByUserId(String id) {
+        return userRepository.findByUserId(id);
     }
 
     @Override
