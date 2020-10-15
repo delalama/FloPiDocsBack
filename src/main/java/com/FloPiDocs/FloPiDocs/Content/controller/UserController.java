@@ -2,6 +2,7 @@ package com.FloPiDocs.FloPiDocs.Content.controller;
 
 import com.FloPiDocs.FloPiDocs.Content.entities.User;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
+import com.FloPiDocs.FloPiDocs.FloPiDocsApplication;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -21,8 +22,6 @@ import java.util.List;
 @Controller
 public class UserController {
 
-        protected final Log logger = LogFactory.getLog(getClass());
-
         @Autowired
         private UserService userService;
 
@@ -32,7 +31,7 @@ public class UserController {
                 @RequestParam("firstName") String firstName,
                 @RequestParam("lastName") String lastName ,
                 @RequestParam("email") String email) {
-                logger.info("user - createUser");
+                FloPiDocsApplication.logger.info("user - createUser");
                 //Guille , este booleano lo declararías así? , me gusta mucho escribir así para que el IF, que es lo importante, se lea muy fácil
                 boolean FIRSTNAME_EMPTY= firstName=="";
                 boolean LASTNAME_EMPTY= lastName=="";
@@ -52,38 +51,57 @@ public class UserController {
                         System.out.println(email);
                         return new ResponseEntity<>("Invalid email" , HttpStatus.CONFLICT);
                 }else{
-                        userService.createUser(new User(firstName,lastName,email));
+                        long usersNum = userService.count();
+                        userService.createUser(new User(usersNum,firstName,lastName,email));
                         return new ResponseEntity<>("Added user: " + firstName + " " + lastName + " " + email, HttpStatus.OK);
                 }
         }
 
+
         @GetMapping(value = "/getAllUsers", produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity<List<User>> getAllUsers() {
-                logger.info("user - getAllUsers");
+                FloPiDocsApplication.logger.info("user - getAllUsers");
                 List<User> userList = userService.findAll();
                 return new ResponseEntity<>(userList, HttpStatus.OK);
         }
 
+        //NO POSSIBILITY TO CHANGE EMAIL
         @PostMapping("/updateUser")
         public ResponseEntity<String> updateUser(
-                @RequestParam("userId") String userId,
+                @RequestParam("userId") Long userId,
                 @RequestParam("firstName") String firstName,
-                @RequestParam("lastName") String lastName ,
-                @RequestParam("email") String email) {
-                logger.info("user - updateUser");
-                if (userService.emailExists(email)){
-                        return new ResponseEntity<>("Email already exists: " , HttpStatus.FORBIDDEN);
-                }else{
-                        userService.createUser(new User(firstName,lastName,email));
-                        return new ResponseEntity<>("Added user: " + firstName + " " + lastName + " " + email, HttpStatus.OK);
-                }
+                @RequestParam("lastName") String lastName) {
+                FloPiDocsApplication.logger.info("user - updateUser");
+                //TODO VALORES EMPTY
+                User userToUpdate = userService.findById(userId);
+                userService.save(new User(userId, firstName, lastName, userToUpdate.getEmail()));
+                return new ResponseEntity<>("User updated", HttpStatus.OK);
         }
 
+        //TODO CHANGE EMAIL
+        @PostMapping("/updateUserEmail")
+        public ResponseEntity<String> updateUserEmail(
+                @RequestParam("userId") Long userId,
+                @RequestParam("email") String email) {
+                FloPiDocsApplication.logger.info("user - updateUser");
+                User userToUpdate = userService.findById(userId);
+                //TODO email EMPTY, Guille algo habrá para que el controlador no acepte valores empty
+                userService.save(new User(userId, userToUpdate.getFirstName(), userToUpdate.getLastName(), email));
+                return new ResponseEntity<>("Email updated", HttpStatus.OK);
+        }
 
         @GetMapping("/deleteAllUsers")
         public ResponseEntity<String> deleteAllUsers() {
-                logger.info("user - deleteAllUsers");
+                FloPiDocsApplication.logger.info("user - deleteAllUsers");
                 userService.deleteAll();
                 return new ResponseEntity<>("Users deleted", HttpStatus.OK);
         }
+
+        @PostMapping("/deleteUsersById")
+        public ResponseEntity<String> deleteUserById() {
+                FloPiDocsApplication.logger.info("user - deleteUserById");
+                userService.deleteAll();
+                return new ResponseEntity<>("Users deleted", HttpStatus.OK);
+        }
+
 }

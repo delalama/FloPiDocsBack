@@ -1,5 +1,10 @@
 package com.FloPiDocs.FloPiDocs;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.ApplicationArguments;
+import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -13,14 +18,13 @@ import java.util.Collections;
 
 @EnableSwagger2
 @SpringBootApplication
-public class FloPiDocsApplication {
+public class FloPiDocsApplication implements ApplicationRunner {
+		@Autowired
+		public static final Logger logger = LogManager.getLogger(FloPiDocsApplication.class);
 
-	public static void main(String[] args) {
+
+		public static void main(String[] args) {
 		SpringApplication.run(FloPiDocsApplication.class, args);
-		//Guille
-		//cómo se implementa esta clase ?
-//		dbUtils = new DbUtils();
-//		dbUtils.actions();
 	}
 
 	@Bean
@@ -45,4 +49,15 @@ public class FloPiDocsApplication {
 				Collections.emptyList());
 	}
 
+	@Override
+	public void run(ApplicationArguments args) throws Exception {
+		logger.info("LOG4J2 messages");
+		logger.info("______________");
+		logger.debug("Debugging log");
+		logger.info("Info log");
+		logger.warn("Hey, This is a warning!");
+		logger.error("Oops! We have an Error. OK");
+		logger.fatal("Damn! Fatal error. Please fix me.");
+		logger.info("______________");
+	}
 }

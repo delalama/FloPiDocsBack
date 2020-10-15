@@ -8,8 +8,11 @@ public interface UserService {
     public abstract void createUser(User user);
     public abstract void deleteUser(String id);
     public abstract User findByEmail(String s);
-    public abstract User findById(String id);
+    public abstract User findById(Long id);
     public abstract List<User> findAll();
     public abstract boolean emailExists(String email);
     public abstract void deleteAll();
+    public long count();
+    public abstract void save(User user);
+
 }

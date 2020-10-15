@@ -14,7 +14,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void createUser(User user) {
-        if(userRepository.findByEmail(user.email ) == null){
+        if(userRepository.findByEmail(user.getEmail()) == null){
             userRepository.save(user);
         }else{
             System.out.println("Email exists");
@@ -41,17 +41,25 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findById(String id) {
-        return null;
+    public User findById(Long id) {
+        return userRepository.findById(id);
     }
 
     @Override
-    public void deleteUser(String id) {
-
-    }
+    public void deleteUser(String id) { }
 
     @Override
     public List<User> findAll() {
         return userRepository.findAll();
+    }
+
+    @Override
+    public long count() {
+        return userRepository.count();
+    }
+
+    @Override
+    public void save(User user) {
+        userRepository.save(user);
     }
 }

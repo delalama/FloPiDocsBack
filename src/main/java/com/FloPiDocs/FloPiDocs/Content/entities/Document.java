@@ -13,22 +13,21 @@ import org.springframework.data.annotation.Id;
 public class Document {
     @Id
     private String id;
-  
-    // UserId must be the ID of the user who creates the document
-    private String userId;
-
+    private Long userId;
     private String title;
-
     private String purpose;
-
-    // Could be autocompleted
     private String date;
+    private String content;
 
-    public Document(String userId, String title, String purpose, String date) {
+    public Document(Long userId, String title, String purpose, String date) {
         this.userId = userId;
         this.title = title;
         this.purpose = purpose;
         this.date = date;
+    }
+
+    public Document(Long documentId, String content) {
+        this.content = content;
     }
 
     @Override

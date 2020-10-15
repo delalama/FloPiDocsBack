@@ -5,7 +5,6 @@ import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -20,7 +19,6 @@ import java.util.List;
 @RequestMapping("document")
 @Controller
 public class DocumentController {
-
         protected final Log logger = LogFactory.getLog(getClass());
 
         @Autowired
@@ -28,15 +26,20 @@ public class DocumentController {
         @Autowired
         private UserService userService;
 
-
-
-        //cómo hacer que pete el controlador cuando le pasas más parámetros de los esperados?
+        //TODO cómo hacer que pete el controlador cuando le pasas más parámetros de los esperados?
         @PostMapping(value = "/createDocument", produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity<String> createDocument(
-                @RequestParam("userId") String userId,
+                @RequestParam("userId") Long userId,
                 @RequestParam("title") String title ,
                 @RequestParam("purpose") String purpose) {
                 logger.info("document - createDocument");
+                if( userId == null){
+                        return new ResponseEntity<>("Empty userId", HttpStatus.CONFLICT);
+                }else if( title == ""){
+                        return new ResponseEntity<>("Empty title", HttpStatus.CONFLICT);
+                }else if( purpose == ""){
+                        return new ResponseEntity<>("Empty purpose", HttpStatus.CONFLICT);
+                }
                 Document document = new Document(userId, title, purpose, Calendar.getInstance().getTime().toString());
                 documentService.createDocument(document);
                 return new ResponseEntity<>("Added Document: " + title, HttpStatus.OK);
@@ -61,7 +64,7 @@ public class DocumentController {
 
         @GetMapping("/getAllDocumentsByUserId")
         public ResponseEntity<List<Document>> getDocumentsByUserId(
-                @RequestParam("userId") String userId) {
+                @RequestParam("userId") Long userId) {
                 logger.info("document - getAllDocumentsByUserId");
                 List<Document> documentList = documentService.findByUserId(userId);
                 System.out.println(documentList);
@@ -69,15 +72,22 @@ public class DocumentController {
         }
 
         //TODO
+        @DeleteMapping("/deleteAll")
+        public ResponseEntity<String> deleteAll() {
+                logger.info("document - deleteAll");
+                documentService.deleteAll();
+                return new ResponseEntity<>( HttpStatus.OK);
+        }
+
+        //TODO
         @DeleteMapping("/deleteAllByUserId")
         public ResponseEntity<String> deleteAllByUserId(
-                @RequestParam("userId") String userId) {
+                @RequestParam("userId") Long userId) {
                 logger.info("document - deleteAllByUserId");
                 documentService.deleteByUserId(userId);
                 return new ResponseEntity<>( HttpStatus.OK);
         }
 
-        //TODO
         @DeleteMapping("/deleteByTitle")
         public ResponseEntity<String> deleteAllByTitle(
                 @RequestParam("title") String title) {
@@ -85,4 +95,16 @@ public class DocumentController {
                 documentService.deleteByTitle(title);
                 return new ResponseEntity<>( HttpStatus.OK);
         }
+
+        //TODO
+        @PostMapping(value = "/updateDocumentContent", produces = MediaType.APPLICATION_JSON_VALUE)
+        public ResponseEntity<String> updateDocumentContent(
+                @RequestParam("documentId") Long documentId,
+                @RequestParam("content") String content) {
+                logger.info("document - createDocument");
+                Document document = new Document(documentId,  content);
+                documentService.save(document);
+                return new ResponseEntity<>("Content updated: " , HttpStatus.OK);
+        }
+
 }
