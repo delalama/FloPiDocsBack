@@ -1,10 +1,8 @@
 package com.FloPiDocs.FloPiDocs.Content.entities;
 
-import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 
-@NoArgsConstructor
 public class Tag {
     @Indexed(unique = true)
     @Id
@@ -51,10 +49,10 @@ public class Tag {
         this.documentId = documentId;
     }
 
+    //TODO
     @Override
     public String toString() {
         return String.format("Tag[id=%s, userId='%s', name='%s', content='%s', privacy='%s', documentId='%s']", tagId, userId, tagName, documentId);
     }
-    
 
 }

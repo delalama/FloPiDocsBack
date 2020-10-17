@@ -29,6 +29,11 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
+    public void deleteByDocumentId(String documentId) {
+        tagRepository.deleteByDocumentId(documentId);
+    }
+
+    @Override
     public void deleteAll() {
         tagRepository.deleteAll();
     }

@@ -107,7 +107,10 @@ public class UserController {
         public ResponseEntity<String> deleteAllContent() {
                 FloPiDocsApplication.logger.info("user - deleteAllContent");
                 List<User> userList = userService.findAll();
-                userList.forEach( t -> documentService.deleteAllByUserId(t.getUserId()));
+                userList.forEach( t -> {
+                        documentService.deleteAllByUserId(t.getUserId());
+
+                } );
                 userService.deleteAll();
 
                 return new ResponseEntity<>("All content deted", HttpStatus.OK);

@@ -7,7 +7,7 @@ import java.util.List;
 public interface DocumentService {
     public abstract Document createDocument(Document document);
     public abstract List<Document> findByTitle(String title);
-    public abstract Document findById(String documentId);
+    public abstract Document findById(String documentId) throws Exception;
     public abstract List<Document> findByPurpose(String purpose);
     public abstract List<Document> findAll();
     public abstract List<Document> findByUserId(String userId);
@@ -17,6 +17,5 @@ public interface DocumentService {
     public abstract void deleteByTitle (String title);
     public abstract void deleteAll ();
     public abstract void save(Document document);
-
-    void deleteAllByUserId(String userId);
+    public abstract void deleteAllByUserId(String userId);
 }

@@ -1,6 +1,5 @@
 package com.FloPiDocs.FloPiDocs.Content.controller;
 
-import com.FloPiDocs.FloPiDocs.Content.entities.Document;
 import com.FloPiDocs.FloPiDocs.Content.entities.Tag;
 import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import com.FloPiDocs.FloPiDocs.Content.service.TagService;
@@ -22,8 +21,6 @@ public class TagController {
 
         @Autowired
         private TagService tagService;
-        @Autowired
-        private DocumentService documentService;
 
         /*TODO REPASAR TODOS LOS NOMBRE DE LOS MAPPINGS
         GET

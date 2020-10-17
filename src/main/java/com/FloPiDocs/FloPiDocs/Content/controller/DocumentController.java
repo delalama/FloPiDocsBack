@@ -2,6 +2,8 @@ package com.FloPiDocs.FloPiDocs.Content.controller;
 
 import com.FloPiDocs.FloPiDocs.Content.entities.Document;
 import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
+import com.FloPiDocs.FloPiDocs.Content.service.FieldService;
+import com.FloPiDocs.FloPiDocs.Content.service.TagService;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -27,6 +29,10 @@ public class DocumentController {
         private DocumentService documentService;
         @Autowired
         private UserService userService;
+        @Autowired
+        private TagService tagService;
+        @Autowired
+        private FieldService fieldService;
 
         //TODO cómo hacer que pete el controlador cuando le pasas más parámetros de los esperados?
         @PostMapping(value = "/createDocument", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -88,8 +94,12 @@ public class DocumentController {
         public ResponseEntity<String> deleteAllByUserId(
                 @RequestParam("userId") String userId) {
                 logger.info("document - deleteAllByUserId");
-                documentService.deleteByUserId(userId);
-                return new ResponseEntity<>( HttpStatus.OK);
+                documentService.findByUserId(userId).forEach(doc ->{
+                        tagService.deleteByDocumentId(doc.getId() );
+                        fieldService.deleteByDocumentId(doc.getId() );
+                        documentService.deleteByUserId(doc.getId());
+                } );
+                return new ResponseEntity<>("Documents, tags and fields deleted",  HttpStatus.OK);
         }
 
         @DeleteMapping("/deleteByTitle")
@@ -104,10 +114,10 @@ public class DocumentController {
         @PostMapping(value = "/updateDocumentContent", produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity<String> updateDocumentContent(
                 @RequestParam("documentId") String documentId,
-                @RequestParam("content") String content) {
+                @RequestParam("content") String content) throws Exception {
                 logger.info("document - updateDocumentContent");
                 Document doc = documentService.findById(documentId);
-                documentService.save(new Document(doc.getId(), documentId,doc.getTitle(), doc.getPurpose(), doc.getDate(), content ) );
+                documentService.save(new Document(doc.getId(), doc.getUserId(),doc.getTitle(), doc.getPurpose(), doc.getDate(), content ) );
                 return new ResponseEntity<>("Content updated: " , HttpStatus.OK);
         }
 

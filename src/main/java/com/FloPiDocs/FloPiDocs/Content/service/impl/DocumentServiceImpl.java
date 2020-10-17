@@ -14,8 +14,6 @@ import java.util.List;
 public class DocumentServiceImpl implements DocumentService {
     @Autowired
     DocumentRepository documentRepository;
-    @Autowired
-    TagRepository tagRepository;
 
     @Override
     public Document createDocument(Document document) {
@@ -28,8 +26,8 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public Document findById(String documentId) {
-        return documentRepository.findById(documentId).get();
+    public Document findById(String documentId) throws Exception {
+        return documentRepository.findById(documentId).orElseThrow(Exception::new);
     }
 
     @Override
@@ -78,9 +76,6 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public void deleteAllByUserId(String userId) {
-//        List<Document> documentList = documentRepository.findByUserId(userId);
-//        documentList.forEach(document -> System.out.println(document));
-        documentRepository.findByUserId(userId).forEach(doc -> tagRepository.deleteAllByDocumentId(doc.getId()));
         documentRepository.deleteByUserId(userId);
     }
 

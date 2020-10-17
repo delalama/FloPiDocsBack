@@ -7,9 +7,9 @@ public class Field {
     @Indexed(unique = true)
     @Id
     private String id;
+    private String documentId;
     private String fieldName;
     private String fieldValue;
-    private String documentId;
 
     public Field() {
     }
@@ -17,6 +17,21 @@ public class Field {
     public Field( String documentId, String fieldName, String fieldValue) {
         this.documentId = documentId;
         this.fieldName = fieldName;
+        this.fieldValue = fieldValue;
+    }
+
+    public Field( String id,  String documentId, String fieldName, String fieldValue) {
+        this.id = id;
+        this.documentId = documentId;
+        this.fieldName = fieldName;
+        this.fieldValue = fieldValue;
+    }
+
+    public String getFieldValue() {
+        return fieldValue;
+    }
+
+    public void setFieldValue(String fieldValue) {
         this.fieldValue = fieldValue;
     }
 
@@ -43,11 +58,5 @@ public class Field {
     public void setDocumentId(String documentId) {
         this.documentId = documentId;
     }
-
-    @Override
-    public String toString() {
-        return String.format("Tag[id=%s, userId='%s', name='%s', content='%s', privacy='%s', documentId='%s']", id, fieldName, fieldValue);
-    }
-    
 
 }
