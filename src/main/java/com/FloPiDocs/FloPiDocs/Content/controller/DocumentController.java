@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Calendar;
 import java.util.List;
+import java.util.Optional;
 
 @RequestMapping("document")
 @Controller
@@ -29,21 +30,23 @@ public class DocumentController {
 
         //TODO cómo hacer que pete el controlador cuando le pasas más parámetros de los esperados?
         @PostMapping(value = "/createDocument", produces = MediaType.APPLICATION_JSON_VALUE)
-        public ResponseEntity<String> createDocument(
+        public ResponseEntity<Document> createDocument(
                 @RequestParam("userId") String userId,
                 @RequestParam("title") String title ,
                 @RequestParam("purpose") String purpose) {
                 logger.info("document - createDocument");
+                Document document = new Document();
+                //Guille , cómo responder lo adecuado a cada CASE?
                 if( userId == ""){
-                        return new ResponseEntity<>("Empty userId", HttpStatus.CONFLICT);
+                        return new ResponseEntity<Document>(document, HttpStatus.CONFLICT);
                 }else if( title == ""){
-                        return new ResponseEntity<>("Empty title", HttpStatus.CONFLICT);
+                        return new ResponseEntity<Document>(document, HttpStatus.CONFLICT);
                 }else if( purpose == ""){
-                        return new ResponseEntity<>("Empty purpose", HttpStatus.CONFLICT);
+                        return new ResponseEntity<Document>(document, HttpStatus.CONFLICT);
                 }
-                Document document = new Document(userId, title, purpose, Calendar.getInstance().getTime().toString());
-                documentService.createDocument(document);
-                return new ResponseEntity<>("Added Document: " + title, HttpStatus.OK);
+                document = new Document(userId, title, purpose, Calendar.getInstance().getTime().toString());
+                document = documentService.createDocument(document);
+                return new ResponseEntity<Document>(document, HttpStatus.OK);
         }
 
 
@@ -100,13 +103,11 @@ public class DocumentController {
         //TODO actual focus
         @PostMapping(value = "/updateDocumentContent", produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity<String> updateDocumentContent(
-                @RequestParam("documentId") String userId,
+                @RequestParam("documentId") String documentId,
                 @RequestParam("content") String content) {
                 logger.info("document - updateDocumentContent");
-                List<Document> doc = documentService.findByUserId(userId);
-                Document doc2 = doc.get(0);
-                Document document = new Document(doc2.getId(), userId,doc2.getTitle(), doc2.getPurpose(), doc2.getDate(), content );
-                documentService.save(document);
+                Document doc = documentService.findById(documentId);
+                documentService.save(new Document(doc.getId(), documentId,doc.getTitle(), doc.getPurpose(), doc.getDate(), content ) );
                 return new ResponseEntity<>("Content updated: " , HttpStatus.OK);
         }
 

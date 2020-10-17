@@ -4,7 +4,6 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 
-@NoArgsConstructor
 @ToString
 @Getter
 @Setter
@@ -17,6 +16,9 @@ public class Document {
     private String purpose;
     private String date;
     private String content;
+
+    public Document() {
+    }
 
     public Document(String userId, String title, String purpose, String date) {
         this.userId = userId;

@@ -48,5 +48,14 @@ public class TagController {
                 List<Tag> tagList = tagService.findByDocumentId(documentId);
                 return new ResponseEntity<>(tagList, HttpStatus.OK);
         }
+
+        //TODO
+        @DeleteMapping("/deleteAll")
+        public ResponseEntity<String> deleteAll() {
+                logger.info("tag - deleteAll");
+                tagService.deleteAll();
+                return new ResponseEntity<>( HttpStatus.OK);
+        }
+
         //TODO ACTUAL INSERTAR VALORES REALES PARA LOS USERID
 }

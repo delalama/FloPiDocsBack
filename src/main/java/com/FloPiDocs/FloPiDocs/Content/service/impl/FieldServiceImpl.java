@@ -2,14 +2,14 @@ package com.FloPiDocs.FloPiDocs.Content.service.impl;
 
 import com.FloPiDocs.FloPiDocs.Content.entities.Tag;
 import com.FloPiDocs.FloPiDocs.Content.repository.TagRepository;
-import com.FloPiDocs.FloPiDocs.Content.service.TagService;
+import com.FloPiDocs.FloPiDocs.Content.service.FieldService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public class TagServiceImpl implements TagService {
+public class FieldServiceImpl implements FieldService {
     @Autowired
     TagRepository tagRepository;
 

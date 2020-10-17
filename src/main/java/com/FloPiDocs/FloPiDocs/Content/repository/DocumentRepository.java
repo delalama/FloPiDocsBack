@@ -5,12 +5,14 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface DocumentRepository extends MongoRepository<Document, String> {
     public List<Document> findByTitle(String title);
     public List<Document> findByPurpose(String purpose);
     public List<Document> findByUserId(String userId);
+    public Optional<Document> findById(String documentId);
     public void deleteAll();
     public void deleteByUserId(String userId);
     public void deleteByTitle(String title);

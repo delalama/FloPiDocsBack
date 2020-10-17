@@ -12,6 +12,8 @@ public interface TagRepository extends MongoRepository<Tag, String> {
     public Tag findByTagId(String userId);
     public List<Tag> findByDocumentId(String documentId);
     public void deleteByTagId();
+    public void deleteAllByDocumentId(String documentId);
     public long count();
+
 
 }

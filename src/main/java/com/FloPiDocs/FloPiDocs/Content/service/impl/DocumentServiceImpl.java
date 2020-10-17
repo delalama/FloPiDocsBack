@@ -1,8 +1,8 @@
 package com.FloPiDocs.FloPiDocs.Content.service.impl;
 
 import com.FloPiDocs.FloPiDocs.Content.entities.Document;
-import com.FloPiDocs.FloPiDocs.Content.entities.User;
 import com.FloPiDocs.FloPiDocs.Content.repository.DocumentRepository;
+import com.FloPiDocs.FloPiDocs.Content.repository.TagRepository;
 import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,20 +14,22 @@ import java.util.List;
 public class DocumentServiceImpl implements DocumentService {
     @Autowired
     DocumentRepository documentRepository;
+    @Autowired
+    TagRepository tagRepository;
 
     @Override
-    public void createDocument(Document document) {
-        documentRepository.save(document);
-    }
-
-    @Override
-    public void deleteDocument(Long id) {
-
+    public Document createDocument(Document document) {
+        return documentRepository.save(document);
     }
 
     @Override
     public List<Document> findByTitle(String title) {
         return documentRepository.findByTitle(title);
+    }
+
+    @Override
+    public Document findById(String documentId) {
+        return documentRepository.findById(documentId).get();
     }
 
     @Override
@@ -52,6 +54,9 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
+    public void deleteById(String id) { documentRepository.deleteById(id);}
+
+    @Override
     public void deleteByUserId(String userId) {
         documentRepository.deleteByUserId(userId);
     }
@@ -69,6 +74,14 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public void save(Document document) {
         documentRepository.save(document);
+    }
+
+    @Override
+    public void deleteAllByUserId(String userId) {
+//        List<Document> documentList = documentRepository.findByUserId(userId);
+//        documentList.forEach(document -> System.out.println(document));
+        documentRepository.findByUserId(userId).forEach(doc -> tagRepository.deleteAllByDocumentId(doc.getId()));
+        documentRepository.deleteByUserId(userId);
     }
 
 }

@@ -1,6 +1,7 @@
 package com.FloPiDocs.FloPiDocs.Content.controller;
 
 import com.FloPiDocs.FloPiDocs.Content.entities.User;
+import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
 import com.FloPiDocs.FloPiDocs.FloPiDocsApplication;
 import org.apache.commons.lang3.StringUtils;
@@ -10,10 +11,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -23,6 +21,8 @@ public class UserController {
 
         @Autowired
         private UserService userService;
+        @Autowired
+        private DocumentService documentService;
 
 
         @PostMapping("/createUser")
@@ -95,14 +95,25 @@ public class UserController {
                 return new ResponseEntity<>("Email updated", HttpStatus.OK);
         }
 
-        @GetMapping("/deleteAllUsers")
+        @DeleteMapping("/deleteAllUsers")
         public ResponseEntity<String> deleteAllUsers() {
                 FloPiDocsApplication.logger.info("user - deleteAllUsers");
                 userService.deleteAll();
                 return new ResponseEntity<>("Users deleted", HttpStatus.OK);
         }
 
-        @PostMapping("/deleteUsersById")
+        //dev method, must be deleted
+        @DeleteMapping("/deleteAllContent")
+        public ResponseEntity<String> deleteAllContent() {
+                FloPiDocsApplication.logger.info("user - deleteAllContent");
+                List<User> userList = userService.findAll();
+                userList.forEach( t -> documentService.deleteAllByUserId(t.getUserId()));
+                userService.deleteAll();
+
+                return new ResponseEntity<>("All content deted", HttpStatus.OK);
+        }
+
+        @DeleteMapping("/deleteUsersById")
         public ResponseEntity<String> deleteUserById() {
                 FloPiDocsApplication.logger.info("user - deleteUserById");
                 userService.deleteAll();
