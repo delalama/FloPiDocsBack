@@ -2,18 +2,21 @@ package com.FloPiDocs.FloPiDocs;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
 import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
+
 import java.util.Collections;
 
 @EnableSwagger2
@@ -22,11 +25,38 @@ public class FloPiDocsApplication implements ApplicationRunner {
 		@Autowired
 		public static final Logger logger = LogManager.getLogger(FloPiDocsApplication.class);
 
-
 		public static void main(String[] args) {
 		SpringApplication.run(FloPiDocsApplication.class, args);
 	}
 
+//	MODEL MAPPER
+	@Configuration
+	public class ApplicationConfig {
+	//Guille , quiero entender pk se hace esto aquí, es un requisito del propio ModelMapper?, pk no encuentro la respuesta por mí mismo?
+//		Es correcto pensar que SOLO con instanciarlo con un @Autowired en el CONTROLLER de turno debería funcionar?
+		@Bean
+		public ModelMapper modelMapper() {
+			ModelMapper modelMapper = new ModelMapper();
+			return modelMapper;
+		}
+	}
+
+/*
+	@EnableWebSecurity
+	@Configuration
+	class WebSecurityConfig extends WebSecurityConfigurerAdapter {
+		@Override
+		protected void configure(HttpSecurity http) throws Exception {
+			http.csrf().disable()
+					.addFilterAfter((Filter) new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
+					.authorizeRequests()
+					.antMatchers(HttpMethod.POST, "/token").permitAll()
+					.anyRequest().authenticated();
+		}
+	}
+*/
+
+//	SWAGGER
 	@Bean
 	public Docket swaggerConfiguration() {
 		return new Docket(DocumentationType.SWAGGER_2)
@@ -49,6 +79,7 @@ public class FloPiDocsApplication implements ApplicationRunner {
 				Collections.emptyList());
 	}
 
+//	LOG4J
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
 		logger.info("LOG4J2 messages");

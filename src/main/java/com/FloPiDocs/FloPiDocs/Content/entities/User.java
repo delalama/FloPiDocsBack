@@ -1,7 +1,6 @@
 package com.FloPiDocs.FloPiDocs.Content.entities;
 
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
@@ -15,20 +14,24 @@ public class User {
   private String firstName;
   private String lastName;
   private String email;
+  private String passWord;
 
   public User() {
   }
 
-  public User(String firstName, String lastName, String email) {
+  public User(String firstName, String lastName, String email, String passWord) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.email = email;
+    this.passWord = passWord;
   }
 
-  public User(String id, String firstName, String lastName, String email) {
-    this.userId = id;
+
+  public User(String userId, String firstName, String lastName, String email, String passWord) {
+    this.userId = userId;
     this.firstName = firstName;
     this.lastName = lastName;
+    this.passWord = passWord;
     this.email = email;
   }
 
@@ -52,6 +55,10 @@ public class User {
   public void setLastName(String lastName) {
     this.lastName = lastName;
   }
+
+  public String getPassWord() { return passWord; }
+
+  public void setPassWord(String passWord) { this.passWord = passWord; }
 
   public String getEmail() {
     return email;

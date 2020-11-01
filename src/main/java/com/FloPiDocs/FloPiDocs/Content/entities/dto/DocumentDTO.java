@@ -1,4 +1,4 @@
-package com.FloPiDocs.FloPiDocs.Content.entities;
+package com.FloPiDocs.FloPiDocs.Content.entities.dto;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -6,9 +6,12 @@ import org.springframework.data.mongodb.core.index.Indexed;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 @Getter
 @Setter
-public class Document {
+public class DocumentDTO {
+    @Indexed(unique = true)
+    @Id
     private String id;
     private String userId;
     private String title;
@@ -16,7 +19,7 @@ public class Document {
     private String date;
     private String content;
 
-    public Document(String userId, String title, String purpose, String content, String date) {
+    public DocumentDTO(String userId, String title, String purpose, String content, String date) {
         this.userId = userId;
         this.title = title;
         this.purpose = purpose;

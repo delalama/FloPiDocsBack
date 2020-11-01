@@ -11,6 +11,8 @@ public class Field {
     private String fieldName;
     private String fieldValue;
 
+    //   TODO  private int position;
+
     public Field() {
     }
 

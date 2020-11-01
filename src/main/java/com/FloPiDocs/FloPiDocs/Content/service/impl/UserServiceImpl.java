@@ -1,14 +1,19 @@
 package com.FloPiDocs.FloPiDocs.Content.service.impl;
 
+import com.FloPiDocs.FloPiDocs.Content.entities.dto.UserDTO;
 import com.FloPiDocs.FloPiDocs.Content.repository.UserRepository;
 import com.FloPiDocs.FloPiDocs.Content.entities.User;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 
 @Service
 public class UserServiceImpl implements UserService {
+    @Autowired
+    ModelMapper modelMapper = new ModelMapper();
     @Autowired
     UserRepository userRepository;
 
@@ -32,8 +37,8 @@ public class UserServiceImpl implements UserService {
         userRepository.deleteAll();
     }
 
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public UserDTO findByEmail(String email) {
+        return modelMapper.map(userRepository.findByEmail(email), UserDTO.class);
     }
 
     @Override
@@ -46,6 +51,9 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<User> findAll() {
+//        ModelMapper modelMapper = new ModelMapper();
+// user here is a prepopulated User instance
+//        List<UserDTO> userDTO = modelMapper.map(userRepository.findAll(), UserDTO.class);
         return userRepository.findAll();
     }
 

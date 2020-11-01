@@ -1,17 +1,24 @@
 package com.FloPiDocs.FloPiDocs.Content.service.impl;
 
 import com.FloPiDocs.FloPiDocs.Content.entities.Document;
+import com.FloPiDocs.FloPiDocs.Content.entities.dto.DocumentDTO;
 import com.FloPiDocs.FloPiDocs.Content.repository.DocumentRepository;
 import com.FloPiDocs.FloPiDocs.Content.repository.TagRepository;
 import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class DocumentServiceImpl implements DocumentService {
+    @Autowired
+    ModelMapper modelMapper = new ModelMapper();
+    
     @Autowired
     DocumentRepository documentRepository;
 
@@ -26,8 +33,9 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public Document findById(String documentId) throws Exception {
-        return documentRepository.findById(documentId).orElseThrow(Exception::new);
+    public DocumentDTO findById(String documentId) throws Exception {
+        Optional<Document> optDocument = documentRepository.findById(documentId);
+        return modelMapper.map(optDocument, DocumentDTO.class);
     }
 
     @Override
@@ -41,8 +49,8 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public List<Document> findByUserId(String userId) {
-        return documentRepository.findByUserId(userId);
+    public List<Document> findByUserId(String userId, Pageable pageable) {
+        return documentRepository.findByUserId(userId, pageable);
 
     }
 
@@ -77,6 +85,16 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public void deleteAllByUserId(String userId) {
         documentRepository.deleteByUserId(userId);
+    }
+
+    @Override
+    public List<Document> findAllByUserId(String userId) {
+        return documentRepository.findAllByUserId(userId);
+    }
+
+    @Override
+    public Long countByUserId(String userId) {
+        return documentRepository.countByUserId(userId);
     }
 
 }
