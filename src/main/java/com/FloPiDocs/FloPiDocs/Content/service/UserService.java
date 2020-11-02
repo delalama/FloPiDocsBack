@@ -6,7 +6,7 @@ import com.FloPiDocs.FloPiDocs.Content.entities.dto.UserDTO;
 import java.util.List;
 
 public interface UserService {
-    public abstract void createUser(User user);
+    public abstract UserDTO createUser(UserDTO userDTO);
     public abstract void deleteUser(String id);
     public abstract UserDTO findByEmail(String s);
     public abstract User findByUserId(String id);

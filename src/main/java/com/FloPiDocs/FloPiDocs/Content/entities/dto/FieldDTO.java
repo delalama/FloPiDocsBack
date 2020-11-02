@@ -1,4 +1,4 @@
-package com.FloPiDocs.FloPiDocs.Content.entities;
+package com.FloPiDocs.FloPiDocs.Content.entities.dto;
 
 import lombok.*;
 import org.springframework.data.annotation.Id;
@@ -9,9 +9,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 @ToString
 @Getter
 @Setter
-public class Field {
-    @Indexed(unique = true)
-    @Id
+public class FieldDTO {
     private String id;
     private String documentId;
     private String fieldName;
@@ -19,9 +17,4 @@ public class Field {
 
     //   TODO  private int position;
 
-    public Field( String documentId, String fieldName, String fieldValue) {
-        this.documentId = documentId;
-        this.fieldName = fieldName;
-        this.fieldValue = fieldValue;
-    }
 }

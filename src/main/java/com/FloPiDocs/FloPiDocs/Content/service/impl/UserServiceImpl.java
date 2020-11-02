@@ -18,12 +18,15 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
 
     @Override
-    public void createUser(User user) {
+    public UserDTO createUser(UserDTO userDTO) {
+        User user = modelMapper.map(userDTO, User.class);
         if(userRepository.findByEmail(user.getEmail()) == null){
             userRepository.save(user);
+            return modelMapper.map(userRepository.findByEmail( user.getEmail() ), UserDTO.class);
         }else{
             System.out.println("Email exists");
         }
+        return userDTO;
     }
 
     @Override

@@ -9,6 +9,8 @@ import org.springframework.data.mongodb.core.index.Indexed;
 @Getter
 @Setter
 public class Document {
+    @Indexed(unique = true)
+    @Id
     private String id;
     private String userId;
     private String title;

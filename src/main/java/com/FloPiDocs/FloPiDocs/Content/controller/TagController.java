@@ -1,10 +1,8 @@
 package com.FloPiDocs.FloPiDocs.Content.controller;
 
 import com.FloPiDocs.FloPiDocs.Content.entities.Tag;
-import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import com.FloPiDocs.FloPiDocs.Content.service.TagService;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import com.FloPiDocs.FloPiDocs.FloPiDocsApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -17,7 +15,6 @@ import java.util.List;
 @RequestMapping("tag")
 @Controller
 public class TagController {
-        protected final Log logger = LogFactory.getLog(getClass());
 
         @Autowired
         private TagService tagService;
@@ -31,7 +28,7 @@ public class TagController {
                 @RequestParam("userId") String userId,
                 @RequestParam("tagName") String tagName ,
                 @RequestParam("documentId") String documentId) {
-                logger.info("tag - createTag");
+                FloPiDocsApplication.logger.info("tag - createTag");
 
                 Tag tag = new Tag(userId, documentId, tagName);
                 tagService.save(tag);
@@ -41,7 +38,7 @@ public class TagController {
         @GetMapping("/getTagByDocumentId")
         public ResponseEntity<List<Tag>> getTagByDocumentId(
                 @RequestParam("documentId") String documentId) {
-                logger.info("tag - getTagByDocumentId");
+                FloPiDocsApplication.logger.info("tag - getTagByDocumentId");
                 List<Tag> tagList = tagService.findByDocumentId(documentId);
                 return new ResponseEntity<>(tagList, HttpStatus.OK);
         }
@@ -49,7 +46,7 @@ public class TagController {
         //TODO
         @DeleteMapping("/deleteAll")
         public ResponseEntity<String> deleteAll() {
-                logger.info("tag - deleteAll");
+                FloPiDocsApplication.logger.info("tag - deleteAll");
                 tagService.deleteAll();
                 return new ResponseEntity<>( HttpStatus.OK);
         }

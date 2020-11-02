@@ -1,7 +1,9 @@
 package com.FloPiDocs.FloPiDocs.Content.controller;
 
 import com.FloPiDocs.FloPiDocs.Content.entities.User;
+import com.FloPiDocs.FloPiDocs.Content.entities.dto.AccountOptionsDTO;
 import com.FloPiDocs.FloPiDocs.Content.entities.dto.UserDTO;
+import com.FloPiDocs.FloPiDocs.Content.service.AccountOptionsService;
 import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
 import com.FloPiDocs.FloPiDocs.FloPiDocsApplication;
@@ -13,11 +15,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("user")
@@ -27,6 +26,8 @@ public class UserController {
         private UserService userService;
         @Autowired
         private DocumentService documentService;
+        @Autowired
+        private AccountOptionsService accountOptionsService;
         @Autowired
         ModelMapper modelMapper = new ModelMapper();
 
@@ -63,7 +64,7 @@ public class UserController {
                 @RequestParam("lastName") String lastName ,
                 @RequestParam("email") String email) {
                 FloPiDocsApplication.logger.info("user - createUser");
-                //Guille , este booleano lo declararías así? , me gusta mucho escribir así para que el IF, que es lo importante, se lea muy fácil
+
                 boolean FIRSTNAME_EMPTY = firstName=="";
                 boolean LASTNAME_EMPTY = lastName=="";
 
@@ -83,8 +84,13 @@ public class UserController {
                         System.out.println(email);
                         return new ResponseEntity<UserDTO>(new UserDTO() , HttpStatus.CONFLICT);
                 }else{
-                        userService.createUser(new User(firstName,lastName,email, password));
-                        UserDTO userCreated = userService.findByEmail(email);
+                        // Create user
+                        UserDTO userCreated = userService.createUser(new UserDTO(firstName,lastName,email, password));
+
+                        //create new user AccountOptions
+                        AccountOptionsDTO accountOptionsDTO = new AccountOptionsDTO(userCreated.getUserId());
+                        accountOptionsService.save(accountOptionsDTO);
+
                         return new ResponseEntity<UserDTO>( userCreated, HttpStatus.OK);
                 }
         }

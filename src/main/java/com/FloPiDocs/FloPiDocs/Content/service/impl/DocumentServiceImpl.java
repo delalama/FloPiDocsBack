@@ -34,7 +34,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public DocumentDTO findById(String documentId) throws Exception {
-        Optional<Document> optDocument = documentRepository.findById(documentId);
+        Document optDocument = documentRepository.findById(documentId).orElseThrow();
         return modelMapper.map(optDocument, DocumentDTO.class);
     }
 
