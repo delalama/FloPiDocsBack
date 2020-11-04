@@ -17,4 +17,5 @@ public class AccountOptions {
     private String id;
     private String userId;
     private boolean safeDelete = true;
+
 }

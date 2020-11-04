@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface AccountOptionsService {
     public abstract void save(AccountOptionsDTO accountOptionsDTO);
+    public abstract void setSafeDelete(String userId, boolean safeDelete);
+    public abstract AccountOptionsDTO findByUserId(String userId);
 }

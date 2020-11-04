@@ -35,9 +35,24 @@ public class AccountOptionsController {
                 @RequestParam("userId") String userId) {
                 FloPiDocsApplication.logger.info("AccountOptions- created initial options");
                 AccountOptionsDTO accountOptionsDTO = new AccountOptionsDTO(userId);
-
                 accountOptionsService.save(accountOptionsDTO);
                 return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        @PostMapping(value = "/changeSafeDelete" ,produces = MediaType.APPLICATION_JSON_VALUE)
+        public ResponseEntity<String> changeSafeDelete(
+                @RequestParam("userId") String userId,
+                @RequestParam("safeDelete") boolean safeDelete){
+                FloPiDocsApplication.logger.info("AccountOptions- change SafeDelete value");
+                accountOptionsService.setSafeDelete(userId, safeDelete);
+                return new ResponseEntity<>(HttpStatus.OK);
+        }
+
+        @GetMapping(value = "/getAccountOptions" ,produces = MediaType.APPLICATION_JSON_VALUE)
+        public ResponseEntity<AccountOptionsDTO> getAccountOptions(
+                @RequestParam("userId") String userId) {
+                FloPiDocsApplication.logger.info("AccountOptions- getAccountOptions by ID");
+                return new ResponseEntity<>(accountOptionsService.findByUserId(userId),HttpStatus.OK);
         }
 
 }

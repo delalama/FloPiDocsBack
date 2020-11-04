@@ -25,4 +25,17 @@ public class AccountOptionsServiceImpl implements AccountOptionsService {
     public void save(AccountOptionsDTO accountOptionsDTO) {
         accountOptionsRepository.save(modelMapper.map(accountOptionsDTO,AccountOptions.class));
     }
+
+    @Override
+    public void setSafeDelete(String userId, boolean safeDelete) {
+        AccountOptions accountOptions = accountOptionsRepository.findByUserId(userId).get(0);
+        accountOptions.setSafeDelete(safeDelete);
+        accountOptionsRepository.save(accountOptions);
+    }
+
+    @Override
+    public AccountOptionsDTO findByUserId(String userId) {
+        AccountOptions accountOptions = accountOptionsRepository.findByUserId(userId).get(0);
+        return modelMapper.map(accountOptions,AccountOptionsDTO.class);
+    }
 }

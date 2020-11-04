@@ -1,6 +1,7 @@
 package com.FloPiDocs.FloPiDocs.Content.controller;
 
 import com.FloPiDocs.FloPiDocs.Content.entities.Field;
+import com.FloPiDocs.FloPiDocs.Content.entities.dto.FieldDTO;
 import com.FloPiDocs.FloPiDocs.Content.service.FieldService;
 import com.FloPiDocs.FloPiDocs.FloPiDocsApplication;
 import org.apache.commons.logging.Log;
@@ -46,7 +47,14 @@ public class FieldController {
                 return new ResponseEntity<>(fieldList, HttpStatus.OK);
         }
 
-        //TODO
+        @PostMapping ("/deleteFieldById")
+        public ResponseEntity<FieldDTO> deleteFieldById(
+                @RequestParam("fieldId") String documentId) {
+                FloPiDocsApplication.logger.info("Field - deleteFieldById");
+                FieldDTO fieldDTO = fieldService.deleteById(documentId);
+                return new ResponseEntity<>(fieldDTO, HttpStatus.OK);
+        }
+
         @DeleteMapping("/deleteAll")
         public ResponseEntity<String> deleteAll() {
                 FloPiDocsApplication.logger.info("Field - deleteAll");
