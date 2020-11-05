@@ -46,11 +46,14 @@ public class DocumentController {
         @Autowired
         ModelMapper modelMapper = new ModelMapper();
 
-        //TODO cómo hacer que pete el controlador cuando le pasas más parámetros de los esperados?
-        @PostMapping(value = "/createDocument", produces = MediaType.APPLICATION_JSON_VALUE)
+        // https://graphql.org/
+        // TODO https://www.baeldung.com/spring-request-response-body
+        // https://medium.com/@mwaysolutions/10-best-practices-for-better-restful-api-cbe81b06f291
+      //TODO cómo hacer que pete el controlador cuando le pasas más parámetros de los esperados?
+
+       @PostMapping(value = "/createDocument", produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity<Document> createDocument(
-                @RequestParam("userId") String userId,
-                @RequestParam("title") String title ,
+                @RequestParam("userId") String userId, @RequestParam("title") String title ,
                 @RequestParam("purpose") String purpose,
                 @RequestParam("content") String content) {
                 FloPiDocsApplication.logger.info("document - createDocument");

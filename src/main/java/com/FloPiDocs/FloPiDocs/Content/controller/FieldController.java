@@ -49,9 +49,9 @@ public class FieldController {
 
         @PostMapping ("/deleteFieldById")
         public ResponseEntity<FieldDTO> deleteFieldById(
-                @RequestParam("fieldId") String documentId) {
+                @RequestParam("fieldId") String fieldId) {
                 FloPiDocsApplication.logger.info("Field - deleteFieldById");
-                FieldDTO fieldDTO = fieldService.deleteById(documentId);
+                FieldDTO fieldDTO = fieldService.deleteById(fieldId);
                 return new ResponseEntity<>(fieldDTO, HttpStatus.OK);
         }
 

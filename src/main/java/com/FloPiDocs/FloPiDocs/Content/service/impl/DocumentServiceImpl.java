@@ -51,7 +51,6 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public List<Document> findByUserId(String userId, Pageable pageable) {
         return documentRepository.findByUserId(userId, pageable);
-
     }
 
     @Override
