@@ -86,6 +86,16 @@ public class DocumentController {
                 return new ResponseEntity<>(documentList, HttpStatus.OK);
         }
 
+
+        @RequestMapping(value = "findByTitleAndPurposeContains")
+        public ResponseEntity<List<Document>> findByTitleAndPurposeContains(
+                @RequestBody String title) {
+                FloPiDocsApplication.logger.info("document - getDocumentByTitle");
+
+                List<Document> documentList = documentService.findByTitleAndPurposeContains(title);
+                return new ResponseEntity<>(documentList, HttpStatus.OK);
+        }
+
         @DeleteMapping("/deleteDocumentById")
         public ResponseEntity<Document> deleteDocumentById(
                 @RequestParam("id") String id) throws Exception {

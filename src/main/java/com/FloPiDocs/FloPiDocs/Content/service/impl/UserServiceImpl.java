@@ -1,14 +1,20 @@
 package com.FloPiDocs.FloPiDocs.Content.service.impl;
 
+import com.FloPiDocs.FloPiDocs.Content.entities.dto.AccountOptionsDTO;
 import com.FloPiDocs.FloPiDocs.Content.entities.dto.UserDTO;
 import com.FloPiDocs.FloPiDocs.Content.repository.UserRepository;
 import com.FloPiDocs.FloPiDocs.Content.entities.User;
+import com.FloPiDocs.FloPiDocs.Content.service.AccountOptionsService;
+import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -16,23 +22,35 @@ public class UserServiceImpl implements UserService {
     ModelMapper modelMapper = new ModelMapper();
     @Autowired
     UserRepository userRepository;
-
+    @Autowired
+    private DocumentService documentService;
+    @Autowired
+    private AccountOptionsService accountOptionsService;
     @Override
-    public UserDTO createUser(UserDTO userDTO) {
-        User user = modelMapper.map(userDTO, User.class);
-        if(userRepository.findByEmail(user.getEmail()) == null){
-            userRepository.save(user);
-            return modelMapper.map(userRepository.findByEmail( user.getEmail() ), UserDTO.class);
-        }else{
-            System.out.println("Email exists");
+    public ResponseEntity<UserDTO> createUser(UserDTO userDTO) {
+
+        boolean EMAIL_EXISTS = emailAlreadyExists(userDTO.getEmail());
+
+        if (EMAIL_EXISTS) {
+            return new ResponseEntity("EMAIL ALREADY EXISTS", HttpStatus.CONFLICT);
+        } else {
+            // Create user
+            User userCreated = userRepository.save( modelMapper.map(userDTO, User.class) );
+
+            UserDTO userCreatedDto = modelMapper.map(userCreated, UserDTO.class);
+
+            // Create new user AccountOptions
+            accountOptionsService.save(new AccountOptionsDTO(userCreatedDto.getUserId()));
+
+            return new ResponseEntity<>(userCreatedDto, HttpStatus.OK);
         }
-        return userDTO;
     }
 
     @Override
-    public boolean emailExists(String email){
-        User user = userRepository.findByEmail(email);
-        return user != null;
+    public Boolean emailAlreadyExists(String email){
+        Optional<User> userList = userRepository.findByEmail(email);
+
+        return !userList.isEmpty();
     }
 
     @Override
@@ -41,7 +59,7 @@ public class UserServiceImpl implements UserService {
     }
 
     public UserDTO findByEmail(String email) {
-        return modelMapper.map(userRepository.findByEmail(email), UserDTO.class);
+        return modelMapper.map(userRepository.findByEmail(email).get(), UserDTO.class);
     }
 
     @Override

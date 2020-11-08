@@ -96,4 +96,10 @@ public class DocumentServiceImpl implements DocumentService {
         return documentRepository.countByUserId(userId);
     }
 
+    @Override
+    public List<Document> findByTitleAndPurposeContains(String title) {
+        List<Document> documentList = documentRepository.findByTitleLike(title);
+        return documentList;
+    }
+
 }

@@ -14,14 +14,14 @@ public class UserDTO {
     private String firstName;
     private String lastName;
     private String email;
-    private String passWord;
+    private String password;
     private String token;
 
 
-    public UserDTO(String firstName, String lastName, String email, String passWord) {
+    public UserDTO(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.passWord = passWord;
+        this.password = password;
     }
 }

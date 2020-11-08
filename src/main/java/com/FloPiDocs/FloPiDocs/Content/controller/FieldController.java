@@ -4,8 +4,6 @@ import com.FloPiDocs.FloPiDocs.Content.entities.Field;
 import com.FloPiDocs.FloPiDocs.Content.entities.dto.FieldDTO;
 import com.FloPiDocs.FloPiDocs.Content.service.FieldService;
 import com.FloPiDocs.FloPiDocs.FloPiDocsApplication;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
