@@ -1,2 +1,2 @@
 
-API rest good practices
+API REST good practices

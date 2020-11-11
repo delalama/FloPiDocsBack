@@ -6,6 +6,8 @@ import com.FloPiDocs.FloPiDocs.Content.repository.FieldRepository;
 import com.FloPiDocs.FloPiDocs.Content.service.FieldService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -47,8 +49,10 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public Field save(Field field) {
-        return fieldRepository.save(field);
+    public ResponseEntity<FieldDTO> save (FieldDTO fieldDTO) {
+        Field field = modelMapper.map(fieldDTO, Field.class);
+        FieldDTO savedFieldDTO = modelMapper.map(fieldRepository.save(field), FieldDTO.class);
+        return new ResponseEntity<>(savedFieldDTO, HttpStatus.OK);
     }
 
     @Override

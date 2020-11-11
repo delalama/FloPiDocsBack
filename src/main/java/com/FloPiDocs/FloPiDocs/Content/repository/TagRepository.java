@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+@SuppressWarnings("ALL")
 @Repository
 public interface TagRepository extends MongoRepository<Tag, String> {
     public Tag findByTagId(String userId);

@@ -8,7 +8,7 @@ import java.util.List;
 
 @Repository
 public interface AccountOptionsRepository extends MongoRepository<AccountOptions, String> {
-    public List<AccountOptions> findByUserId(String userId);
+    List<AccountOptions> findByUserId(String userId);
 
 
 }

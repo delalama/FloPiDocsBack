@@ -31,10 +31,11 @@ public class FloPiDocsApplication implements ApplicationRunner {
 
 //	MODEL MAPPER
 	@Configuration
-	public class ApplicationConfig {
+	public static class ApplicationConfig {
 	//Guille , quiero entender pk se hace esto aquí, es un requisito del propio ModelMapper?, pk no encuentro la respuesta por mí mismo?
 //		Es correcto pensar que SOLO con instanciarlo con un @Autowired en el CONTROLLER de turno debería funcionar?
-		@Bean
+		@SuppressWarnings("UnnecessaryLocalVariable")
+        @Bean
 		public ModelMapper modelMapper() {
 			ModelMapper modelMapper = new ModelMapper();
 			return modelMapper;

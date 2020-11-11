@@ -1,14 +1,8 @@
 package com.FloPiDocs.FloPiDocs.Content.controller;
 
-import com.FloPiDocs.FloPiDocs.Content.entities.AccountOptions;
-import com.FloPiDocs.FloPiDocs.Content.entities.Field;
-import com.FloPiDocs.FloPiDocs.Content.entities.User;
 import com.FloPiDocs.FloPiDocs.Content.entities.dto.AccountOptionsDTO;
 import com.FloPiDocs.FloPiDocs.Content.service.AccountOptionsService;
-import com.FloPiDocs.FloPiDocs.Content.service.FieldService;
 import com.FloPiDocs.FloPiDocs.FloPiDocsApplication;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,8 +10,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @CrossOrigin
 @RequestMapping("accountOptions")
@@ -32,55 +24,17 @@ public class AccountOptionsController {
 
 
 
-
-
-
         @GetMapping("/get")
         public @ResponseBody ResponseEntity<String> get() {
-                return new ResponseEntity<String>("GET Response", HttpStatus.OK);
+                return new ResponseEntity<>("GET Response", HttpStatus.OK);
         }
 
         @GetMapping("/get/{id}")
         public @ResponseBody ResponseEntity<String>
         getById(@PathVariable String id) {
-                return new ResponseEntity<String>("GET Response : "
+                return new ResponseEntity<>("GET Response : "
                         + id, HttpStatus.OK);
         }
-
-        @PostMapping("/post")
-        public @ResponseBody ResponseEntity<String> post() {
-                return new ResponseEntity<String>("POST Response", HttpStatus.OK);
-        }
-
-        @PutMapping("/put")
-        public @ResponseBody ResponseEntity<String> put() {
-                return new ResponseEntity<String>("PUT Response", HttpStatus.OK);
-        }
-
-        @DeleteMapping("/delete")
-        public @ResponseBody ResponseEntity<String> delete() {
-                return new ResponseEntity<String>("DELETE Response", HttpStatus.OK);
-        }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
         @PostMapping(value = "/createByUserId" ,produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity<String> createInitOptions(
@@ -105,6 +59,12 @@ public class AccountOptionsController {
                 @RequestParam("userId") String userId) {
                 FloPiDocsApplication.logger.info("AccountOptions- getAccountOptions by ID");
                 return new ResponseEntity<>(accountOptionsService.findByUserId(userId),HttpStatus.OK);
+        }
+
+        @DeleteMapping(value = "/all" ,produces = MediaType.APPLICATION_JSON_VALUE)
+        public void deleteAllAccountOptions() {
+                FloPiDocsApplication.logger.info("AccountOptions- Delete All");
+                accountOptionsService.deleteAll();
         }
 
 }

@@ -15,8 +15,9 @@ public class Document {
     private String userId;
     private String title;
     private String purpose;
-    private String date;
     private String content;
+    private String date;
+
 
     public Document(String userId, String title, String purpose, String content, String date) {
         this.userId = userId;

@@ -10,18 +10,19 @@ import java.util.Optional;
 
 @Repository
 public interface DocumentRepository extends MongoRepository<Document, String> {
-    public List<Document> findByTitle(String title);
-    public List<Document> findByPurpose(String purpose);
-    public List<Document> findByUserId(String userId, Pageable pageable);
-    public List<Document> findAllByUserId(String userId);
-    public Optional<Document> findById(String documentId);
-    public void deleteAll();
-    public void deleteByUserId(String userId);
-    public void deleteByTitle(String title);
+    List<Document> findByTitle(String title);
+    List<Document> findByPurpose(String purpose);
+    List<Document> findByUserId(String userId, Pageable pageable);
+    List<Document> findAllByUserId(String userId);
+    Optional<Document> findById(String documentId);
+    void deleteAll();
+    void deleteByUserId(String userId);
+    void deleteByTitle(String title);
     Long countByUserId(String userId);
-    public void deleteById(String userId);
-
+    void deleteById(String userId);
     List<Document> findByTitleAndPurpose(String title, String purpose, String query);
 
-    List<Document> findByTitleLike(String a);
+//    @Query(value = "{'a': {$regex : ?0, $options: 'i'}}")
+    List<Document> findByUserIdAndTitleLikeOrPurposeLike(String userId,String a, String b);
+    List<Document> findByPurposeLike(String a);
 }

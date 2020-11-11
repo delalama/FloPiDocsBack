@@ -16,6 +16,7 @@ public class User {
   private String email;
   private String passWord;
 
+  //TODO token cuando PRODUCCION
   //GUILLE , es posible que el @Entity se esté creando en el momento en que asignamos el tipo en el repository?
   // si pongo @Entity peta
   public User() {

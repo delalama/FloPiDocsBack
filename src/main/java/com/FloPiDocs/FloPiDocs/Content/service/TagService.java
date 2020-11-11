@@ -4,6 +4,7 @@ import com.FloPiDocs.FloPiDocs.Content.entities.Tag;
 
 import java.util.List;
 
+@SuppressWarnings("ALL")
 public interface TagService {
     public abstract Tag findByTagId(String id);
     public abstract List<Tag> findByDocumentId(String documentId);

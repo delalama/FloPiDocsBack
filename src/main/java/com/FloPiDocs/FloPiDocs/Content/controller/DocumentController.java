@@ -7,14 +7,9 @@ import com.FloPiDocs.FloPiDocs.Content.service.FieldService;
 import com.FloPiDocs.FloPiDocs.Content.service.TagService;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
 import com.FloPiDocs.FloPiDocs.FloPiDocsApplication;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,14 +18,12 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
-import javax.print.Doc;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
 
+// TODO CHANGE document -> documents
 @CrossOrigin
 @RequestMapping("document")
 @Controller
@@ -73,7 +66,7 @@ public class DocumentController {
 
                 document = new Document(userId, title, purpose, content ,formatedDate);
                 document = documentService.createDocument(document);
-                return new ResponseEntity<Document>(document, HttpStatus.OK);
+                return new ResponseEntity<>(document, HttpStatus.OK);
         }
 
 
@@ -86,13 +79,13 @@ public class DocumentController {
                 return new ResponseEntity<>(documentList, HttpStatus.OK);
         }
 
-
         @RequestMapping(value = "findByTitleAndPurposeContains")
         public ResponseEntity<List<Document>> findByTitleAndPurposeContains(
-                @RequestBody String title) {
+                @RequestParam("key") String key,
+                @RequestParam("userId") String userId) {
                 FloPiDocsApplication.logger.info("document - getDocumentByTitle");
 
-                List<Document> documentList = documentService.findByTitleAndPurposeContains(title);
+                List<Document> documentList = documentService.findByTitleAndPurposeContains(userId, key);
                 return new ResponseEntity<>(documentList, HttpStatus.OK);
         }
 
@@ -135,7 +128,7 @@ public class DocumentController {
         {
                 FloPiDocsApplication.logger.info("document - deleteAll");
                 Long documentsCount = documentService.countByUserId(userId);
-                return new ResponseEntity<Long>(documentsCount, HttpStatus.OK);
+                return new ResponseEntity<>(documentsCount, HttpStatus.OK);
         }
 
         //TODO

@@ -1,5 +1,7 @@
 package com.FloPiDocs.FloPiDocs.Content.service.impl;
 
+import com.FloPiDocs.FloPiDocs.Content.controller.UserController;
+import com.FloPiDocs.FloPiDocs.Content.controller.utils.MailAndPass;
 import com.FloPiDocs.FloPiDocs.Content.entities.dto.AccountOptionsDTO;
 import com.FloPiDocs.FloPiDocs.Content.entities.dto.UserDTO;
 import com.FloPiDocs.FloPiDocs.Content.repository.UserRepository;
@@ -7,15 +9,17 @@ import com.FloPiDocs.FloPiDocs.Content.entities.User;
 import com.FloPiDocs.FloPiDocs.Content.service.AccountOptionsService;
 import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
+import com.FloPiDocs.FloPiDocs.FloPiDocsApplication;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
+import java.util.stream.Collectors;
 import java.util.List;
 import java.util.Optional;
 
+@SuppressWarnings("unchecked")
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
@@ -26,14 +30,9 @@ public class UserServiceImpl implements UserService {
     private DocumentService documentService;
     @Autowired
     private AccountOptionsService accountOptionsService;
+
     @Override
-    public ResponseEntity<UserDTO> createUser(UserDTO userDTO) {
-
-        boolean EMAIL_EXISTS = emailAlreadyExists(userDTO.getEmail());
-
-        if (EMAIL_EXISTS) {
-            return new ResponseEntity("EMAIL ALREADY EXISTS", HttpStatus.CONFLICT);
-        } else {
+    public ResponseEntity createUser(UserDTO userDTO) {
             // Create user
             User userCreated = userRepository.save( modelMapper.map(userDTO, User.class) );
 
@@ -43,14 +42,11 @@ public class UserServiceImpl implements UserService {
             accountOptionsService.save(new AccountOptionsDTO(userCreatedDto.getUserId()));
 
             return new ResponseEntity<>(userCreatedDto, HttpStatus.OK);
-        }
     }
 
     @Override
-    public Boolean emailAlreadyExists(String email){
-        Optional<User> userList = userRepository.findByEmail(email);
-
-        return !userList.isEmpty();
+    public Boolean emailAlreadyExists(String email) throws Exception {
+            return userRepository.findByEmail(email).isPresent();
     }
 
     @Override
@@ -68,14 +64,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void deleteUser(String id) { }
+    public UserDTO deleteUser(String id) {
+        return modelMapper.map(userRepository.deleteByUserId(id), UserDTO.class)  ;
+    }
 
+    // TODO
+//    delete during devel or work on it if I do a manage account
     @Override
-    public List<User> findAll() {
-//        ModelMapper modelMapper = new ModelMapper();
-// user here is a prepopulated User instance
-//        List<UserDTO> userDTO = modelMapper.map(userRepository.findAll(), UserDTO.class);
-        return userRepository.findAll();
+    public List<UserDTO> findAll() {
+        List<UserDTO> userDTOList = userRepository.findAll()
+                .stream()
+                .map(u -> modelMapper.map(u, UserDTO.class))
+                .collect(Collectors.toList()) ;
+
+        return userDTOList;
     }
 
     @Override
@@ -86,5 +88,16 @@ public class UserServiceImpl implements UserService {
     @Override
     public void save(User user) {
         userRepository.save(user);
+    }
+
+    @Override
+    public ResponseEntity<UserDTO> login(MailAndPass mailAndPass) {
+        Optional<UserDTO> user = Optional.ofNullable( findByEmail(mailAndPass.getEmail()));
+
+        if (user.isPresent() && user.get().getPassword().equals(mailAndPass.getPassword())) {
+            return new ResponseEntity<>(user.get(), HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(new UserDTO(), HttpStatus.CONFLICT);
+        }
     }
 }

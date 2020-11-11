@@ -3,7 +3,6 @@ package com.FloPiDocs.FloPiDocs.Content.service.impl;
 import com.FloPiDocs.FloPiDocs.Content.entities.Document;
 import com.FloPiDocs.FloPiDocs.Content.entities.dto.DocumentDTO;
 import com.FloPiDocs.FloPiDocs.Content.repository.DocumentRepository;
-import com.FloPiDocs.FloPiDocs.Content.repository.TagRepository;
 import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +11,8 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.List;
-import java.util.Optional;
 
+@SuppressWarnings("UnnecessaryLocalVariable")
 @Service
 public class DocumentServiceImpl implements DocumentService {
     @Autowired
@@ -96,9 +95,10 @@ public class DocumentServiceImpl implements DocumentService {
         return documentRepository.countByUserId(userId);
     }
 
+    //TODO ESTO NO VA COMO QUIERO
     @Override
-    public List<Document> findByTitleAndPurposeContains(String title) {
-        List<Document> documentList = documentRepository.findByTitleLike(title);
+    public List<Document> findByTitleAndPurposeContains(String userId,String key) {
+        List<Document> documentList = documentRepository.findByUserIdAndTitleLikeOrPurposeLike(userId, key, key);
         return documentList;
     }
 

@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
-
 @AllArgsConstructor
 @Getter
 @Setter
@@ -16,6 +15,9 @@ public class AccountOptions {
     @Id
     private String id;
     private String userId;
+
+    /** Option to avoid fast field delete **/
     private boolean safeDelete = true;
+
 
 }

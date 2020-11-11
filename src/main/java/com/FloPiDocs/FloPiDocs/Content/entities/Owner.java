@@ -14,7 +14,6 @@ public class Owner {
     private Boolean right;
     private Integer documentId;
 
-
     @Override
     public String toString() {
     return String.format("Tag[id=%s, right='%s', documentId='%s']", id, right, documentId);

@@ -1,14 +1,12 @@
 package com.FloPiDocs.FloPiDocs.Content.controller;
 
+import com.FloPiDocs.FloPiDocs.Content.controller.utils.MailAndPass;
 import com.FloPiDocs.FloPiDocs.Content.entities.User;
 import com.FloPiDocs.FloPiDocs.Content.entities.dto.UserDTO;
 import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
 import com.FloPiDocs.FloPiDocs.FloPiDocsApplication;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,7 +16,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("users")
@@ -28,82 +25,38 @@ public class UserController {
     private UserService userService;
 
     @Autowired
-    ModelMapper modelMapper = new ModelMapper();
+    ModelMapper modelMapper ;
 
     // a la capa service durante el refactor
     @Autowired
     private DocumentService documentService;
 
-    @Getter
-    @Setter
-    @AllArgsConstructor
-    public static class MailAndPass {
-        private String email;
-        private String password;
-    }
 
-    @RequestMapping(
-            value = "whatever",
-            method = RequestMethod.PUT,
-            produces = "application/json",
-            consumes = "application/json")
+    @RequestMapping(value = "login", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     @ResponseBody
-    public ResponseEntity<User> postController(
-            @RequestBody User user) {
-        User user1 = new User(user.getFirstName(), user.getLastName(), user.getEmail(), user.getPassWord());
-        return new ResponseEntity<>(user1, HttpStatus.OK);
-    }
-
-
-    @RequestMapping(
-            value = "login", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
-    @ResponseBody
-    public ResponseEntity<UserDTO> login(
+    public ResponseEntity login(
             @RequestBody MailAndPass mailAndPass) {
         FloPiDocsApplication.logger.info("user - login");
-        Optional<UserDTO> user = Optional.ofNullable(userService.findByEmail(mailAndPass.getEmail()));
-        if (user.isPresent() && user.get().getPassword().equals(mailAndPass.getPassword())) {
-            return new ResponseEntity<UserDTO>(user.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<UserDTO>(new UserDTO(), HttpStatus.CONFLICT);
-        }
+
+        return userService.login(mailAndPass);
     }
 
     //TODO ENCRIPTAR PASSWORD AL PASAR A PRODUCCIÓN
     @RequestMapping(method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
     @JsonIgnoreProperties(value = {"userId", "token"})
-    public ResponseEntity<UserDTO> createUser(
+    public ResponseEntity createUser(
             @RequestBody UserDTO userDTO) {
         FloPiDocsApplication.logger.info("user - createUser");
 
         return userService.createUser(userDTO);
     }
 
-    @RequestMapping(value = "emailAlreadyExists" , method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
+    @RequestMapping(value = "emailAlreadyExists", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     public Boolean emailNotAvailable(
-            @RequestBody String email) {
+            @RequestBody String email) throws Exception {
         FloPiDocsApplication.logger.info("user - createUser");
-
-        return userService.emailAlreadyExists(email) ;
+        return userService.emailAlreadyExists(email);
     }
-
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<User>> getUsers(
-            @RequestParam("email") String email,
-            @RequestParam("password") String password) {
-        FloPiDocsApplication.logger.info("user - getAllUsers");
-        List<User> userList = userService.findAll();
-        return new ResponseEntity<>(userList, HttpStatus.OK);
-    }
-
-
-    @GetMapping(value = "/getAllUsers", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<User>> getAllUsers() {
-        FloPiDocsApplication.logger.info("user - getAllUsers");
-        List<User> userList = userService.findAll();
-        return new ResponseEntity<>(userList, HttpStatus.OK);
-    }
-
 
     //TODO VALORES EMPTY
     @PostMapping("/updateUser")
@@ -146,7 +99,7 @@ public class UserController {
     @DeleteMapping("/deleteAllContent")
     public ResponseEntity<String> deleteAllContent() {
         FloPiDocsApplication.logger.info("user - deleteAllContent");
-        List<User> userList = userService.findAll();
+        List<UserDTO> userList = userService.findAll();
         userList.forEach(t -> {
             documentService.deleteAllByUserId(t.getUserId());
 
@@ -156,11 +109,24 @@ public class UserController {
         return new ResponseEntity<>("All content deted", HttpStatus.OK);
     }
 
-    @DeleteMapping("/deleteUsersById")
-    public ResponseEntity<String> deleteUserById() {
-        FloPiDocsApplication.logger.info("user - deleteUserById");
-        userService.deleteAll();
-        return new ResponseEntity<>("Users deleted", HttpStatus.OK);
+    @DeleteMapping(value ="/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteUserById(
+            @PathVariable("id") String id) {
+        UserDTO userDTO = userService.deleteUser(id);
+        //GUILLE , mala práctica?
+        FloPiDocsApplication.logger.info("user - deleteUser: \n " + userDTO.toString() );
+    }
+
+    /**
+     * Manager method
+     * @return ResponseEntity
+     */
+    @RequestMapping(value = "all" , method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        FloPiDocsApplication.logger.info("user - getAllUsers");
+
+        return new ResponseEntity<List<UserDTO>>(userService.findAll(), HttpStatus.OK);
     }
 
 

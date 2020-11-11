@@ -7,15 +7,15 @@ import com.FloPiDocs.FloPiDocs.FloPiDocsApplication;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@SuppressWarnings("rawtypes")
 @CrossOrigin
-@RequestMapping("field")
+@RequestMapping("fields")
 @Controller
 public class FieldController {
 
@@ -25,8 +25,17 @@ public class FieldController {
         @Autowired
         ModelMapper modelMapper = new ModelMapper();
 
+        @RequestMapping(method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
+        public ResponseEntity createField(
+                @RequestBody FieldDTO fieldDTO) {
+                FloPiDocsApplication.logger.info("field - createField");
+
+                return fieldService.save(fieldDTO);
+        }
+
+/*              TODO BORRAR CUANDO FUNCIONE "CREATEFIELD"
         @PostMapping(value = "/createField", produces = MediaType.APPLICATION_JSON_VALUE)
-        public ResponseEntity<Field> createField(
+        public ResponseEntity<Field> createFieldOld(
                 @RequestParam("documentId") String documentId,
                 @RequestParam("fieldName") String fieldName ,
                 @RequestParam("fieldValue") String fieldValue ) {
@@ -36,6 +45,7 @@ public class FieldController {
                 Field field1 = fieldService.save(field);
                 return new ResponseEntity<Field>( field1 , HttpStatus.OK);
         }
+*/
 
         @GetMapping("/getFieldByDocumentId")
         public ResponseEntity<List<Field>> getFieldByDocumentId(
