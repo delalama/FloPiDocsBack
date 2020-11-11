@@ -22,7 +22,6 @@ import java.util.Optional;
 @SuppressWarnings("unchecked")
 @Service
 public class UserServiceImpl implements UserService {
-    @Autowired
     ModelMapper modelMapper = new ModelMapper();
     @Autowired
     UserRepository userRepository;

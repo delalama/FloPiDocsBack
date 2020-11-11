@@ -16,7 +16,7 @@ import java.util.List;
 public class FieldServiceImpl implements FieldService {
     @Autowired
     FieldRepository fieldRepository;
-    @Autowired
+
     ModelMapper modelMapper = new ModelMapper();
 
     @Override

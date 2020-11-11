@@ -13,7 +13,6 @@ public class AccountOptionsServiceImpl implements AccountOptionsService {
     @Autowired
     AccountOptionsRepository accountOptionsRepository;
 
-    @Autowired
     ModelMapper modelMapper = new ModelMapper();
 
     @Override

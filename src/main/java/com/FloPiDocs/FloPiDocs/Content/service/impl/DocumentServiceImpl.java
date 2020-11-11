@@ -15,7 +15,6 @@ import java.util.List;
 @SuppressWarnings("UnnecessaryLocalVariable")
 @Service
 public class DocumentServiceImpl implements DocumentService {
-    @Autowired
     ModelMapper modelMapper = new ModelMapper();
     
     @Autowired

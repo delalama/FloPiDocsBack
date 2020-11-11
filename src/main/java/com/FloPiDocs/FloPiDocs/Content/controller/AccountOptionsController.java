@@ -3,6 +3,7 @@ package com.FloPiDocs.FloPiDocs.Content.controller;
 import com.FloPiDocs.FloPiDocs.Content.entities.dto.AccountOptionsDTO;
 import com.FloPiDocs.FloPiDocs.Content.service.AccountOptionsService;
 import com.FloPiDocs.FloPiDocs.FloPiDocsApplication;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,11 +15,8 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin
 @RequestMapping("accountOptions")
 @Controller
+@Slf4j
 public class AccountOptionsController {
-
-        @Autowired
-        ModelMapper modelMapper = new ModelMapper();
-
         @Autowired
         private AccountOptionsService accountOptionsService;
 
@@ -39,7 +37,7 @@ public class AccountOptionsController {
         @PostMapping(value = "/createByUserId" ,produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity<String> createInitOptions(
                 @RequestParam("userId") String userId) {
-                FloPiDocsApplication.logger.info("AccountOptions- created initial options");
+                log.info("AccountOptions- created initial options");
                 AccountOptionsDTO accountOptionsDTO = new AccountOptionsDTO(userId);
                 accountOptionsService.save(accountOptionsDTO);
                 return new ResponseEntity<>(HttpStatus.OK);
@@ -49,7 +47,7 @@ public class AccountOptionsController {
         public ResponseEntity<String> changeSafeDelete(
                 @RequestParam("userId") String userId,
                 @RequestParam("safeDelete") boolean safeDelete){
-                FloPiDocsApplication.logger.info("AccountOptions- change SafeDelete value");
+                log.info("AccountOptions- change SafeDelete value");
                 accountOptionsService.setSafeDelete(userId, safeDelete);
                 return new ResponseEntity<>(HttpStatus.OK);
         }
@@ -57,13 +55,13 @@ public class AccountOptionsController {
         @GetMapping(value = "/getAccountOptions" ,produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity<AccountOptionsDTO> getAccountOptions(
                 @RequestParam("userId") String userId) {
-                FloPiDocsApplication.logger.info("AccountOptions- getAccountOptions by ID");
+                log.info("AccountOptions- getAccountOptions by ID");
                 return new ResponseEntity<>(accountOptionsService.findByUserId(userId),HttpStatus.OK);
         }
 
         @DeleteMapping(value = "/all" ,produces = MediaType.APPLICATION_JSON_VALUE)
         public void deleteAllAccountOptions() {
-                FloPiDocsApplication.logger.info("AccountOptions- Delete All");
+                log.info("AccountOptions- Delete All");
                 accountOptionsService.deleteAll();
         }
 

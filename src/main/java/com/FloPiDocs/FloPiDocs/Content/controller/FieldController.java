@@ -4,6 +4,7 @@ import com.FloPiDocs.FloPiDocs.Content.entities.Field;
 import com.FloPiDocs.FloPiDocs.Content.entities.dto.FieldDTO;
 import com.FloPiDocs.FloPiDocs.Content.service.FieldService;
 import com.FloPiDocs.FloPiDocs.FloPiDocsApplication;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,18 +18,18 @@ import java.util.List;
 @CrossOrigin
 @RequestMapping("fields")
 @Controller
+@Slf4j
 public class FieldController {
 
         @Autowired
         private FieldService fieldService;
 
-        @Autowired
         ModelMapper modelMapper = new ModelMapper();
 
         @RequestMapping(method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
         public ResponseEntity createField(
                 @RequestBody FieldDTO fieldDTO) {
-                FloPiDocsApplication.logger.info("field - createField");
+                log.info("field - createField");
 
                 return fieldService.save(fieldDTO);
         }
@@ -39,7 +40,7 @@ public class FieldController {
                 @RequestParam("documentId") String documentId,
                 @RequestParam("fieldName") String fieldName ,
                 @RequestParam("fieldValue") String fieldValue ) {
-                FloPiDocsApplication.logger.info("field - createField");
+                log.info("field - createField");
 
                 Field field = new Field(documentId, fieldName, fieldValue);
                 Field field1 = fieldService.save(field);
@@ -50,7 +51,7 @@ public class FieldController {
         @GetMapping("/getFieldByDocumentId")
         public ResponseEntity<List<Field>> getFieldByDocumentId(
                 @RequestParam("documentId") String documentId) {
-                FloPiDocsApplication.logger.info("Field - getFieldByDocumentId");
+                log.info("Field - getFieldByDocumentId");
                 List<Field> fieldList = fieldService.findByDocumentId(documentId);
                 return new ResponseEntity<>(fieldList, HttpStatus.OK);
         }
@@ -58,14 +59,14 @@ public class FieldController {
         @PostMapping ("/deleteFieldById")
         public ResponseEntity<FieldDTO> deleteFieldById(
                 @RequestParam("fieldId") String fieldId) {
-                FloPiDocsApplication.logger.info("Field - deleteFieldById");
+                log.info("Field - deleteFieldById");
                 FieldDTO fieldDTO = fieldService.deleteById(fieldId);
                 return new ResponseEntity<>(fieldDTO, HttpStatus.OK);
         }
 
         @DeleteMapping("/deleteAll")
         public ResponseEntity<String> deleteAll() {
-                FloPiDocsApplication.logger.info("Field - deleteAll");
+                log.info("Field - deleteAll");
                 fieldService.deleteAll();
                 return new ResponseEntity<>( HttpStatus.OK);
         }

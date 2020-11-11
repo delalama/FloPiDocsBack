@@ -5,8 +5,8 @@ import com.FloPiDocs.FloPiDocs.Content.entities.User;
 import com.FloPiDocs.FloPiDocs.Content.entities.dto.UserDTO;
 import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
-import com.FloPiDocs.FloPiDocs.FloPiDocsApplication;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +20,12 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("users")
 @RestController
+@Slf4j
 public class UserController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    ModelMapper modelMapper ;
+    ModelMapper modelMapper = new ModelMapper();
 
     // a la capa service durante el refactor
     @Autowired
@@ -36,7 +36,7 @@ public class UserController {
     @ResponseBody
     public ResponseEntity login(
             @RequestBody MailAndPass mailAndPass) {
-        FloPiDocsApplication.logger.info("user - login");
+        log.info("user - login");
 
         return userService.login(mailAndPass);
     }
@@ -46,7 +46,7 @@ public class UserController {
     @JsonIgnoreProperties(value = {"userId", "token"})
     public ResponseEntity createUser(
             @RequestBody UserDTO userDTO) {
-        FloPiDocsApplication.logger.info("user - createUser");
+        log.info("user - createUser");
 
         return userService.createUser(userDTO);
     }
@@ -54,7 +54,7 @@ public class UserController {
     @RequestMapping(value = "emailAlreadyExists", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     public Boolean emailNotAvailable(
             @RequestBody String email) throws Exception {
-        FloPiDocsApplication.logger.info("user - createUser");
+        log.info("user - createUser");
         return userService.emailAlreadyExists(email);
     }
 
@@ -64,7 +64,7 @@ public class UserController {
             @RequestParam("userId") String userId,
             @RequestParam("firstName") String firstName,
             @RequestParam("lastName") String lastName) {
-        FloPiDocsApplication.logger.info("user - updateUser");
+        log.info("user - updateUser");
         User userToUpdate = userService.findByUserId(userId);
         userService.save(new User(userId, firstName, lastName, userToUpdate.getEmail()));
         return new ResponseEntity<>("User updated", HttpStatus.OK);
@@ -75,7 +75,7 @@ public class UserController {
     public ResponseEntity<String> updateUserEmail(
             @RequestParam("userId") String userId,
             @RequestParam("email") String email) {
-        FloPiDocsApplication.logger.info("user - updateUser");
+        log.info("user - updateUser");
         User userToUpdate = userService.findByUserId(userId);
         if (userToUpdate == null) {
             return new ResponseEntity<>("No user found", HttpStatus.CONFLICT);
@@ -90,7 +90,7 @@ public class UserController {
 
     @DeleteMapping("/deleteAllUsers")
     public ResponseEntity<String> deleteAllUsers() {
-        FloPiDocsApplication.logger.info("user - deleteAllUsers");
+        log.info("user - deleteAllUsers");
         userService.deleteAll();
         return new ResponseEntity<>("Users deleted", HttpStatus.OK);
     }
@@ -98,7 +98,7 @@ public class UserController {
     //dev method, must be deleted
     @DeleteMapping("/deleteAllContent")
     public ResponseEntity<String> deleteAllContent() {
-        FloPiDocsApplication.logger.info("user - deleteAllContent");
+        log.info("user - deleteAllContent");
         List<UserDTO> userList = userService.findAll();
         userList.forEach(t -> {
             documentService.deleteAllByUserId(t.getUserId());
@@ -109,22 +109,23 @@ public class UserController {
         return new ResponseEntity<>("All content deted", HttpStatus.OK);
     }
 
-    @DeleteMapping(value ="/{id}")
+    @DeleteMapping(value = "/{id}")
     @ResponseStatus(HttpStatus.OK)
     public void deleteUserById(
             @PathVariable("id") String id) {
         UserDTO userDTO = userService.deleteUser(id);
         //GUILLE , mala práctica?
-        FloPiDocsApplication.logger.info("user - deleteUser: \n " + userDTO.toString() );
+        log.info("user - deleteUser: \n " + userDTO.toString());
     }
 
     /**
      * Manager method
+     *
      * @return ResponseEntity
      */
-    @RequestMapping(value = "all" , method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(value = "all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<UserDTO>> getAllUsers() {
-        FloPiDocsApplication.logger.info("user - getAllUsers");
+        log.info("user - getAllUsers");
 
         return new ResponseEntity<List<UserDTO>>(userService.findAll(), HttpStatus.OK);
     }

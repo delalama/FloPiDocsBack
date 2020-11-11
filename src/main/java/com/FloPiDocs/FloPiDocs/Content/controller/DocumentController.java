@@ -7,6 +7,7 @@ import com.FloPiDocs.FloPiDocs.Content.service.FieldService;
 import com.FloPiDocs.FloPiDocs.Content.service.TagService;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
 import com.FloPiDocs.FloPiDocs.FloPiDocsApplication;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -27,6 +28,7 @@ import java.util.Locale;
 @CrossOrigin
 @RequestMapping("document")
 @Controller
+@Slf4j
 public class DocumentController {
         @Autowired
         private DocumentService documentService;
@@ -36,7 +38,6 @@ public class DocumentController {
         private TagService tagService;
         @Autowired
         private FieldService fieldService;
-        @Autowired
         ModelMapper modelMapper = new ModelMapper();
 
         // https://graphql.org/
@@ -49,7 +50,7 @@ public class DocumentController {
                 @RequestParam("userId") String userId, @RequestParam("title") String title ,
                 @RequestParam("purpose") String purpose,
                 @RequestParam("content") String content) {
-                FloPiDocsApplication.logger.info("document - createDocument");
+                log.info("document - createDocument");
                 Document document = new Document();
                 //Guille , cómo responder lo adecuado a cada CASE?
                 if( userId.equals("")){
@@ -74,7 +75,7 @@ public class DocumentController {
         public ResponseEntity<List<Document>> getDocumentByTitle(
                 @RequestParam("title") String title) {
 
-                FloPiDocsApplication.logger.info("document - getDocumentByTitle");
+                log.info("document - getDocumentByTitle");
                 List<Document> documentList = documentService.findByTitle(title);
                 return new ResponseEntity<>(documentList, HttpStatus.OK);
         }
@@ -83,7 +84,7 @@ public class DocumentController {
         public ResponseEntity<List<Document>> findByTitleAndPurposeContains(
                 @RequestParam("key") String key,
                 @RequestParam("userId") String userId) {
-                FloPiDocsApplication.logger.info("document - getDocumentByTitle");
+                log.info("document - getDocumentByTitle");
 
                 List<Document> documentList = documentService.findByTitleAndPurposeContains(userId, key);
                 return new ResponseEntity<>(documentList, HttpStatus.OK);
@@ -92,10 +93,10 @@ public class DocumentController {
         @DeleteMapping("/deleteDocumentById")
         public ResponseEntity<Document> deleteDocumentById(
                 @RequestParam("id") String id) throws Exception {
-                FloPiDocsApplication.logger.info("document - deleteDocumentById");
+                log.info("document - deleteDocumentById");
                 DocumentDTO doc = documentService.findById(id);
                 if(doc.getId() == null){
-                        FloPiDocsApplication.logger.info("CONFLICT");
+                        log.info("CONFLICT");
                         return new ResponseEntity<>(HttpStatus.CONFLICT);
                 }else {
                         documentService.deleteById(id);
@@ -106,7 +107,7 @@ public class DocumentController {
         @GetMapping("/getDocumentByPurpose")
         public ResponseEntity<List<Document>> getDocumentByPurpose (
                 @RequestParam("purpose") String purpose) {
-                        FloPiDocsApplication.logger.info("document - getDocumentByPurpose");
+                        log.info("document - getDocumentByPurpose");
                 List<Document> documentList = documentService.findByPurpose(purpose);
                 return new ResponseEntity<>(documentList, HttpStatus.OK);
         }
@@ -115,7 +116,7 @@ public class DocumentController {
         @GetMapping("/getAllDocumentsByUserId")
         public ResponseEntity<List<Document>> getDocumentsByUserId(
                 @RequestParam("userId") String userId) {
-                FloPiDocsApplication.logger.info("document - getAllDocumentsByUserId");
+                log.info("document - getAllDocumentsByUserId");
                 List<Document> documentList = documentService.findByUserId(userId, PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id")));
                 System.out.println(documentList);
                 return new ResponseEntity<>(documentList, HttpStatus.OK);
@@ -126,7 +127,7 @@ public class DocumentController {
         public ResponseEntity<Long> countByUserId(
                 @RequestParam("userId") String userId)
         {
-                FloPiDocsApplication.logger.info("document - deleteAll");
+                log.info("document - deleteAll");
                 Long documentsCount = documentService.countByUserId(userId);
                 return new ResponseEntity<>(documentsCount, HttpStatus.OK);
         }
@@ -134,7 +135,7 @@ public class DocumentController {
         //TODO
         @DeleteMapping("/deleteAll")
         public ResponseEntity<String> deleteAll() {
-                FloPiDocsApplication.logger.info("document - deleteAll");
+                log.info("document - deleteAll");
                 documentService.deleteAll();
                 return new ResponseEntity<>( HttpStatus.OK);
         }
@@ -143,7 +144,7 @@ public class DocumentController {
         @DeleteMapping("/deleteAllByUserId")
         public ResponseEntity<String> deleteAllByUserId(
                 @RequestParam("userId") String userId) {
-                FloPiDocsApplication.logger.info("document - deleteAllByUserId");
+                log.info("document - deleteAllByUserId");
                 documentService.findAllByUserId(userId).forEach(doc ->{
                         tagService.deleteByDocumentId(doc.getId() );
                         fieldService.deleteByDocumentId(doc.getId() );
@@ -155,7 +156,7 @@ public class DocumentController {
         @DeleteMapping("/deleteByTitle")
         public ResponseEntity<String> deleteAllByTitle(
                 @RequestParam("title") String title) {
-                FloPiDocsApplication.logger.info("document - deleteByTitle");
+                log.info("document - deleteByTitle");
                 documentService.deleteByTitle(title);
                 return new ResponseEntity<>( HttpStatus.OK);
         }
@@ -165,7 +166,7 @@ public class DocumentController {
         public ResponseEntity<String> updateDocumentContent(
                 @RequestParam("documentId") String documentId,
                 @RequestParam("content") String content) throws Exception {
-                FloPiDocsApplication.logger.info("document - updateDocumentContent");
+                log.info("document - updateDocumentContent");
                 DocumentDTO doc = documentService.findById(documentId);
                 // DTO!!
                 documentService.save(new Document(doc.getId(), doc.getUserId(),doc.getTitle(), doc.getPurpose(), doc.getDate(), content ) );
