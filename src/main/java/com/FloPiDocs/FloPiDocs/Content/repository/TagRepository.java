@@ -1,6 +1,6 @@
 package com.FloPiDocs.FloPiDocs.Content.repository;
 
-import com.FloPiDocs.FloPiDocs.Content.entities.Tag;
+import com.FloPiDocs.FloPiDocs.Content.model.persistence.Tag;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

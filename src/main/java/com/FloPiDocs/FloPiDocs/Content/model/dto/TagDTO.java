@@ -1,23 +1,19 @@
-package com.FloPiDocs.FloPiDocs.Content.entities;
+package com.FloPiDocs.FloPiDocs.Content.model.dto;
 
 import lombok.*;
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.Indexed;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
 @Getter
 @Setter
-public class Tag {
-    @Indexed(unique = true)
-    @Id
+public class TagDTO {
     private String tagId;
     private String userId;
     private String tagName;
     private String documentId;
 
-    public Tag(String userId, String documentId, String tagName) {
+    public TagDTO(String userId, String documentId, String tagName) {
         this.userId = userId;
         this.documentId = documentId;
         this.tagName = tagName;

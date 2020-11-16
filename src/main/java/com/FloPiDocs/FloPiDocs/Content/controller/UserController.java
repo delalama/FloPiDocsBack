@@ -1,15 +1,14 @@
 package com.FloPiDocs.FloPiDocs.Content.controller;
 
 import com.FloPiDocs.FloPiDocs.Content.controller.utils.MailAndPass;
-import com.FloPiDocs.FloPiDocs.Content.entities.User;
-import com.FloPiDocs.FloPiDocs.Content.entities.dto.UserDTO;
+import com.FloPiDocs.FloPiDocs.Content.model.persistence.User;
+import com.FloPiDocs.FloPiDocs.Content.model.dto.UserDTO;
 import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -21,20 +20,15 @@ import java.util.List;
 @RequestMapping("users")
 @RestController
 @Slf4j
+@AllArgsConstructor
 public class UserController {
-    @Autowired
-    private UserService userService;
 
-    ModelMapper modelMapper = new ModelMapper();
+    private final UserService userService;
+    private final DocumentService documentService;
 
-    // a la capa service durante el refactor
-    @Autowired
-    private DocumentService documentService;
-
-
-    @RequestMapping(value = "login", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
+    @PostMapping("login")
     @ResponseBody
-    public ResponseEntity login(
+    public UserDTO login(
             @RequestBody MailAndPass mailAndPass) {
         log.info("user - login");
 

@@ -1,10 +1,8 @@
 package com.FloPiDocs.FloPiDocs.Content.controller;
 
-import com.FloPiDocs.FloPiDocs.Content.entities.dto.AccountOptionsDTO;
+import com.FloPiDocs.FloPiDocs.Content.model.dto.AccountOptionsDTO;
 import com.FloPiDocs.FloPiDocs.Content.service.AccountOptionsService;
-import com.FloPiDocs.FloPiDocs.FloPiDocsApplication;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;

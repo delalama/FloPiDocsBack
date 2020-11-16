@@ -1,4 +1,4 @@
-package com.FloPiDocs.FloPiDocs.Content.entities.dto;
+package com.FloPiDocs.FloPiDocs.Content.model.dto;
 
 import lombok.*;
 

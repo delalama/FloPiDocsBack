@@ -1,6 +1,6 @@
 package com.FloPiDocs.FloPiDocs.Content.service.impl;
 
-import com.FloPiDocs.FloPiDocs.Content.entities.Tag;
+import com.FloPiDocs.FloPiDocs.Content.model.persistence.Tag;
 import com.FloPiDocs.FloPiDocs.Content.repository.TagRepository;
 import com.FloPiDocs.FloPiDocs.Content.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;

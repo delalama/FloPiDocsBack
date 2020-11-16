@@ -1,6 +1,6 @@
 package com.FloPiDocs.FloPiDocs.Content.controller;
 
-import com.FloPiDocs.FloPiDocs.Content.entities.dto.UserDTO;
+import com.FloPiDocs.FloPiDocs.Content.model.dto.UserDTO;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;

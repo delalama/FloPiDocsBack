@@ -1,7 +1,7 @@
 package com.FloPiDocs.FloPiDocs.Content.service.impl;
 
-import com.FloPiDocs.FloPiDocs.Content.entities.AccountOptions;
-import com.FloPiDocs.FloPiDocs.Content.entities.dto.AccountOptionsDTO;
+import com.FloPiDocs.FloPiDocs.Content.model.persistence.AccountOptions;
+import com.FloPiDocs.FloPiDocs.Content.model.dto.AccountOptionsDTO;
 import com.FloPiDocs.FloPiDocs.Content.repository.AccountOptionsRepository;
 import com.FloPiDocs.FloPiDocs.Content.service.AccountOptionsService;
 import org.modelmapper.ModelMapper;

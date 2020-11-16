@@ -1,4 +1,4 @@
-package com.FloPiDocs.FloPiDocs.Content.entities;
+package com.FloPiDocs.FloPiDocs.Content.model.persistence;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

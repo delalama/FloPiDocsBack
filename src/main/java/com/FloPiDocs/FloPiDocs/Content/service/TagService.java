@@ -1,6 +1,6 @@
 package com.FloPiDocs.FloPiDocs.Content.service;
 
-import com.FloPiDocs.FloPiDocs.Content.entities.Tag;
+import com.FloPiDocs.FloPiDocs.Content.model.persistence.Tag;
 
 import java.util.List;
 

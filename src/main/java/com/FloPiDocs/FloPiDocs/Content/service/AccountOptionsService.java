@@ -1,6 +1,6 @@
 package com.FloPiDocs.FloPiDocs.Content.service;
 
-import com.FloPiDocs.FloPiDocs.Content.entities.dto.AccountOptionsDTO;
+import com.FloPiDocs.FloPiDocs.Content.model.dto.AccountOptionsDTO;
 
 public interface AccountOptionsService {
     void save(AccountOptionsDTO accountOptionsDTO);

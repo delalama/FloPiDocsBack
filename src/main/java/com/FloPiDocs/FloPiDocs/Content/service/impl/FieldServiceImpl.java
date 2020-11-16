@@ -1,7 +1,7 @@
 package com.FloPiDocs.FloPiDocs.Content.service.impl;
 
-import com.FloPiDocs.FloPiDocs.Content.entities.Field;
-import com.FloPiDocs.FloPiDocs.Content.entities.dto.FieldDTO;
+import com.FloPiDocs.FloPiDocs.Content.model.persistence.Field;
+import com.FloPiDocs.FloPiDocs.Content.model.dto.FieldDTO;
 import com.FloPiDocs.FloPiDocs.Content.repository.FieldRepository;
 import com.FloPiDocs.FloPiDocs.Content.service.FieldService;
 import org.modelmapper.ModelMapper;

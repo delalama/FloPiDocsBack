@@ -1,14 +1,12 @@
-package com.FloPiDocs.FloPiDocs.Content.entities.dto;
+package com.FloPiDocs.FloPiDocs.Content.model.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @AllArgsConstructor
 @Getter
 @Setter
 @NoArgsConstructor
+@Builder
 public class UserDTO {
     private String userId;
     private String firstName;

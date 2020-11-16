@@ -1,12 +1,11 @@
 package com.FloPiDocs.FloPiDocs.Content.controller;
 
-import com.FloPiDocs.FloPiDocs.Content.entities.Document;
-import com.FloPiDocs.FloPiDocs.Content.entities.dto.DocumentDTO;
+import com.FloPiDocs.FloPiDocs.Content.model.persistence.Document;
+import com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDTO;
 import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import com.FloPiDocs.FloPiDocs.Content.service.FieldService;
 import com.FloPiDocs.FloPiDocs.Content.service.TagService;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
-import com.FloPiDocs.FloPiDocs.FloPiDocsApplication;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,9 +41,6 @@ public class DocumentController {
 
         // https://graphql.org/
         // TODO https://www.baeldung.com/spring-request-response-body
-        // https://medium.com/@mwaysolutions/10-best-practices-for-better-restful-api-cbe81b06f291
-      //TODO cómo hacer que pete el controlador cuando le pasas más parámetros de los esperados?
-
        @PostMapping(value = "/createDocument", produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity<Document> createDocument(
                 @RequestParam("userId") String userId, @RequestParam("title") String title ,
@@ -80,13 +76,27 @@ public class DocumentController {
                 return new ResponseEntity<>(documentList, HttpStatus.OK);
         }
 
-        @RequestMapping(value = "findByTitleAndPurposeContains")
-        public ResponseEntity<List<Document>> findByTitleAndPurposeContains(
+        @GetMapping(value = "findByTitle")
+        public ResponseEntity<List<Document>> findByUserIdAndTitle(
                 @RequestParam("key") String key,
                 @RequestParam("userId") String userId) {
-                log.info("document - getDocumentByTitle");
+                log.info("document - searchBar");
+                log.info("string Title : " + key);
+                log.info("userId : " + userId);
 
-                List<Document> documentList = documentService.findByTitleAndPurposeContains(userId, key);
+                List<Document> documentList = documentService.findByUserIdAndTitle( userId, key);
+                return new ResponseEntity<>(documentList, HttpStatus.OK);
+        }
+
+        @GetMapping(value = "findByPurpose")
+        public ResponseEntity<List<Document>> findByUserIdAndPurpose(
+                @RequestParam("key") String key,
+                @RequestParam("userId") String userId) {
+                log.info("document - searchBar");
+                log.info("string Purpose : " + key);
+                log.info("userId : " + userId);
+
+                List<Document> documentList = documentService.findByUserIdAndPurpose( userId, key);
                 return new ResponseEntity<>(documentList, HttpStatus.OK);
         }
 

@@ -1,9 +1,8 @@
 package com.FloPiDocs.FloPiDocs.Content.controller;
 
-import com.FloPiDocs.FloPiDocs.Content.entities.Field;
-import com.FloPiDocs.FloPiDocs.Content.entities.dto.FieldDTO;
+import com.FloPiDocs.FloPiDocs.Content.model.persistence.Field;
+import com.FloPiDocs.FloPiDocs.Content.model.dto.FieldDTO;
 import com.FloPiDocs.FloPiDocs.Content.service.FieldService;
-import com.FloPiDocs.FloPiDocs.FloPiDocsApplication;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,7 @@ import java.util.List;
 
 @SuppressWarnings("rawtypes")
 @CrossOrigin
-@RequestMapping("fields")
+@RequestMapping("field")
 @Controller
 @Slf4j
 public class FieldController {

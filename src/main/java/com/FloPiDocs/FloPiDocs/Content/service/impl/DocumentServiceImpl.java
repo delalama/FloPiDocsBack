@@ -1,7 +1,7 @@
 package com.FloPiDocs.FloPiDocs.Content.service.impl;
 
-import com.FloPiDocs.FloPiDocs.Content.entities.Document;
-import com.FloPiDocs.FloPiDocs.Content.entities.dto.DocumentDTO;
+import com.FloPiDocs.FloPiDocs.Content.model.persistence.Document;
+import com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDTO;
 import com.FloPiDocs.FloPiDocs.Content.repository.DocumentRepository;
 import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import org.modelmapper.ModelMapper;
@@ -94,10 +94,16 @@ public class DocumentServiceImpl implements DocumentService {
         return documentRepository.countByUserId(userId);
     }
 
-    //TODO ESTO NO VA COMO QUIERO
+    //TODO ACTUAL
     @Override
-    public List<Document> findByTitleAndPurposeContains(String userId,String key) {
-        List<Document> documentList = documentRepository.findByUserIdAndTitleLikeOrPurposeLike(userId, key, key);
+    public List<Document> findByUserIdAndTitle(String userId, String key) {
+        List<Document> documentList = documentRepository.findByUserIdAndTitleContainsIgnoreCase(userId, key);
+        return documentList;
+    }
+
+    @Override
+    public List<Document> findByUserIdAndPurpose(String userId, String purpose) {
+        List<Document> documentList = documentRepository.findByUserIdAndPurposeContainsIgnoreCase(userId, purpose);
         return documentList;
     }
 

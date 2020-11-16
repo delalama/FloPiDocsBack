@@ -28,3 +28,18 @@ TBD FLO
     
 ###Swagger 2 API    
     http://localhost:8080/swagger-ui.html
+    
+    
+    
+    
+LIBRERÍAS QUE YA ESTÁN EN SPRING
+    
+    LOMBOK - DATA
+    @SlF4j
+
+    LogBack -> es spring
+    
+    CAPA API -> responseEntity
+    @ControllerAdvice
+    
+    Código de los services
