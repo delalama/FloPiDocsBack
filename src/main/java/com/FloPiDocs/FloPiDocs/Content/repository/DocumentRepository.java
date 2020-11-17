@@ -1,5 +1,6 @@
 package com.FloPiDocs.FloPiDocs.Content.repository;
 
+import com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDTO;
 import com.FloPiDocs.FloPiDocs.Content.model.persistence.Document;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
@@ -19,7 +20,8 @@ public interface DocumentRepository extends MongoRepository<Document, String> {
     void deleteByUserId(String userId);
     void deleteByTitle(String title);
     Long countByUserId(String userId);
-    void deleteById(String userId);
+
+    void deleteById(String id );
 
     // find by userId and title
     List<Document> findByUserIdAndTitleContainsIgnoreCase(String userId,String title);

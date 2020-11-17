@@ -33,20 +33,6 @@ public class FieldController {
                 return fieldService.save(fieldDTO);
         }
 
-/*              TODO BORRAR CUANDO FUNCIONE "CREATEFIELD"
-        @PostMapping(value = "/createField", produces = MediaType.APPLICATION_JSON_VALUE)
-        public ResponseEntity<Field> createFieldOld(
-                @RequestParam("documentId") String documentId,
-                @RequestParam("fieldName") String fieldName ,
-                @RequestParam("fieldValue") String fieldValue ) {
-                log.info("field - createField");
-
-                Field field = new Field(documentId, fieldName, fieldValue);
-                Field field1 = fieldService.save(field);
-                return new ResponseEntity<Field>( field1 , HttpStatus.OK);
-        }
-*/
-
         @GetMapping("/getFieldByDocumentId")
         public ResponseEntity<List<Field>> getFieldByDocumentId(
                 @RequestParam("documentId") String documentId) {

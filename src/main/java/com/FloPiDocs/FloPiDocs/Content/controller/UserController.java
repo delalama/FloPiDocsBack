@@ -52,7 +52,6 @@ public class UserController {
         return userService.emailAlreadyExists(email);
     }
 
-    //TODO VALORES EMPTY
     @PostMapping("/updateUser")
     public ResponseEntity<String> updateUser(
             @RequestParam("userId") String userId,
@@ -64,7 +63,6 @@ public class UserController {
         return new ResponseEntity<>("User updated", HttpStatus.OK);
     }
 
-    //TODO email EMPTY, Guille algo habrá para que el controlador no acepte valores empty
     @PostMapping("/updateUserEmail")
     public ResponseEntity<String> updateUserEmail(
             @RequestParam("userId") String userId,
@@ -82,12 +80,40 @@ public class UserController {
         return new ResponseEntity<>("Email updated", HttpStatus.OK);
     }
 
+
+    //TODO DELETE USER borrará toda la info del user borrado
     @DeleteMapping("/deleteAllUsers")
     public ResponseEntity<String> deleteAllUsers() {
         log.info("user - deleteAllUsers");
         userService.deleteAll();
         return new ResponseEntity<>("Users deleted", HttpStatus.OK);
     }
+
+    //TODO DELETE USER borrará toda la info del user borrado
+    @DeleteMapping(value = "/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public void deleteUserById(
+            @PathVariable("id") String id) {
+        UserDTO userDTO = userService.deleteUser(id);
+        //GUILLE , mala práctica?
+        log.info("user - deleteUser: \n " + userDTO.toString());
+    }
+
+
+
+
+    /**
+     * Manager method
+     *
+     * @return ResponseEntity
+     */
+    @RequestMapping(value = "all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        log.info("user - getAllUsers");
+
+        return new ResponseEntity<List<UserDTO>>(userService.findAll(), HttpStatus.OK);
+    }
+
 
     //dev method, must be deleted
     @DeleteMapping("/deleteAllContent")
@@ -102,27 +128,5 @@ public class UserController {
 
         return new ResponseEntity<>("All content deted", HttpStatus.OK);
     }
-
-    @DeleteMapping(value = "/{id}")
-    @ResponseStatus(HttpStatus.OK)
-    public void deleteUserById(
-            @PathVariable("id") String id) {
-        UserDTO userDTO = userService.deleteUser(id);
-        //GUILLE , mala práctica?
-        log.info("user - deleteUser: \n " + userDTO.toString());
-    }
-
-    /**
-     * Manager method
-     *
-     * @return ResponseEntity
-     */
-    @RequestMapping(value = "all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        log.info("user - getAllUsers");
-
-        return new ResponseEntity<List<UserDTO>>(userService.findAll(), HttpStatus.OK);
-    }
-
 
 }

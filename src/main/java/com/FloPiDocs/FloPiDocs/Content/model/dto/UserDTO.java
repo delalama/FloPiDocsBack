@@ -16,6 +16,7 @@ public class UserDTO {
     private String token;
 
 
+
     public UserDTO(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;

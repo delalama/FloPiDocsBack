@@ -104,7 +104,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO login(MailAndPass mailAndPass) {
-
         Optional<UserDTO> user = findByEmail(mailAndPass.getEmail());
 
         if (user.isPresent() && StringUtils.equals(user.get().getPassword(), mailAndPass.getPassword())) {

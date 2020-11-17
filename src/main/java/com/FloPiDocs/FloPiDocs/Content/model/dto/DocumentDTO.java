@@ -15,17 +15,18 @@ public class DocumentDTO {
     private String date;
     private String content;
 
+
+    public DocumentDTO(String id, String userId) {
+        this.id = id;
+        this.userId = userId;
+    }
+
     public DocumentDTO(String userId, String title, String purpose, String content, String date) {
         this.userId = userId;
         this.title = title;
         this.purpose = purpose;
         this.content = content;
         this.date = date;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("Document[id=%s, userId='%s', title='%s', purpose='%s', date='%s']", id, userId, title, purpose, date);
     }
 
 }

@@ -16,7 +16,7 @@ public interface DocumentService {
     public abstract List<Document> findAll();
     public abstract List<Document> findByUserId(String userId, Pageable pageable);
     public abstract boolean emailExists(String email);
-    public abstract void deleteById(String documentId);
+    public DocumentDTO deleteById(DocumentDTO documentDTO) throws Exception;
     public abstract void deleteByUserId (String userId);
     public abstract void deleteByTitle (String title);
     public abstract void deleteAll ();

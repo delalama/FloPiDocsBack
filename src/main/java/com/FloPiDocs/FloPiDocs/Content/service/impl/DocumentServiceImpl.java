@@ -6,6 +6,7 @@ import com.FloPiDocs.FloPiDocs.Content.repository.DocumentRepository;
 import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
@@ -19,6 +20,9 @@ public class DocumentServiceImpl implements DocumentService {
     
     @Autowired
     DocumentRepository documentRepository;
+
+    @Autowired
+    private ConversionService conversionService;
 
     @Override
     public Document createDocument(Document document) {
@@ -57,7 +61,12 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public void deleteById(String id) { documentRepository.deleteById(id);}
+    public DocumentDTO deleteById (DocumentDTO documentDTO) throws Exception {
+        DocumentDTO documentDTO1 = findById(documentDTO.getId());
+        documentRepository.deleteById( documentDTO1.getId() );
+
+        return conversionService.convert(documentDTO1, DocumentDTO.class) ;
+    }
 
     @Override
     public void deleteByUserId(String userId) {
