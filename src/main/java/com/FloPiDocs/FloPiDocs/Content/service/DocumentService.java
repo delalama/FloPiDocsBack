@@ -25,4 +25,6 @@ public interface DocumentService {
     public abstract Long countByUserId(String userId);
     public abstract List<Document> findByUserIdAndTitle(String userId, String title);
     public abstract List<Document> findByUserIdAndPurpose(String userId, String title);
+
+    void update(DocumentDTO documentDTO) throws Exception;
 }

@@ -116,4 +116,9 @@ public class DocumentServiceImpl implements DocumentService {
         return documentList;
     }
 
+    @Override
+    public void update(DocumentDTO documentDTO) throws Exception {
+        save( conversionService.convert(documentDTO, Document.class ));
+    }
+
 }

@@ -18,6 +18,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.lang.reflect.Method;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -166,14 +167,12 @@ public class DocumentController {
     }
 
     //TODO actual focus
-    @PostMapping(value = "/updateDocumentContent", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> updateDocumentContent(
-            @RequestParam("documentId") String documentId,
-            @RequestParam("content") String content) throws Exception {
-        log.info("document - updateDocumentContent");
-        DocumentDTO doc = documentService.findById(documentId);
-        // DTO!!
-        documentService.save(new Document(doc.getId(), doc.getUserId(), doc.getTitle(), doc.getPurpose(), doc.getDate(), content));
+    @RequestMapping( method = RequestMethod.PUT , produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity updateDocumentContent(
+            @RequestBody DocumentDTO documentDTO) throws Exception {
+        log.info("document - updateDocument");
+        documentService.update(documentDTO);
+
         return new ResponseEntity<>("Content updated: ", HttpStatus.OK);
     }
 
