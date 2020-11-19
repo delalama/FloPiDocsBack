@@ -8,6 +8,9 @@ import java.util.List;
 public interface TagService {
     public abstract Tag findByTagId(String id);
     public abstract List<Tag> findByDocumentId(String documentId);
+
+    List<Tag> findByTagName(String tagName);
+
     public abstract void deleteById();
     public abstract void deleteByDocumentId(String documentId);
     public abstract void deleteAll();

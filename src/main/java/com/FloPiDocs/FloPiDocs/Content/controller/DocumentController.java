@@ -79,9 +79,6 @@ public class DocumentController {
     public ResponseEntity<List<Document>> findByUserIdAndTitle(
             @RequestParam("key") String key,
             @RequestParam("userId") String userId) {
-        log.info("document - searchBar");
-        log.info("string Title : " + key);
-        log.info("userId : " + userId);
 
         List<Document> documentList = documentService.findByUserIdAndTitle(userId, key);
         return new ResponseEntity<>(documentList, HttpStatus.OK);
@@ -91,11 +88,17 @@ public class DocumentController {
     public ResponseEntity<List<Document>> findByUserIdAndPurpose(
             @RequestParam("key") String key,
             @RequestParam("userId") String userId) {
-        log.info("document - searchBar");
-        log.info("string Purpose : " + key);
-        log.info("userId : " + userId);
 
         List<Document> documentList = documentService.findByUserIdAndPurpose(userId, key);
+        return new ResponseEntity<>(documentList, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "findByTag")
+    public ResponseEntity<List<DocumentDTO>> findByUserIdAndTag(
+            @RequestParam("key") String key,
+            @RequestParam("userId") String userId) {
+        //TODO ACTUAL, findByTag on docService
+        List<DocumentDTO> documentList = documentService.findByUserIdAndTag(userId, key);
         return new ResponseEntity<>(documentList, HttpStatus.OK);
     }
 
@@ -107,7 +110,7 @@ public class DocumentController {
         DocumentDTO documentDTO1 = documentService.deleteById(documentDTO);
 
         //TODO ACTUAL, ELIMINAR TODO EL CONTENIDO DEL DOCUMENTO BORRADO
-        return new ResponseEntity<DocumentDTO>(documentDTO1, HttpStatus.OK );
+        return new ResponseEntity<DocumentDTO>(documentDTO1, HttpStatus.OK);
     }
 
     @GetMapping("/getDocumentByPurpose")
@@ -167,7 +170,7 @@ public class DocumentController {
     }
 
     //TODO actual focus
-    @RequestMapping( method = RequestMethod.PUT , produces = MediaType.APPLICATION_JSON_VALUE)
+    @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateDocumentContent(
             @RequestBody DocumentDTO documentDTO) throws Exception {
         log.info("document - updateDocument");

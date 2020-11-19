@@ -1,17 +1,24 @@
 package com.FloPiDocs.FloPiDocs.Content.service.impl;
 
+import com.FloPiDocs.FloPiDocs.Content.model.dto.TagDTO;
 import com.FloPiDocs.FloPiDocs.Content.model.persistence.Tag;
 import com.FloPiDocs.FloPiDocs.Content.repository.TagRepository;
 import com.FloPiDocs.FloPiDocs.Content.service.TagService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class TagServiceImpl implements TagService {
     @Autowired
     TagRepository tagRepository;
+
+    @Autowired
+    private ConversionService conversionService;
+
 
     @Override
     public Tag findByTagId(String id) {
@@ -21,6 +28,13 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<Tag> findByDocumentId(String documentId) {
         return tagRepository.findByDocumentId(documentId);
+    }
+
+    @Override
+    public List<TagDTO> findByTagName(String tagName) {
+        List<Tag> tagList = tagRepository.findByDocumentId(tagName);
+        return tagList.stream().map(tag -> conversionService.convert(tag,TagDTO.class )).collect(Collectors.toList());
+//        return conversionService.convert(tagList, TagDTO.class);
     }
 
     @Override

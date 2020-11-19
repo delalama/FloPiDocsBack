@@ -1,6 +1,5 @@
 package com.FloPiDocs.FloPiDocs.Content.repository;
 
-import com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDTO;
 import com.FloPiDocs.FloPiDocs.Content.model.persistence.Document;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;

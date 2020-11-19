@@ -81,7 +81,7 @@ public class UserServiceImpl implements UserService {
     }
 
     // TODO
-//    delete during devel or work on it if I do a manage account
+//    delete during prod or work on it if I do a manage account
     @Override
     public List<UserDTO> findAll() {
         List<UserDTO> userDTOList = userRepository.findAll()

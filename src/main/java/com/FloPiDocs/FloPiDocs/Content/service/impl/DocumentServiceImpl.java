@@ -103,7 +103,6 @@ public class DocumentServiceImpl implements DocumentService {
         return documentRepository.countByUserId(userId);
     }
 
-    //TODO ACTUAL
     @Override
     public List<Document> findByUserIdAndTitle(String userId, String key) {
         List<Document> documentList = documentRepository.findByUserIdAndTitleContainsIgnoreCase(userId, key);
@@ -119,6 +118,13 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public void update(DocumentDTO documentDTO) throws Exception {
         save( conversionService.convert(documentDTO, Document.class ));
+    }
+
+    @Override
+    public List<DocumentDTO> findByUserIdAndTag(String userId, String key) {
+        List<Document> documentList = findAllByUserId(userId);
+
+        return null;
     }
 
 }

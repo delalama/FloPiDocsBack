@@ -27,4 +27,6 @@ public interface DocumentService {
     public abstract List<Document> findByUserIdAndPurpose(String userId, String title);
 
     void update(DocumentDTO documentDTO) throws Exception;
+
+    List<DocumentDTO> findByUserIdAndTag(String userId, String key);
 }
