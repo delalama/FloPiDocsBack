@@ -1,9 +1,11 @@
 package com.FloPiDocs.FloPiDocs.Content.service.impl;
 
+import com.FloPiDocs.FloPiDocs.Content.model.dto.TagDTO;
 import com.FloPiDocs.FloPiDocs.Content.model.persistence.Document;
 import com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDTO;
 import com.FloPiDocs.FloPiDocs.Content.repository.DocumentRepository;
 import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
+import com.FloPiDocs.FloPiDocs.Content.service.TagService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @SuppressWarnings("UnnecessaryLocalVariable")
 @Service
@@ -20,6 +23,9 @@ public class DocumentServiceImpl implements DocumentService {
     
     @Autowired
     DocumentRepository documentRepository;
+
+    @Autowired
+    TagService tagService;
 
     @Autowired
     private ConversionService conversionService;
@@ -117,14 +123,19 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public void update(DocumentDTO documentDTO) throws Exception {
-        save( conversionService.convert(documentDTO, Document.class ));
+        Document document = conversionService.convert(documentDTO, Document.class );
+        save(document);
     }
 
     @Override
-    public List<DocumentDTO> findByUserIdAndTag(String userId, String key) {
-        List<Document> documentList = findAllByUserId(userId);
+    public List<DocumentDTO> findByUserIdAndTag(String userId, String key) throws Exception {
+        List<TagDTO> tagDTO = tagService.findByUserIdAndTagName(userId,key);
 
-        return null;
+        List<Document> documentList = tagDTO.stream().map(tag -> documentRepository.findById(tag.getDocumentId()).get()).collect(Collectors.toList());
+
+        List<DocumentDTO> documentDTOList = documentList.stream().map( document -> conversionService.convert(document,DocumentDTO.class)).collect(Collectors.toList());
+
+        return documentDTOList;
     }
 
 }

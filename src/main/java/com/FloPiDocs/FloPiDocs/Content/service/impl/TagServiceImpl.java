@@ -33,9 +33,18 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<TagDTO> findByTagName(String tagName) {
         List<Tag> tagList = tagRepository.findByDocumentId(tagName);
-        return tagList.stream().map(tag -> conversionService.convert(tag,TagDTO.class )).collect(Collectors.toList());
+        List<TagDTO> tagDTOList = tagList.stream().map(v -> conversionService.convert(v, TagDTO.class)).collect(Collectors.toList());
+        return tagDTOList;
 //        return conversionService.convert(tagList, TagDTO.class);
     }
+
+    @Override
+    public List<TagDTO> findByUserIdAndTagName(String userId, String tagName) {
+        List<Tag> tagList = tagRepository.findByUserIdAndTagNameIgnoreCaseContains(userId,tagName);
+        List<TagDTO> tagDTOList = tagList.stream().map(tag -> conversionService.convert(tag, TagDTO.class)).collect(Collectors.toList());
+        return tagDTOList;
+    }
+
 
     @Override
     public void deleteById() {

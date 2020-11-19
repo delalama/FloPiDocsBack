@@ -17,4 +17,5 @@ public interface TagRepository extends MongoRepository<Tag, String> {
     public long count();
 
 
+    List<Tag> findByUserIdAndTagNameIgnoreCaseContains(String userId, String tagName);
 }

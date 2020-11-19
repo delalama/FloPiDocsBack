@@ -96,10 +96,9 @@ public class DocumentController {
     @GetMapping(value = "findByTag")
     public ResponseEntity<List<DocumentDTO>> findByUserIdAndTag(
             @RequestParam("key") String key,
-            @RequestParam("userId") String userId) {
-        //TODO ACTUAL, findByTag on docService
-        List<DocumentDTO> documentList = documentService.findByUserIdAndTag(userId, key);
-        return new ResponseEntity<>(documentList, HttpStatus.OK);
+            @RequestParam("userId") String userId) throws Exception {
+
+        return new ResponseEntity<>(documentService.findByUserIdAndTag(userId, key), HttpStatus.OK);
     }
 
     @DeleteMapping
