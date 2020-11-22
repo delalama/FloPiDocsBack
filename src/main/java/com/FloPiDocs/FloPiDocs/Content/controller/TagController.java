@@ -1,5 +1,6 @@
 package com.FloPiDocs.FloPiDocs.Content.controller;
 
+import com.FloPiDocs.FloPiDocs.Content.model.dto.TagDTO;
 import com.FloPiDocs.FloPiDocs.Content.model.persistence.Tag;
 import com.FloPiDocs.FloPiDocs.Content.service.TagService;
 import lombok.extern.slf4j.Slf4j;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RequestMapping("tag")
+@CrossOrigin
 @RestController
 @Slf4j
 public class TagController {
@@ -23,24 +25,28 @@ public class TagController {
     GET
     POST create/update data
     * */
-    @PostMapping(value = "/createTag", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> createTag(
-            @RequestParam("userId") String userId,
-            @RequestParam("tagName") String tagName,
-            @RequestParam("documentId") String documentId) {
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<TagDTO> createTag(
+            @RequestBody TagDTO tagDTO) {
         log.info("tag - createTag");
 
-        Tag tag = new Tag(userId, documentId, tagName);
-        tagService.save(tag);
-        return new ResponseEntity<>("Added Tag: " + tagName, HttpStatus.OK);
+        return new ResponseEntity<TagDTO>(tagService.save(tagDTO), HttpStatus.OK);
     }
 
-    @GetMapping("/getTagByDocumentId")
-    public ResponseEntity<List<Tag>> getTagByDocumentId(
+    @GetMapping
+    public ResponseEntity<List<TagDTO>> getTagByDocumentId(
             @RequestParam("documentId") String documentId) {
         log.info("tag - getTagByDocumentId");
-        List<Tag> tagList = tagService.findByDocumentId(documentId);
-        return new ResponseEntity<>(tagList, HttpStatus.OK);
+
+        return new ResponseEntity<>(tagService.findByDocumentId(documentId), HttpStatus.OK);
+    }
+
+    //TODO
+    @DeleteMapping
+    public ResponseEntity<TagDTO> deleteByTagId(
+            @RequestParam("tagId") String tagId) {
+        log.info("tag - deleteByTagId");
+        return new ResponseEntity<>(tagService.deleteByTagId(tagId), HttpStatus.OK);
     }
 
     //TODO

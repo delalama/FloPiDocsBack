@@ -12,7 +12,7 @@ public interface TagRepository extends MongoRepository<Tag, String> {
     public Tag findByTagId(String userId);
     public List<Tag> findByDocumentId(String documentId);
     public List<Tag> findByTagName(String tagName);
-    public void deleteByTagId();
+    public void deleteByTagId(String tagId);
     public void deleteByDocumentId(String documentId);
     public long count();
 

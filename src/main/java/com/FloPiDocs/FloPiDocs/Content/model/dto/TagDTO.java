@@ -13,9 +13,9 @@ public class TagDTO {
     private String tagName;
     private String documentId;
 
-    public TagDTO(String userId, String documentId, String tagName) {
+    public TagDTO(String userId, String tagName, String documentId) {
         this.userId = userId;
-        this.documentId = documentId;
         this.tagName = tagName;
+        this.documentId = documentId;
     }
 }

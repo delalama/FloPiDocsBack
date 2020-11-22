@@ -4,6 +4,7 @@ import com.FloPiDocs.FloPiDocs.Content.model.dto.TagDTO;
 import com.FloPiDocs.FloPiDocs.Content.model.persistence.Tag;
 import com.FloPiDocs.FloPiDocs.Content.repository.TagRepository;
 import com.FloPiDocs.FloPiDocs.Content.service.TagService;
+import com.FloPiDocs.FloPiDocs.Content.service.converter.TagDtoToTagConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
@@ -26,8 +27,8 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public List<Tag> findByDocumentId(String documentId) {
-        return tagRepository.findByDocumentId(documentId);
+    public List<TagDTO> findByDocumentId(String documentId) {
+        return tagRepository.findByDocumentId(documentId).stream().map( tag -> conversionService.convert(tag,TagDTO.class)).collect(Collectors.toList());
     }
 
     @Override
@@ -67,7 +68,17 @@ public class TagServiceImpl implements TagService {
     }
 
     @Override
-    public void save(Tag tag) {
-        tagRepository.save(tag);
+    public TagDTO save(TagDTO tagDTO) {
+
+        Tag tag = tagRepository.save(conversionService.convert(tagDTO, Tag.class));
+
+        return  conversionService.convert(tag, TagDTO.class);
+    }
+
+    @Override
+    public TagDTO deleteByTagId(String tagId) {
+        TagDTO tagToDelete = conversionService.convert(findByTagId(tagId), TagDTO.class);
+        tagRepository.deleteByTagId(tagId);
+        return tagToDelete;
     }
 }

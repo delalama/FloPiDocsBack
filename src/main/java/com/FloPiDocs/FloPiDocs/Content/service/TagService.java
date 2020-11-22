@@ -8,7 +8,7 @@ import java.util.List;
 @SuppressWarnings("ALL")
 public interface TagService {
     public abstract Tag findByTagId(String id);
-    public abstract List<Tag> findByDocumentId(String documentId);
+    public abstract List<TagDTO> findByDocumentId(String documentId);
 
     List<TagDTO> findByTagName(String tagName);
     List<TagDTO> findByUserIdAndTagName(String userId, String tagName);
@@ -17,6 +17,7 @@ public interface TagService {
     public abstract void deleteByDocumentId(String documentId);
     public abstract void deleteAll();
     public long count();
-    public abstract void save(Tag tag);
+    TagDTO save(TagDTO tagDTO);
 
+    TagDTO deleteByTagId(String tagId);
 }
