@@ -5,6 +5,7 @@ import com.FloPiDocs.FloPiDocs.Content.model.persistence.Document;
 import com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDTO;
 import com.FloPiDocs.FloPiDocs.Content.repository.DocumentRepository;
 import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
+import com.FloPiDocs.FloPiDocs.Content.service.FieldService;
 import com.FloPiDocs.FloPiDocs.Content.service.TagService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,12 +21,15 @@ import java.util.stream.Collectors;
 @Service
 public class DocumentServiceImpl implements DocumentService {
     ModelMapper modelMapper = new ModelMapper();
-    
+
     @Autowired
     DocumentRepository documentRepository;
 
     @Autowired
     TagService tagService;
+
+    @Autowired
+    FieldService fieldService;
 
     @Autowired
     private ConversionService conversionService;
@@ -41,7 +45,7 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public DocumentDTO findById(String documentId) throws Exception {
+    public DocumentDTO findById(String documentId) {
         Document optDocument = documentRepository.findById(documentId).orElseThrow();
         return modelMapper.map(optDocument, DocumentDTO.class);
     }
@@ -67,11 +71,12 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public DocumentDTO deleteById (DocumentDTO documentDTO) throws Exception {
+    public DocumentDTO deleteById(DocumentDTO documentDTO)  {
         DocumentDTO documentDTO1 = findById(documentDTO.getId());
-        documentRepository.deleteById( documentDTO1.getId() );
-
-        return conversionService.convert(documentDTO1, DocumentDTO.class) ;
+        documentRepository.deleteById(documentDTO1.getId());
+        tagService.deleteByDocumentId(documentDTO.getId());
+        fieldService.deleteByDocumentId(documentDTO.getId());
+        return conversionService.convert(documentDTO1, DocumentDTO.class);
     }
 
     @Override
@@ -122,18 +127,25 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public void update(DocumentDTO documentDTO) throws Exception {
-        Document document = conversionService.convert(documentDTO, Document.class );
+    public void update(DocumentDTO documentDTO)  {
+        Document document = conversionService.convert(documentDTO, Document.class);
         save(document);
     }
 
     @Override
-    public List<DocumentDTO> findByUserIdAndTag(String userId, String key) throws Exception {
-        List<TagDTO> tagDTO = tagService.findByUserIdAndTagName(userId,key);
+    public List<DocumentDTO> findByUserIdAndTag(String userId, String key) {
+        List<TagDTO> tagDTO = tagService.findByUserIdAndTagName(userId, key);
 
-        List<Document> documentList = tagDTO.stream().map(tag -> documentRepository.findById(tag.getDocumentId()).get()).collect(Collectors.toList());
+        List<Document> documentList = tagDTO.stream().map(tag -> {
+                    if (documentRepository.findById(tag.getDocumentId()).isPresent()) {
+                        return documentRepository.findById(tag.getDocumentId()).get();
+                    } else return new Document();
+                }
+        ).collect(Collectors.toList());
 
-        List<DocumentDTO> documentDTOList = documentList.stream().map( document -> conversionService.convert(document,DocumentDTO.class)).collect(Collectors.toList());
+//        List<Document> documentList = tagDTO.stream().map(tag -> documentRepository.findById(tag.getDocumentId()).get()).collect(Collectors.toList());
+
+        List<DocumentDTO> documentDTOList = documentList.stream().map(document -> conversionService.convert(document, DocumentDTO.class)).collect(Collectors.toList());
 
         return documentDTOList;
     }

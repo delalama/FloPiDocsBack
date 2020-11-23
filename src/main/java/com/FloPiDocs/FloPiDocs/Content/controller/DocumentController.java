@@ -105,7 +105,7 @@ public class DocumentController {
     public ResponseEntity<DocumentDTO> deleteDocumentById(
             @RequestBody DocumentDTO documentDTO) throws Exception {
         log.info("document - deleteDocumentById");
-        System.out.println(documentDTO);
+
         DocumentDTO documentDTO1 = documentService.deleteById(documentDTO);
 
         //TODO ACTUAL, ELIMINAR TODO EL CONTENIDO DEL DOCUMENTO BORRADO
