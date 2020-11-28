@@ -9,6 +9,6 @@ import java.util.List;
 @Repository
 public interface AccountOptionsRepository extends MongoRepository<AccountOptions, String> {
     List<AccountOptions> findByUserId(String userId);
-
+    void deleteByUserId(String id);
 
 }

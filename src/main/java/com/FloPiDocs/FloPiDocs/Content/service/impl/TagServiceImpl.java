@@ -4,7 +4,6 @@ import com.FloPiDocs.FloPiDocs.Content.model.dto.TagDTO;
 import com.FloPiDocs.FloPiDocs.Content.model.persistence.Tag;
 import com.FloPiDocs.FloPiDocs.Content.repository.TagRepository;
 import com.FloPiDocs.FloPiDocs.Content.service.TagService;
-import com.FloPiDocs.FloPiDocs.Content.service.converter.TagDtoToTagConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
@@ -34,22 +33,19 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<TagDTO> findByTagName(String tagName) {
         List<Tag> tagList = tagRepository.findByDocumentId(tagName);
-        List<TagDTO> tagDTOList = tagList.stream().map(v -> conversionService.convert(v, TagDTO.class)).collect(Collectors.toList());
-        return tagDTOList;
+        return tagList.stream().map(v -> conversionService.convert(v, TagDTO.class)).collect(Collectors.toList());
 //        return conversionService.convert(tagList, TagDTO.class);
     }
 
     @Override
     public List<TagDTO> findByUserIdAndTagName(String userId, String tagName) {
         List<Tag> tagList = tagRepository.findByUserIdAndTagNameIgnoreCaseContains(userId,tagName);
-        List<TagDTO> tagDTOList = tagList.stream().map(tag -> conversionService.convert(tag, TagDTO.class)).collect(Collectors.toList());
-        return tagDTOList;
+        return tagList.stream().map(tag -> conversionService.convert(tag, TagDTO.class)).collect(Collectors.toList());
     }
 
 
     @Override
     public void deleteById() {
-
     }
 
     @Override

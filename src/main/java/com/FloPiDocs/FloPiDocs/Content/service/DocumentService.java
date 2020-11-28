@@ -9,7 +9,9 @@ import java.util.List;
 @SuppressWarnings("UnnecessaryInterfaceModifier")
 public interface DocumentService {
     public abstract void save(Document document);
-    public abstract Document createDocument(Document document);
+    public abstract DocumentDTO createDocument(DocumentDTO documentDTO);
+
+
     public abstract List<Document> findByTitle(String title);
     public abstract DocumentDTO findById(String documentId) throws Exception;
     public abstract List<Document> findByPurpose(String purpose);
@@ -21,7 +23,8 @@ public interface DocumentService {
     public abstract void deleteByTitle (String title);
     public abstract void deleteAll ();
     public abstract void deleteAllByUserId(String userId);
-    public abstract List<Document>findAllByUserId(String userId);
+
+    abstract List<DocumentDTO> findAllByUserId(String userId);
     public abstract Long countByUserId(String userId);
     public abstract List<Document> findByUserIdAndTitle(String userId, String title);
     public abstract List<Document> findByUserIdAndPurpose(String userId, String title);

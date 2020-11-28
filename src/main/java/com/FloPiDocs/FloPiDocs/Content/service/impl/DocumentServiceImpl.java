@@ -14,13 +14,16 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 
 @SuppressWarnings("UnnecessaryLocalVariable")
 @Service
 public class DocumentServiceImpl implements DocumentService {
-    ModelMapper modelMapper = new ModelMapper();
+    final ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
     DocumentRepository documentRepository;
@@ -35,8 +38,13 @@ public class DocumentServiceImpl implements DocumentService {
     private ConversionService conversionService;
 
     @Override
-    public Document createDocument(Document document) {
-        return documentRepository.save(document);
+    public DocumentDTO createDocument(DocumentDTO documentDTO) {
+        DateTimeFormatter formmat1 = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH);
+        LocalDateTime ldt = LocalDateTime.now();
+        String formatedDate = formmat1.format(ldt);
+        documentDTO.setDate(formatedDate);
+        Document doc = documentRepository.save(conversionService.convert(documentDTO, Document.class));
+        return conversionService.convert(doc, DocumentDTO.class);
     }
 
     @Override
@@ -66,12 +74,18 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
+    public List<DocumentDTO> findAllByUserId(String userId) {
+        List<Document> documentList = documentRepository.findAllByUserId(userId);
+        return documentList.stream().map(doc -> conversionService.convert(doc, DocumentDTO.class)).collect(Collectors.toList());
+    }
+
+    @Override
     public boolean emailExists(String email) {
         return false;
     }
 
     @Override
-    public DocumentDTO deleteById(DocumentDTO documentDTO)  {
+    public DocumentDTO deleteById(DocumentDTO documentDTO) {
         DocumentDTO documentDTO1 = findById(documentDTO.getId());
         documentRepository.deleteById(documentDTO1.getId());
         tagService.deleteByDocumentId(documentDTO.getId());
@@ -101,12 +115,12 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public void deleteAllByUserId(String userId) {
-        documentRepository.deleteByUserId(userId);
-    }
-
-    @Override
-    public List<Document> findAllByUserId(String userId) {
-        return documentRepository.findAllByUserId(userId);
+        List<DocumentDTO> documentList = findAllByUserId(userId);
+        documentList.forEach( documentDTO -> {
+            fieldService.deleteByDocumentId(documentDTO.getId());
+            tagService.deleteByDocumentId(documentDTO.getId());}
+        );
+        deleteByUserId(userId);
     }
 
     @Override
@@ -127,7 +141,7 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public void update(DocumentDTO documentDTO)  {
+    public void update(DocumentDTO documentDTO) {
         Document document = conversionService.convert(documentDTO, Document.class);
         save(document);
     }

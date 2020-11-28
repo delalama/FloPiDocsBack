@@ -21,11 +21,10 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("unchecked")
 @Service
 public class UserServiceImpl implements UserService {
 
-    ModelMapper modelMapper = new ModelMapper();
+    final ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
     UserRepository userRepository;
@@ -76,20 +75,18 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO deleteUser(String id) {
-        return modelMapper.map(userRepository.deleteByUserId(id), UserDTO.class);
+    public void deleteUser(String id) {
+        documentService.deleteAllByUserId(id);
+        accountOptionsService.deleteByUserId(id);
+        userRepository.deleteById(id);
     }
 
-    // TODO
-//    delete during prod or work on it if I do a manage account
     @Override
     public List<UserDTO> findAll() {
-        List<UserDTO> userDTOList = userRepository.findAll()
+        return userRepository.findAll()
                 .stream()
                 .map(u -> modelMapper.map(u, UserDTO.class))
                 .collect(Collectors.toList());
-
-        return userDTOList;
     }
 
     @Override
@@ -112,4 +109,9 @@ public class UserServiceImpl implements UserService {
             throw new InvalidLoginException();
         }
     }
+    @Override
+    public void deleteAllContent() {
+        userRepository.findAll().forEach( user -> deleteUser(user.getUserId()));
+    }
 }
+

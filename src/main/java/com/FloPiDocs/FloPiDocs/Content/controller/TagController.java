@@ -1,7 +1,6 @@
 package com.FloPiDocs.FloPiDocs.Content.controller;
 
 import com.FloPiDocs.FloPiDocs.Content.model.dto.TagDTO;
-import com.FloPiDocs.FloPiDocs.Content.model.persistence.Tag;
 import com.FloPiDocs.FloPiDocs.Content.service.TagService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,15 +28,13 @@ public class TagController {
     public ResponseEntity<TagDTO> createTag(
             @RequestBody TagDTO tagDTO) {
         log.info("tag - createTag");
-
-        return new ResponseEntity<TagDTO>(tagService.save(tagDTO), HttpStatus.OK);
+        return new ResponseEntity<>(tagService.save(tagDTO), HttpStatus.OK);
     }
 
     @GetMapping
     public ResponseEntity<List<TagDTO>> getTagByDocumentId(
             @RequestParam("documentId") String documentId) {
         log.info("tag - getTagByDocumentId");
-
         return new ResponseEntity<>(tagService.findByDocumentId(documentId), HttpStatus.OK);
     }
 
@@ -56,6 +53,4 @@ public class TagController {
         tagService.deleteAll();
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-    //TODO ACTUAL INSERTAR VALORES REALES PARA LOS USERID
 }

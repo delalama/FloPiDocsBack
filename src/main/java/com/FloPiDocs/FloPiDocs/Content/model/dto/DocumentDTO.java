@@ -30,4 +30,11 @@ public class DocumentDTO {
         this.date = date;
     }
 
+    public DocumentDTO(String userId, String title, String purpose, String content) {
+        this.userId = userId;
+        this.title = title;
+        this.purpose = purpose;
+        this.content = content;
+    }
+
 }

@@ -6,6 +6,7 @@ import com.FloPiDocs.FloPiDocs.Content.repository.AccountOptionsRepository;
 import com.FloPiDocs.FloPiDocs.Content.service.AccountOptionsService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -13,11 +14,12 @@ public class AccountOptionsServiceImpl implements AccountOptionsService {
     @Autowired
     AccountOptionsRepository accountOptionsRepository;
 
-    ModelMapper modelMapper = new ModelMapper();
+    @Autowired
+    private ConversionService conversionService;
 
     @Override
     public void save(AccountOptionsDTO accountOptionsDTO) {
-        accountOptionsRepository.save(modelMapper.map(accountOptionsDTO,AccountOptions.class));
+        accountOptionsRepository.save(conversionService.convert(accountOptionsDTO,AccountOptions.class));
     }
 
     @Override
@@ -33,8 +35,12 @@ public class AccountOptionsServiceImpl implements AccountOptionsService {
     }
 
     @Override
+    public void deleteByUserId(String id) {
+        accountOptionsRepository.deleteByUserId(id);
+    }
+
+    @Override
     public AccountOptionsDTO findByUserId(String userId) {
-        AccountOptions accountOptions = accountOptionsRepository.findByUserId(userId).get(0);
-        return modelMapper.map(accountOptions,AccountOptionsDTO.class);
+        return conversionService.convert(accountOptionsRepository.findByUserId(userId).get(0),AccountOptionsDTO.class);
     }
 }

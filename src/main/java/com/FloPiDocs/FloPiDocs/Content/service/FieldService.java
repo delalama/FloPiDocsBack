@@ -9,7 +9,7 @@ import java.util.List;
 @SuppressWarnings("ALL")
 public interface FieldService {
     public abstract Field findById(String id);
-    public abstract List<Field> findByDocumentId(String documentId);
+    public abstract List<FieldDTO> findByDocumentId(String documentId);
     public abstract FieldDTO deleteById(String id);
     public abstract void deleteAll();
     public long count();
@@ -17,4 +17,6 @@ public interface FieldService {
     public abstract ResponseEntity save(FieldDTO field);
 
     public abstract void deleteByDocumentId(String id);
+
+    FieldDTO update(FieldDTO fieldDTO);
 }

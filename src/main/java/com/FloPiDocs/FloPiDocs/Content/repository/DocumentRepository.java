@@ -19,9 +19,7 @@ public interface DocumentRepository extends MongoRepository<Document, String> {
     void deleteByUserId(String userId);
     void deleteByTitle(String title);
     Long countByUserId(String userId);
-
     void deleteById(String id );
-
     // find by userId and title
     List<Document> findByUserIdAndTitleContainsIgnoreCase(String userId,String title);
     // find by userId and purpose

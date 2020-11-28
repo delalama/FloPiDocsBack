@@ -6,18 +6,23 @@ import com.FloPiDocs.FloPiDocs.Content.repository.FieldRepository;
 import com.FloPiDocs.FloPiDocs.Content.service.FieldService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class FieldServiceImpl implements FieldService {
     @Autowired
     FieldRepository fieldRepository;
 
-    ModelMapper modelMapper = new ModelMapper();
+    final ModelMapper modelMapper = new ModelMapper();
+
+    @Autowired
+    private ConversionService conversionService;
 
     @Override
     public Field findById(String id) {
@@ -25,13 +30,13 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public List<Field> findByDocumentId(String documentId) {
-        return fieldRepository.findByDocumentId(documentId);
+    public List<FieldDTO> findByDocumentId(String documentId) {
+        List<Field> fieldList = fieldRepository.findByDocumentId(documentId);
+        return fieldList.stream().map( field -> conversionService.convert(field, FieldDTO.class)).collect(Collectors.toList());
     }
 
     @Override
     public FieldDTO deleteById(String id) {
-        // GUILLE, esto debe ser una ñapa.....no? molaría que el deleteById(id) devolviese el que ha borrado.......debe existir algo como custom query....
         Field field = fieldRepository.findById(id).orElseThrow() ;
         FieldDTO fieldDTO = modelMapper.map(field, FieldDTO.class);
         fieldRepository.deleteById(id);
@@ -58,5 +63,16 @@ public class FieldServiceImpl implements FieldService {
     @Override
     public void deleteByDocumentId(String id) {
         fieldRepository.deleteByDocumentId(id);
+    }
+
+    @Override
+    public FieldDTO update(FieldDTO fieldDTO) {
+        Field field = fieldRepository.findById(fieldDTO.getId()).get();
+
+        field.setFieldName(fieldDTO.getFieldName());
+        field.setFieldValue(fieldDTO.getFieldValue());
+
+        Field field1 = fieldRepository.save(field);
+        return conversionService.convert(field1, FieldDTO.class);
     }
 }

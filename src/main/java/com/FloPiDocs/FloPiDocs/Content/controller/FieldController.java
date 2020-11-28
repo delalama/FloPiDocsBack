@@ -1,6 +1,5 @@
 package com.FloPiDocs.FloPiDocs.Content.controller;
 
-import com.FloPiDocs.FloPiDocs.Content.model.persistence.Field;
 import com.FloPiDocs.FloPiDocs.Content.model.dto.FieldDTO;
 import com.FloPiDocs.FloPiDocs.Content.service.FieldService;
 import lombok.extern.slf4j.Slf4j;
@@ -25,28 +24,32 @@ public class FieldController {
 
         ModelMapper modelMapper = new ModelMapper();
 
-        @RequestMapping(method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
+        @RequestMapping(method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
         public ResponseEntity createField(
                 @RequestBody FieldDTO fieldDTO) {
                 log.info("field - createField");
-
                 return fieldService.save(fieldDTO);
         }
 
+        @RequestMapping(method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
+        public ResponseEntity<FieldDTO> updateField(
+                @RequestBody FieldDTO fieldDTO) {
+                log.info("field - updateField");
+                return new ResponseEntity<FieldDTO>(fieldService.update(fieldDTO), HttpStatus.OK) ;
+        }
+
         @GetMapping("/getFieldByDocumentId")
-        public ResponseEntity<List<Field>> getFieldByDocumentId(
+        public ResponseEntity<List<FieldDTO>> getFieldByDocumentId(
                 @RequestParam("documentId") String documentId) {
                 log.info("Field - getFieldByDocumentId");
-                List<Field> fieldList = fieldService.findByDocumentId(documentId);
-                return new ResponseEntity<>(fieldList, HttpStatus.OK);
+                return new ResponseEntity<>(fieldService.findByDocumentId(documentId), HttpStatus.OK);
         }
 
         @PostMapping ("/deleteFieldById")
         public ResponseEntity<FieldDTO> deleteFieldById(
                 @RequestParam("fieldId") String fieldId) {
                 log.info("Field - deleteFieldById");
-                FieldDTO fieldDTO = fieldService.deleteById(fieldId);
-                return new ResponseEntity<>(fieldDTO, HttpStatus.OK);
+                return new ResponseEntity<>(fieldService.deleteById(fieldId), HttpStatus.OK);
         }
 
         @DeleteMapping("/deleteAll")

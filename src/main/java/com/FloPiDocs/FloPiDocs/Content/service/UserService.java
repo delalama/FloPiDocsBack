@@ -12,7 +12,7 @@ import java.util.Optional;
 public interface UserService {
     public abstract ResponseEntity createUser(UserDTO userDTO);
 
-    UserDTO deleteUser(String id);
+    void deleteUser(String id);
 
     public Optional<UserDTO> findByEmail(String s);
 
@@ -29,4 +29,6 @@ public interface UserService {
     public abstract void save(User user);
 
     UserDTO login(MailAndPass mailAndPass);
+
+    void deleteAllContent();
 }

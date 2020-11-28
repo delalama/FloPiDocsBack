@@ -9,8 +9,6 @@ import com.FloPiDocs.FloPiDocs.Content.service.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -18,11 +16,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
-import java.lang.reflect.Method;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.Locale;
 
 @CrossOrigin
 @RequestMapping("document")
@@ -40,46 +34,26 @@ public class DocumentController {
     ModelMapper modelMapper = new ModelMapper();
 
     // https://graphql.org/
-    @PostMapping(value = "/createDocument", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Document> createDocument(
-            @RequestParam("userId") String userId, @RequestParam("title") String title,
-            @RequestParam("purpose") String purpose,
-            @RequestParam("content") String content) {
+    @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<DocumentDTO> createDocument(
+            @RequestBody DocumentDTO documentDTO) {
         log.info("document - createDocument");
-        Document document = new Document();
-        //Guille , cómo responder lo adecuado a cada CASE?
-        if (userId.equals("")) {
-            return new ResponseEntity<>(document, HttpStatus.CONFLICT);
-        } else if (title.equals("")) {
-            return new ResponseEntity<>(document, HttpStatus.CONFLICT);
-        } else if (purpose.equals("")) {
-            return new ResponseEntity<>(document, HttpStatus.CONFLICT);
-        }
-        // formated date
-        DateTimeFormatter formmat1 = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH);
-        LocalDateTime ldt = LocalDateTime.now();
-        String formatedDate = formmat1.format(ldt);
-
-        document = new Document(userId, title, purpose, content, formatedDate);
-        document = documentService.createDocument(document);
-        return new ResponseEntity<>(document, HttpStatus.OK);
+        DocumentDTO documentDTO1 = documentService.createDocument(documentDTO);
+        return new ResponseEntity<>(documentDTO1, HttpStatus.OK);
     }
 
 
     @GetMapping("/getDocumentByTitle")
     public ResponseEntity<List<Document>> getDocumentByTitle(
             @RequestParam("title") String title) {
-
         log.info("document - getDocumentByTitle");
-        List<Document> documentList = documentService.findByTitle(title);
-        return new ResponseEntity<>(documentList, HttpStatus.OK);
+        return new ResponseEntity<>(documentService.findByTitle(title), HttpStatus.OK);
     }
 
     @GetMapping(value = "findByTitle")
     public ResponseEntity<List<Document>> findByUserIdAndTitle(
             @RequestParam("key") String key,
             @RequestParam("userId") String userId) {
-
         List<Document> documentList = documentService.findByUserIdAndTitle(userId, key);
         return new ResponseEntity<>(documentList, HttpStatus.OK);
     }
@@ -88,7 +62,6 @@ public class DocumentController {
     public ResponseEntity<List<Document>> findByUserIdAndPurpose(
             @RequestParam("key") String key,
             @RequestParam("userId") String userId) {
-
         List<Document> documentList = documentService.findByUserIdAndPurpose(userId, key);
         return new ResponseEntity<>(documentList, HttpStatus.OK);
     }
@@ -97,7 +70,6 @@ public class DocumentController {
     public ResponseEntity<List<DocumentDTO>> findByUserIdAndTag(
             @RequestParam("key") String key,
             @RequestParam("userId") String userId) throws Exception {
-
         return new ResponseEntity<>(documentService.findByUserIdAndTag(userId, key), HttpStatus.OK);
     }
 
@@ -105,13 +77,10 @@ public class DocumentController {
     public ResponseEntity<DocumentDTO> deleteDocumentById(
             @RequestBody DocumentDTO documentDTO) throws Exception {
         log.info("document - deleteDocumentById");
-
-        DocumentDTO documentDTO1 = documentService.deleteById(documentDTO);
-
-        //TODO ACTUAL, ELIMINAR TODO EL CONTENIDO DEL DOCUMENTO BORRADO
-        return new ResponseEntity<DocumentDTO>(documentDTO1, HttpStatus.OK);
+        return new ResponseEntity<>(documentService.deleteById(documentDTO), HttpStatus.OK);
     }
 
+//    TODO ACTUAL
     @GetMapping("/getDocumentByPurpose")
     public ResponseEntity<List<Document>> getDocumentByPurpose(
             @RequestParam("purpose") String purpose) {
@@ -122,12 +91,10 @@ public class DocumentController {
 
     //TODO page por parámetro
     @GetMapping
-    public ResponseEntity<List<Document>> getDocumentsByUserId(
+    public ResponseEntity<List<DocumentDTO>> getDocumentsByUserId(
             @RequestParam("userId") String userId) {
         log.info("document - getAllDocumentsByUserId");
-        List<Document> documentList = documentService.findByUserId(userId, PageRequest.of(0, 10, Sort.by(Sort.Direction.DESC, "id")));
-        System.out.println(documentList);
-        return new ResponseEntity<>(documentList, HttpStatus.OK);
+        return new ResponseEntity<>(documentService.findAllByUserId(userId), HttpStatus.OK);
     }
 
     //TODO
@@ -147,19 +114,6 @@ public class DocumentController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    //TODO
-    @DeleteMapping("/deleteAllByUserId")
-    public ResponseEntity<String> deleteAllByUserId(
-            @RequestParam("userId") String userId) {
-        log.info("document - deleteAllByUserId");
-        documentService.findAllByUserId(userId).forEach(doc -> {
-            tagService.deleteByDocumentId(doc.getId());
-            fieldService.deleteByDocumentId(doc.getId());
-            documentService.deleteByUserId(doc.getId());
-        });
-        return new ResponseEntity<>("Documents, tags and fields deleted", HttpStatus.OK);
-    }
-
     @DeleteMapping("/deleteByTitle")
     public ResponseEntity<String> deleteAllByTitle(
             @RequestParam("title") String title) {
@@ -168,16 +122,11 @@ public class DocumentController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    //TODO actual focus
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateDocumentContent(
             @RequestBody DocumentDTO documentDTO) throws Exception {
         log.info("document - updateDocument");
         documentService.update(documentDTO);
-
         return new ResponseEntity<>("Content updated: ", HttpStatus.OK);
     }
-
 }
-
-// TODO ACTUAL, onDelete document delete tags and fields

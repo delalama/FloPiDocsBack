@@ -11,7 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin
-@RequestMapping("accountOptions")
+@RequestMapping("accountOption")
 @Controller
 @Slf4j
 public class AccountOptionsController {
@@ -19,25 +19,11 @@ public class AccountOptionsController {
         private AccountOptionsService accountOptionsService;
 
 
-
-        @GetMapping("/get")
-        public @ResponseBody ResponseEntity<String> get() {
-                return new ResponseEntity<>("GET Response", HttpStatus.OK);
-        }
-
-        @GetMapping("/get/{id}")
-        public @ResponseBody ResponseEntity<String>
-        getById(@PathVariable String id) {
-                return new ResponseEntity<>("GET Response : "
-                        + id, HttpStatus.OK);
-        }
-
         @PostMapping(value = "/createByUserId" ,produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity<String> createInitOptions(
                 @RequestParam("userId") String userId) {
                 log.info("AccountOptions- created initial options");
-                AccountOptionsDTO accountOptionsDTO = new AccountOptionsDTO(userId);
-                accountOptionsService.save(accountOptionsDTO);
+                accountOptionsService.save(new AccountOptionsDTO(userId));
                 return new ResponseEntity<>(HttpStatus.OK);
         }
 
@@ -50,7 +36,7 @@ public class AccountOptionsController {
                 return new ResponseEntity<>(HttpStatus.OK);
         }
 
-        @GetMapping(value = "/getAccountOptions" ,produces = MediaType.APPLICATION_JSON_VALUE)
+        @GetMapping
         public ResponseEntity<AccountOptionsDTO> getAccountOptions(
                 @RequestParam("userId") String userId) {
                 log.info("AccountOptions- getAccountOptions by ID");
@@ -58,9 +44,10 @@ public class AccountOptionsController {
         }
 
         @DeleteMapping(value = "/all" ,produces = MediaType.APPLICATION_JSON_VALUE)
-        public void deleteAllAccountOptions() {
+        public ResponseEntity<String> deleteAllAccountOptions() {
                 log.info("AccountOptions- Delete All");
                 accountOptionsService.deleteAll();
+                return new ResponseEntity<>(HttpStatus.OK);
         }
 
 }
