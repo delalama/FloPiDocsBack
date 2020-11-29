@@ -9,6 +9,7 @@ import com.FloPiDocs.FloPiDocs.Content.repository.UserRepository;
 import com.FloPiDocs.FloPiDocs.Content.service.AccountOptionsService;
 import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
+import com.FloPiDocs.FloPiDocs.Content.service.encryptor.Encryptor;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +17,6 @@ import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -24,6 +24,7 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
 
+    //TODO ACTUAL, APRENDER A USAR JASYPT
     final ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
@@ -33,17 +34,23 @@ public class UserServiceImpl implements UserService {
     private DocumentService documentService;
 
     @Autowired
+    private Encryptor encryptor;
+
+    final String password = "Test!email30#password";
+
+    @Autowired
     private AccountOptionsService accountOptionsService;
 
     @Autowired
     private ConversionService conversionService;
 
     @Override
-    public ResponseEntity createUser(UserDTO userDTO) {
+    public ResponseEntity createUser(UserDTO userDTO) throws Exception {
+        userDTO.setPassword(encryptor.encrypt(userDTO.getPassword()));
         // Create user
-        User userCreated = userRepository.save(modelMapper.map(userDTO, User.class));
+        User userCreated = userRepository.save(conversionService.convert(userDTO, User.class));
 
-        UserDTO userCreatedDto = modelMapper.map(userCreated, UserDTO.class);
+        UserDTO userCreatedDto = conversionService.convert(userCreated, UserDTO.class);
 
         // Create new user AccountOptions
         accountOptionsService.save(new AccountOptionsDTO(userCreatedDto.getUserId()));
@@ -85,7 +92,7 @@ public class UserServiceImpl implements UserService {
     public List<UserDTO> findAll() {
         return userRepository.findAll()
                 .stream()
-                .map(u -> modelMapper.map(u, UserDTO.class))
+                .map(u -> conversionService.convert(u, UserDTO.class))
                 .collect(Collectors.toList());
     }
 
@@ -100,7 +107,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO login(MailAndPass mailAndPass) {
+    public UserDTO login(MailAndPass mailAndPass) throws Exception {
+        mailAndPass.setPassword(encryptor.encrypt(mailAndPass.getPassword()));
+
         Optional<UserDTO> user = findByEmail(mailAndPass.getEmail());
 
         if (user.isPresent() && StringUtils.equals(user.get().getPassword(), mailAndPass.getPassword())) {

@@ -29,7 +29,7 @@ public class UserController {
     @PostMapping("login")
     @ResponseBody
     public UserDTO login(
-            @RequestBody MailAndPass mailAndPass) {
+            @RequestBody MailAndPass mailAndPass) throws Exception {
         log.info("user - login");
         return userService.login(mailAndPass);
     }
@@ -38,7 +38,7 @@ public class UserController {
     @RequestMapping(method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
     @JsonIgnoreProperties(value = {"userId", "token"})
     public ResponseEntity createUser(
-            @RequestBody UserDTO userDTO) {
+            @RequestBody UserDTO userDTO) throws Exception {
         log.info("user - createUser");
         return userService.createUser(userDTO);
     }

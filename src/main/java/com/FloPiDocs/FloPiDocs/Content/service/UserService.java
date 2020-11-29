@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @SuppressWarnings("ALL")
 public interface UserService {
-    public abstract ResponseEntity createUser(UserDTO userDTO);
+    public abstract ResponseEntity createUser(UserDTO userDTO) throws Exception;
 
     void deleteUser(String id);
 
@@ -28,7 +28,7 @@ public interface UserService {
 
     public abstract void save(User user);
 
-    UserDTO login(MailAndPass mailAndPass);
+    UserDTO login(MailAndPass mailAndPass) throws Exception;
 
     void deleteAllContent();
 }
