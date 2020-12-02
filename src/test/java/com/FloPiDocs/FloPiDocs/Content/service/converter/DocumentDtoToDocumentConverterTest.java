@@ -8,21 +8,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DocumentDtoToDocumentConverterTest {
     public static final String ID = "id";
-    public static final String CONTENT = "content";
+    public static final String TITLE = "content";
 
     @Test
     void convertShouldConvert() {
         DocumentDTO documentDTO = new DocumentDTO();
 
         documentDTO.setId(ID);
-        documentDTO.setContent(CONTENT);
+        documentDTO.setTitle(TITLE);
 
         DocumentDtoToDocumentConverter converter = new DocumentDtoToDocumentConverter();
 
         Document document = converter.convert(documentDTO);
 
         assertEquals(ID, document.getId());
-        assertEquals(CONTENT, document.getContent());
+        assertEquals(TITLE, document.getTitle());
 
     }
 }

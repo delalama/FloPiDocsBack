@@ -6,9 +6,12 @@ import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import com.FloPiDocs.FloPiDocs.Content.service.FieldService;
 import com.FloPiDocs.FloPiDocs.Content.service.TagService;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
+import com.itextpdf.text.DocumentException;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 @CrossOrigin
@@ -56,6 +60,20 @@ public class DocumentController {
             @RequestParam("userId") String userId) {
         List<Document> documentList = documentService.findByUserIdAndTitle(userId, key);
         return new ResponseEntity<>(documentList, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "exportDocument")
+    public ResponseEntity<InputStreamResource> exportDocument(
+            @RequestParam("documentId") String documentId) throws FileNotFoundException, DocumentException {
+
+        var headers = new HttpHeaders();
+        headers.add("Content-Disposition", "inline; filename=FloPiDoc.pdf");
+
+        return  ResponseEntity
+                .ok()
+                .headers(headers)
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(new InputStreamResource(documentService.exportDocument(documentId)));
     }
 
     @GetMapping(value = "findByPurpose")

@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
+//GUILLE , esto se puede hacer mejor?
 @Component
 public class Encryptor {
     @Value("${encryptor.key}")

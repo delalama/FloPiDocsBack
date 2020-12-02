@@ -15,15 +15,13 @@ public class Document {
     private String userId;
     private String title;
     private String purpose;
-    private String content;
     private String date;
 
 
-    public Document(String userId, String title, String purpose, String content, String date) {
+    public Document(String userId, String title, String purpose, String date) {
         this.userId = userId;
         this.title = title;
         this.purpose = purpose;
-        this.content = content;
         this.date = date;
     }
 

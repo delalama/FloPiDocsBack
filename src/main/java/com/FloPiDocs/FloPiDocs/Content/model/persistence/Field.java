@@ -16,10 +16,12 @@ public class Field {
     private String documentId;
     private String fieldName;
     private String fieldValue;
+    private String fieldPicture;
 
-    public Field( String documentId, String fieldName, String fieldValue) {
+    public Field( String documentId, String fieldName, String fieldValue, String fieldPicture) {
         this.documentId = documentId;
         this.fieldName = fieldName;
         this.fieldValue = fieldValue;
+        this.fieldPicture = fieldPicture;
     }
 }

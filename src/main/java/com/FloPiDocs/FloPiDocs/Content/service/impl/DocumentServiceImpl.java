@@ -1,29 +1,38 @@
 package com.FloPiDocs.FloPiDocs.Content.service.impl;
 
+import com.FloPiDocs.FloPiDocs.Content.model.dto.FieldDTO;
 import com.FloPiDocs.FloPiDocs.Content.model.dto.TagDTO;
+import com.FloPiDocs.FloPiDocs.Content.model.dto.UserDTO;
 import com.FloPiDocs.FloPiDocs.Content.model.persistence.Document;
 import com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDTO;
 import com.FloPiDocs.FloPiDocs.Content.repository.DocumentRepository;
 import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import com.FloPiDocs.FloPiDocs.Content.service.FieldService;
 import com.FloPiDocs.FloPiDocs.Content.service.TagService;
-import org.modelmapper.ModelMapper;
+import com.FloPiDocs.FloPiDocs.Content.service.UserService;
+import com.itextpdf.text.*;
+
+import com.itextpdf.text.Font;
+import com.itextpdf.text.pdf.PdfPCell;
+import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.text.pdf.draw.DottedLineSeparator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import com.itextpdf.text.pdf.PdfPTable;
 
-
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
-@SuppressWarnings("UnnecessaryLocalVariable")
 @Service
 public class DocumentServiceImpl implements DocumentService {
-    final ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
     DocumentRepository documentRepository;
@@ -33,6 +42,9 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Autowired
     FieldService fieldService;
+
+    @Autowired
+    UserService userService;
 
     @Autowired
     private ConversionService conversionService;
@@ -48,6 +60,155 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
+    public ByteArrayInputStream exportDocument(String documentId) throws FileNotFoundException, DocumentException {
+        Document document = documentRepository.findById(documentId).orElseThrow();
+        List<FieldDTO> fieldList = fieldService.findByDocumentId(documentId);
+
+        UserDTO userDTO = conversionService.convert(userService.findByUserId(document.getUserId()), UserDTO.class);
+        String userName = userDTO.getFirstName();
+        String lastName = userDTO.getLastName();
+        String email = userDTO.getEmail();
+
+        //SETTINGS
+        Font headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        com.itextpdf.text.Document pdf = new com.itextpdf.text.Document();
+        PdfWriter.getInstance(pdf, out);
+        pdf.open();
+
+        //DOCUMENT TOP
+        String documentInit = "OFFICIAL FloPiDoc";
+        String documentPurpose = "ESTE PROGRAMA ESTÁ CREADO CON FINES DIDÁCTICOS Y NO ESTÁ PERMITIDA SU MONETIZACIÓN, AUNQUE SI SE CONSIGUE USTED ES UN CAPO";
+
+        pdf.add(new Paragraph(documentInit));
+        pdf.add(new Paragraph(documentPurpose));
+        pdf.add(new Paragraph("                                          "));
+
+        //DIVIDER
+        DottedLineSeparator dottedline = new DottedLineSeparator();
+        dottedline.setOffset(-2);
+        dottedline.setGap(2f);
+        pdf.add(dottedline);
+        pdf.add(new Paragraph("                                          "));
+
+        //USER DATA
+        String userData = "USER: " + userName + lastName + " , EMAIL: " + email;
+        PdfPTable userDatatable = new PdfPTable(2);
+        userDatatable.setWidthPercentage(60);
+        userDatatable.setWidths(new int[]{3, 3});
+
+
+        PdfPCell hcell;
+        hcell = new PdfPCell(new Phrase("USER NAME", headFont));
+        hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        userDatatable.addCell(hcell);
+
+        hcell = new PdfPCell(new Phrase("EMAIL", headFont));
+        hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        userDatatable.addCell(hcell);
+
+        hcell = new PdfPCell(new Phrase(userName + " " + lastName));
+        hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        userDatatable.addCell(hcell);
+
+        hcell = new PdfPCell(new Phrase(email));
+        hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        userDatatable.addCell(hcell);
+
+        pdf.add(userDatatable);
+
+        pdf.add(new Paragraph("                                          "));
+
+        //DOCUMENT DATA
+        PdfPTable table = new PdfPTable(3);
+        table.setWidthPercentage(60);
+        table.setWidths(new int[]{3, 3, 3});
+
+        hcell = new PdfPCell(new Phrase("DOC TITLE", headFont));
+        hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(hcell);
+
+        hcell = new PdfPCell(new Phrase("DOC PURPOSE", headFont));
+        hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(hcell);
+
+        hcell = new PdfPCell(new Phrase("DATE", headFont));
+        hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(hcell);
+
+        hcell = new PdfPCell(new Phrase(document.getTitle()));
+        hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(hcell);
+
+        hcell = new PdfPCell(new Phrase(document.getPurpose()));
+        hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(hcell);
+
+        hcell = new PdfPCell(new Phrase(document.getDate()));
+        hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(hcell);
+
+        pdf.add(table);
+        pdf.add(new Paragraph("                                          "));
+
+//      FieldList
+        PdfPTable fieldDatatable = new PdfPTable(2);
+        fieldDatatable.setWidthPercentage(95);
+        fieldDatatable.setWidths(new int[]{2, 10});
+
+        hcell = new PdfPCell(new Phrase("FIELD NAME", headFont));
+        hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        fieldDatatable.addCell(hcell);
+
+        hcell = new PdfPCell(new Phrase("FIELD VALUE", headFont));
+        hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
+        fieldDatatable.addCell(hcell);
+
+
+        fieldList.forEach(field -> {
+            PdfPCell hcell1;
+            hcell1 = new PdfPCell(new Phrase(field.getFieldName()));
+            hcell1.setHorizontalAlignment(Element.ALIGN_CENTER);
+            fieldDatatable.addCell(hcell1);
+
+            if (field.getFieldValue() != null) {
+                hcell1 = new PdfPCell(new Phrase(field.getFieldValue()));
+                hcell1.setHorizontalAlignment(Element.ALIGN_CENTER);
+                fieldDatatable.addCell(hcell1);
+            } else {
+                //PICTURE
+                String base64Image = field.getFieldPicture().split(",")[1];
+                byte[] imageBytes = javax.xml.bind.DatatypeConverter.parseBase64Binary(base64Image);
+                BufferedImage img = null;
+                try {
+                    img = ImageIO.read(new ByteArrayInputStream(imageBytes));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    Image imageText = Image.getInstance(imageBytes);
+                    hcell1 = new PdfPCell(imageText, true);
+                    hcell1.setHorizontalAlignment(Element.ALIGN_CENTER);
+                    fieldDatatable.addCell(hcell1);
+                } catch (BadElementException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        pdf.add(fieldDatatable);
+//        pdf.add(new Paragraph("                                          "));
+
+        pdf.close();
+
+        return new ByteArrayInputStream(out.toByteArray());
+    }
+
+
+    @Override
     public List<Document> findByTitle(String title) {
         return documentRepository.findByTitle(title);
     }
@@ -55,7 +216,7 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public DocumentDTO findById(String documentId) {
         Document optDocument = documentRepository.findById(documentId).orElseThrow();
-        return modelMapper.map(optDocument, DocumentDTO.class);
+        return conversionService.convert(optDocument, DocumentDTO.class);
     }
 
     @Override
@@ -116,9 +277,10 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public void deleteAllByUserId(String userId) {
         List<DocumentDTO> documentList = findAllByUserId(userId);
-        documentList.forEach( documentDTO -> {
-            fieldService.deleteByDocumentId(documentDTO.getId());
-            tagService.deleteByDocumentId(documentDTO.getId());}
+        documentList.forEach(documentDTO -> {
+                    fieldService.deleteByDocumentId(documentDTO.getId());
+                    tagService.deleteByDocumentId(documentDTO.getId());
+                }
         );
         deleteByUserId(userId);
     }
@@ -163,5 +325,6 @@ public class DocumentServiceImpl implements DocumentService {
 
         return documentDTOList;
     }
+
 
 }

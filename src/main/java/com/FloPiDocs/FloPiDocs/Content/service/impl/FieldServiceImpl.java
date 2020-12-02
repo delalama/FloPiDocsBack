@@ -38,7 +38,7 @@ public class FieldServiceImpl implements FieldService {
     @Override
     public FieldDTO deleteById(String id) {
         Field field = fieldRepository.findById(id).orElseThrow() ;
-        FieldDTO fieldDTO = modelMapper.map(field, FieldDTO.class);
+        FieldDTO fieldDTO = conversionService.convert(field, FieldDTO.class);
         fieldRepository.deleteById(id);
         return fieldDTO;
     }

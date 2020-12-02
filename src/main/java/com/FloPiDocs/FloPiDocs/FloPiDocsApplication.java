@@ -1,11 +1,5 @@
 package com.FloPiDocs.FloPiDocs;
 
-import com.ulisesbocchio.jasyptspringboot.annotation.EncryptablePropertySource;
-import org.jasypt.encryption.StringEncryptor;
-import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
-import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
-import org.jasypt.util.text.AES256TextEncryptor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

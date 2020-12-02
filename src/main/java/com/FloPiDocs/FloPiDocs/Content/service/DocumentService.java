@@ -2,8 +2,11 @@ package com.FloPiDocs.FloPiDocs.Content.service;
 
 import com.FloPiDocs.FloPiDocs.Content.model.persistence.Document;
 import com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDTO;
+import com.itextpdf.text.DocumentException;
 import org.springframework.data.domain.Pageable;
 
+import java.io.ByteArrayInputStream;
+import java.io.FileNotFoundException;
 import java.util.List;
 
 @SuppressWarnings("UnnecessaryInterfaceModifier")
@@ -11,6 +14,7 @@ public interface DocumentService {
     public abstract void save(Document document);
     public abstract DocumentDTO createDocument(DocumentDTO documentDTO);
 
+    public ByteArrayInputStream exportDocument(String documentId) throws FileNotFoundException, DocumentException;
 
     public abstract List<Document> findByTitle(String title);
     public abstract DocumentDTO findById(String documentId) throws Exception;
