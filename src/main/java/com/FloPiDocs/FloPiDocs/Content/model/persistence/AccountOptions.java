@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
 
+/**
+ * The type Account options.
+ */
 @AllArgsConstructor
 @Getter
 @Setter

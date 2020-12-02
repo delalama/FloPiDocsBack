@@ -1,6 +1,5 @@
 package com.FloPiDocs.FloPiDocs.Content.controller;
 
-import com.FloPiDocs.FloPiDocs.Content.controller.utils.MailAndPass;
 import com.FloPiDocs.FloPiDocs.Content.model.dto.UserDTO;
 import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
@@ -9,7 +8,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 
@@ -34,10 +32,6 @@ class UserControllerTest {
 
         ResponseEntity<String> deleteAllContent = controller.deleteAllContent();
         assertEquals(userList.getStatusCode().value(), 200);
-
-//        UserDTO userDTO = Mockito.mock(UserDTO.class);
-//        ResponseEntity responseEntity = controller.createUser(userDTO);
-//        assertFalse(userDTO == null);
     }
 
 }

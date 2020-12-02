@@ -1,6 +1,5 @@
 package com.FloPiDocs.FloPiDocs.Content.controller;
 
-import com.FloPiDocs.FloPiDocs.Content.model.persistence.Document;
 import com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDTO;
 import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import com.FloPiDocs.FloPiDocs.Content.service.FieldService;
@@ -8,7 +7,6 @@ import com.FloPiDocs.FloPiDocs.Content.service.TagService;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
 import com.itextpdf.text.DocumentException;
 import lombok.extern.slf4j.Slf4j;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpHeaders;
@@ -22,6 +20,9 @@ import org.springframework.web.bind.annotation.*;
 import java.io.FileNotFoundException;
 import java.util.List;
 
+/**
+ * The type Document controller.
+ */
 @CrossOrigin
 @RequestMapping("document")
 @Controller
@@ -38,8 +39,9 @@ public class DocumentController {
 
     /**
      * Create Document
-     * @param documentDTO
-     * @return documentDto
+     *
+     * @param documentDTO the document dto
+     * @return documentDto response entity
      */
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DocumentDTO> createDocument(
@@ -51,10 +53,11 @@ public class DocumentController {
 
     /**
      * Export Document
-     * @param documentId
-     * @return
-     * @throws FileNotFoundException
-     * @throws DocumentException
+     *
+     * @param documentId the document id
+     * @return response entity
+     * @throws FileNotFoundException the file not found exception
+     * @throws DocumentException     the document exception
      */
     @GetMapping(value = "exportDocument")
     public ResponseEntity<InputStreamResource> exportDocument(
@@ -72,9 +75,10 @@ public class DocumentController {
 
     /**
      * Find documents by title
-     * @param title Title of document
-     * @param userId
-     * @return List<DocumentDto>
+     *
+     * @param title  Title of document
+     * @param userId the user id
+     * @return List<DocumentDto> response entity
      */
     @GetMapping(value = "findByTitle")
     public ResponseEntity<List<DocumentDTO>> findByUserIdAndTitle(
@@ -86,9 +90,10 @@ public class DocumentController {
 
     /**
      * Find documents By Purpose
-     * @param key
-     * @param userId
-     * @return
+     *
+     * @param key    the key
+     * @param userId the user id
+     * @return response entity
      */
     @GetMapping(value = "findByPurpose")
     public ResponseEntity<List<DocumentDTO>> findByUserIdAndPurpose(
@@ -100,10 +105,11 @@ public class DocumentController {
 
     /**
      * Find documents By Tag
-     * @param key
-     * @param userId
-     * @return List<DocumentDto>
-     * @throws Exception
+     *
+     * @param key    the key
+     * @param userId the user id
+     * @return List<DocumentDto> response entity
+     * @throws Exception the exception
      */
     @GetMapping(value = "findByTag")
     public ResponseEntity<List<DocumentDTO>> findByUserIdAndTag(
@@ -114,9 +120,10 @@ public class DocumentController {
 
     /**
      * Delete document by documentID
-     * @param documentDTO
-     * @return
-     * @throws Exception
+     *
+     * @param documentDTO the document dto
+     * @return response entity
+     * @throws Exception the exception
      */
     @DeleteMapping
     public ResponseEntity<DocumentDTO> deleteDocumentById(
@@ -127,8 +134,9 @@ public class DocumentController {
 
     /**
      * Get documents by purpose
-     * @param purpose
-     * @return List<DocumentDto>
+     *
+     * @param purpose the purpose
+     * @return List<DocumentDto> document by purpose
      */
     @GetMapping("/getDocumentByPurpose")
     public ResponseEntity<List<DocumentDTO>> getDocumentByPurpose(
@@ -140,9 +148,10 @@ public class DocumentController {
 
     /**
      * Update document data
-     * @param documentDTO
+     *
+     * @param documentDTO the document dto
      * @return updated documentDto
-     * @throws Exception
+     * @throws Exception the exception
      */
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateDocumentContent(
@@ -154,8 +163,9 @@ public class DocumentController {
 
     /**
      * Get Document By Title
-     * @param title
-     * @return
+     *
+     * @param title the title
+     * @return document by title
      */
     @GetMapping("/getDocumentByTitle")
     public ResponseEntity<List<DocumentDTO>> getDocumentByTitle(
@@ -166,8 +176,9 @@ public class DocumentController {
 
     /**
      * Get documents by userId
-     * @param userId
-     * @return List<DocumentDto>
+     *
+     * @param userId the user id
+     * @return List<DocumentDto> documents by user id
      */
     @GetMapping
     public ResponseEntity<List<DocumentDTO>> getDocumentsByUserId(
@@ -178,7 +189,8 @@ public class DocumentController {
 
     /**
      * Manager method
-     * @return
+     *
+     * @return response entity
      */
     @DeleteMapping("/deleteAll")
     public ResponseEntity<String> deleteAll() {
@@ -189,8 +201,9 @@ public class DocumentController {
 
     /**
      * Not used
-     * @param userId
-     * @return
+     *
+     * @param userId the user id
+     * @return response entity
      */
     @GetMapping("/countByUserId")
     public ResponseEntity<Long> countByUserId(
@@ -202,8 +215,9 @@ public class DocumentController {
 
     /**
      * Not used
-     * @param title
-     * @return
+     *
+     * @param title the title
+     * @return response entity
      */
     @DeleteMapping("/deleteByTitle")
     public ResponseEntity<String> deleteAllByTitle(

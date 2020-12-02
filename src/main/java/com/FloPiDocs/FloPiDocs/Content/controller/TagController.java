@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * The type Tag controller.
+ */
 @RequestMapping("tag")
 @CrossOrigin
 @RestController
@@ -22,8 +25,9 @@ public class TagController {
 
     /**
      * Create tag
-     * @param tagDTO
-     * @return tagDto
+     *
+     * @param tagDTO the tag dto
+     * @return tagDto response entity
      */
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TagDTO> createTag(
@@ -34,8 +38,9 @@ public class TagController {
 
     /**
      * Get tags by documentId
-     * @param documentId
-     * @return List<TagDto>
+     *
+     * @param documentId the document id
+     * @return List<TagDto> tag by document id
      */
     @GetMapping
     public ResponseEntity<List<TagDTO>> getTagByDocumentId(
@@ -46,8 +51,9 @@ public class TagController {
 
     /**
      * Delete Tag by tagId
-     * @param tagId
-     * @return tagDto
+     *
+     * @param tagId the tag id
+     * @return tagDto response entity
      */
     @DeleteMapping
     public ResponseEntity<TagDTO> deleteByTagId(
@@ -58,7 +64,8 @@ public class TagController {
 
     /**
      * Manager method
-     * @return
+     *
+     * @return response entity
      */
     @DeleteMapping("/deleteAll")
     public ResponseEntity<String> deleteAll() {

@@ -6,6 +6,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
+/**
+ * The type Account options dto.
+ */
 @AllArgsConstructor
 @Getter
 @Setter
@@ -14,6 +17,11 @@ public class AccountOptionsDTO {
     private String userId;
     private boolean safeDelete = true;
 
+    /**
+     * Instantiates a new Account options dto.
+     *
+     * @param userId the user id
+     */
     public AccountOptionsDTO(String userId) {
         this.userId = userId;
     }

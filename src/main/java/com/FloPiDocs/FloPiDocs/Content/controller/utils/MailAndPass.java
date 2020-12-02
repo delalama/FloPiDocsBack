@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * The type Mail and pass.
+ */
 @Getter
 @Setter
 @AllArgsConstructor

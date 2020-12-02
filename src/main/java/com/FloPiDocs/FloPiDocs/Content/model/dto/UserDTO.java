@@ -2,6 +2,9 @@ package com.FloPiDocs.FloPiDocs.Content.model.dto;
 
 import lombok.*;
 
+/**
+ * The type User dto.
+ */
 @AllArgsConstructor
 @Getter
 @Setter
@@ -16,7 +19,14 @@ public class UserDTO {
     private String token;
 
 
-
+    /**
+     * Instantiates a new User dto.
+     *
+     * @param firstName the first name
+     * @param lastName  the last name
+     * @param email     the email
+     * @param password  the password
+     */
     public UserDTO(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;

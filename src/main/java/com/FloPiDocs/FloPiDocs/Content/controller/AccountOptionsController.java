@@ -10,6 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+/**
+ * The type Account options controller.
+ */
 @CrossOrigin
 @RequestMapping("accountOption")
 @Controller
@@ -20,9 +23,11 @@ public class AccountOptionsController {
 
 
         /**
-        * Returns the options of the user account
-        * @Param userId
-        * @return requested account options
+         * Returns the options of the user account
+         *
+         * @param userId the user id
+         * @return requested account options
+         * @Param userId
          */
         @GetMapping
         public ResponseEntity<AccountOptionsDTO> getAccountOptions(
@@ -33,8 +38,9 @@ public class AccountOptionsController {
 
         /**
          * Create new user
-         * @param userId
-         * @return httpStatus
+         *
+         * @param userId the user id
+         * @return httpStatus response entity
          */
         @PostMapping(value = "/createByUserId" ,produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity<String> createInitOptions(
@@ -46,9 +52,10 @@ public class AccountOptionsController {
 
         /**
          * Change safe delete option
-         * @param userId
-         * @param safeDelete
-         * @return HttpStatus
+         *
+         * @param userId     the user id
+         * @param safeDelete the safe delete
+         * @return HttpStatus response entity
          */
         @PostMapping(value = "/changeSafeDelete" ,produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity<String> changeSafeDelete(
@@ -61,7 +68,8 @@ public class AccountOptionsController {
 
         /**
          * Manager method
-         * @return
+         *
+         * @return response entity
          */
         @DeleteMapping(value = "/all" ,produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity<String> deleteAllAccountOptions() {

@@ -4,6 +4,9 @@ import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 
+/**
+ * The type Document.
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -18,6 +21,14 @@ public class Document {
     private String date;
 
 
+    /**
+     * Instantiates a new Document.
+     *
+     * @param userId  the user id
+     * @param title   the title
+     * @param purpose the purpose
+     * @param date    the date
+     */
     public Document(String userId, String title, String purpose, String date) {
         this.userId = userId;
         this.title = title;

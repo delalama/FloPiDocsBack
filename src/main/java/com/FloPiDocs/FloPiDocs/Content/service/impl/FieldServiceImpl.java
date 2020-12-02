@@ -7,8 +7,6 @@ import com.FloPiDocs.FloPiDocs.Content.service.FieldService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -18,8 +16,6 @@ import java.util.stream.Collectors;
 public class FieldServiceImpl implements FieldService {
     @Autowired
     FieldRepository fieldRepository;
-
-    final ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
     private ConversionService conversionService;
@@ -55,8 +51,8 @@ public class FieldServiceImpl implements FieldService {
 
     @Override
     public FieldDTO save (FieldDTO fieldDTO) {
-        Field field = modelMapper.map(fieldDTO, Field.class);
-        FieldDTO savedFieldDTO = modelMapper.map(fieldRepository.save(field), FieldDTO.class);
+        Field field = conversionService.convert(fieldDTO, Field.class);
+        FieldDTO savedFieldDTO = conversionService.convert(fieldRepository.save(field), FieldDTO.class);
         return savedFieldDTO;
     }
 

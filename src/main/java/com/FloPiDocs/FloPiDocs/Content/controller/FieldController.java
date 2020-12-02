@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * The type Field controller.
+ */
 @CrossOrigin
 @RequestMapping("field")
 @Controller
@@ -22,32 +25,35 @@ public class FieldController {
 
         /**
          * Create field
-         * @param fieldDTO
+         *
+         * @param fieldDTO the field dto
          * @return created Field
          */
         @RequestMapping(method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
         public ResponseEntity<FieldDTO> createField(
                 @RequestBody FieldDTO fieldDTO) {
                 log.info("field - createField");
-                return new ResponseEntity<FieldDTO>(fieldService.save(fieldDTO), HttpStatus.OK);
+                return new ResponseEntity<>(fieldService.save(fieldDTO), HttpStatus.OK);
         }
 
         /**
          * Update field data
-         * @param fieldDTO
+         *
+         * @param fieldDTO the field dto
          * @return updated FieldDto
          */
         @RequestMapping(method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
         public ResponseEntity<FieldDTO> updateField(
                 @RequestBody FieldDTO fieldDTO) {
                 log.info("field - updateField");
-                return new ResponseEntity<FieldDTO>(fieldService.update(fieldDTO), HttpStatus.OK) ;
+                return new ResponseEntity<>(fieldService.update(fieldDTO), HttpStatus.OK) ;
         }
 
         /**
          * Get fields by documentId
-         * @param documentId
-         * @return List<FieldDto>
+         *
+         * @param documentId the document id
+         * @return List<FieldDto> field by document id
          */
         @GetMapping("/getFieldByDocumentId")
         public ResponseEntity<List<FieldDTO>> getFieldByDocumentId(
@@ -58,8 +64,9 @@ public class FieldController {
 
         /**
          * Delete field by fieldId
-         * @param fieldId
-         * @return fieldDto
+         *
+         * @param fieldId the field id
+         * @return fieldDto response entity
          */
         @PostMapping ("/deleteFieldById")
         public ResponseEntity<FieldDTO> deleteFieldById(
@@ -71,7 +78,8 @@ public class FieldController {
         /**
          * Manager method
          * Delete all fields
-         * @return
+         *
+         * @return response entity
          */
         @DeleteMapping("/deleteAll")
         public ResponseEntity<String> deleteAll() {

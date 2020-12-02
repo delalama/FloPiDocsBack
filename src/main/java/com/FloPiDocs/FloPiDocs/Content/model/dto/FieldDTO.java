@@ -2,6 +2,9 @@ package com.FloPiDocs.FloPiDocs.Content.model.dto;
 
 import lombok.*;
 
+/**
+ * The type Field dto.
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString

@@ -1,9 +1,7 @@
 package com.FloPiDocs.FloPiDocs.Content.service.converter;
 
 import com.FloPiDocs.FloPiDocs.Content.model.dto.FieldDTO;
-import com.FloPiDocs.FloPiDocs.Content.model.dto.TagDTO;
 import com.FloPiDocs.FloPiDocs.Content.model.persistence.Field;
-import com.FloPiDocs.FloPiDocs.Content.model.persistence.Tag;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

@@ -12,7 +12,6 @@ import com.FloPiDocs.FloPiDocs.Content.service.TagService;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
 import com.itextpdf.text.*;
 
-import com.itextpdf.text.Font;
 import com.itextpdf.text.pdf.PdfPCell;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.DottedLineSeparator;
@@ -199,9 +198,7 @@ public class DocumentServiceImpl implements DocumentService {
                     hcell1 = new PdfPCell(imageText, true);
                     hcell1.setHorizontalAlignment(Element.ALIGN_CENTER);
                     fieldDatatable.addCell(hcell1);
-                } catch (BadElementException e) {
-                    e.printStackTrace();
-                } catch (IOException e) {
+                } catch (BadElementException | IOException e) {
                     e.printStackTrace();
                 }
 
@@ -333,12 +330,7 @@ public class DocumentServiceImpl implements DocumentService {
                 }
         ).collect(Collectors.toList());
 
-//        List<Document> documentList = tagDTO.stream().map(tag -> documentRepository.findById(tag.getDocumentId()).get()).collect(Collectors.toList());
-
-        List<DocumentDTO> documentDTOList = documentList.stream().map(document -> conversionService.convert(document, DocumentDTO.class)).collect(Collectors.toList());
-
-        return documentDTOList;
+        return documentList.stream().map(document -> conversionService.convert(document, DocumentDTO.class)).collect(Collectors.toList());
     }
-
 
 }

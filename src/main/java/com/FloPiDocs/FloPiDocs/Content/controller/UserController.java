@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+/**
+ * The type User controller.
+ */
 @CrossOrigin(origins = "http://localhost:3000")
 @RequestMapping("users")
 @RestController
@@ -28,8 +31,9 @@ public class UserController {
 
     /**
      * Login method
+     *
      * @param mailAndPass object that contains mail and password "MailAndPass"
-     * @return userDto
+     * @return userDto user dto
      * @throws Exception if there is login errors
      */
     @PostMapping("login")
@@ -42,9 +46,10 @@ public class UserController {
 
     /**
      * Create new user
-     * @param userDTO
-     * @return userDto
-     * @throws Exception
+     *
+     * @param userDTO the user dto
+     * @return userDto response entity
+     * @throws Exception the exception
      */
     @RequestMapping(method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
     @JsonIgnoreProperties(value = {"userId", "token"})
@@ -56,7 +61,8 @@ public class UserController {
 
     /**
      * Delete all user data
-     * @param userId
+     *
+     * @param userId the user id
      */
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
@@ -67,8 +73,9 @@ public class UserController {
 
     /**
      * Check email is available
-     * @param email
-     * @return boolean
+     *
+     * @param email the email
+     * @return boolean boolean
      */
     @RequestMapping(value = "emailAlreadyExists", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     public Boolean emailNotAvailable(
@@ -80,10 +87,11 @@ public class UserController {
 
     /**
      * TODO Not used method
-     * @param userId
-     * @param firstName
-     * @param lastName
-     * @return string
+     *
+     * @param userId    the user id
+     * @param firstName the first name
+     * @param lastName  the last name
+     * @return string response entity
      */
     @PostMapping("/updateUser")
     public ResponseEntity<String> updateUser(
@@ -98,9 +106,10 @@ public class UserController {
 
     /**
      * TODO Not used method
-     * @param userId
-     * @param email
-     * @return string
+     *
+     * @param userId the user id
+     * @param email  the email
+     * @return string response entity
      */
     @PostMapping("/updateUserEmail")
     public ResponseEntity<String> updateUserEmail(
@@ -122,7 +131,7 @@ public class UserController {
     /**
      * Manager method
      *
-     * @return ResponseEntity
+     * @return ResponseEntity all users
      */
     @RequestMapping(value = "all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<UserDTO>> getAllUsers() {
@@ -133,7 +142,8 @@ public class UserController {
 
     /**
      * Manager method
-     * @return string
+     *
+     * @return string response entity
      */
     @DeleteMapping("/deleteAllUsers")
     public ResponseEntity<String> deleteAllUsers() {
@@ -144,7 +154,8 @@ public class UserController {
 
     /**
      * Manager method
-     * @return string
+     *
+     * @return string response entity
      */
     @DeleteMapping("/deleteAllContent")
     public ResponseEntity<String> deleteAllContent() {

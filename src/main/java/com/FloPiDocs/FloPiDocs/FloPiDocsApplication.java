@@ -4,11 +4,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
-import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import springfox.documentation.builders.PathSelectors;
 import springfox.documentation.builders.RequestHandlerSelectors;
 import springfox.documentation.service.ApiInfo;
@@ -27,21 +22,6 @@ public class FloPiDocsApplication {
         SpringApplication.run(FloPiDocsApplication.class, args);
     }
 
-
-/*
-	@EnableWebSecurity
-	@Configuration
-	class WebSecurityConfig extends WebSecurityConfigurerAdapter {
-		@Override
-		protected void configure(HttpSecurity http) throws Exception {
-			http.csrf().disable()
-					.addFilterAfter((Filter) new JWTAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class)
-					.authorizeRequests()
-					.antMatchers(HttpMethod.POST, "/token").permitAll()
-					.anyRequest().authenticated();
-		}
-	}
-*/
 
     //	SWAGGER
     @Bean

@@ -1,14 +1,10 @@
 package com.FloPiDocs.FloPiDocs.Content.service.converter.UserService;
 
-import com.FloPiDocs.FloPiDocs.Content.model.dto.UserDTO;
 import com.FloPiDocs.FloPiDocs.Content.repository.UserRepository;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import java.util.List;
-
-import static org.mockito.Mockito.when;
 
 public class UserServiceTest {
     
