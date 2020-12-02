@@ -26,6 +26,12 @@ public class UserController {
     private final UserService userService;
     private final DocumentService documentService;
 
+    /**
+     * Login method
+     * @param mailAndPass object that contains mail and password "MailAndPass"
+     * @return userDto
+     * @throws Exception if there is login errors
+     */
     @PostMapping("login")
     @ResponseBody
     public UserDTO login(
@@ -34,7 +40,12 @@ public class UserController {
         return userService.login(mailAndPass);
     }
 
-    //TODO ENCRIPTAR PASSWORD AL PASAR A PRODUCCIÓN
+    /**
+     * Create new user
+     * @param userDTO
+     * @return userDto
+     * @throws Exception
+     */
     @RequestMapping(method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
     @JsonIgnoreProperties(value = {"userId", "token"})
     public ResponseEntity createUser(
@@ -43,6 +54,10 @@ public class UserController {
         return userService.createUser(userDTO);
     }
 
+    /**
+     * Delete all user data
+     * @param userId
+     */
     @DeleteMapping
     @ResponseStatus(HttpStatus.OK)
     public void deleteUserById(
@@ -50,25 +65,26 @@ public class UserController {
         userService.deleteUser(userId);
     }
 
+    /**
+     * Check email is available
+     * @param email
+     * @return boolean
+     */
     @RequestMapping(value = "emailAlreadyExists", method = RequestMethod.POST, produces = "application/json", consumes = "application/json")
     public Boolean emailNotAvailable(
-            @RequestBody String email) throws Exception {
+            @RequestBody String email) {
         log.info("user - createUser");
         return userService.emailAlreadyExists(email);
     }
 
+
     /**
-     * Manager method
-     *
-     * @return ResponseEntity
+     * TODO Not used method
+     * @param userId
+     * @param firstName
+     * @param lastName
+     * @return string
      */
-    @RequestMapping(value = "all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
-        log.info("user - getAllUsers");
-
-        return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
-    }
-
     @PostMapping("/updateUser")
     public ResponseEntity<String> updateUser(
             @RequestParam("userId") String userId,
@@ -80,21 +96,12 @@ public class UserController {
         return new ResponseEntity<>("User updated", HttpStatus.OK);
     }
 
-    @DeleteMapping("/deleteAllUsers")
-    public ResponseEntity<String> deleteAllUsers() {
-        log.info("user - deleteAllUsers");
-        userService.deleteAll();
-        return new ResponseEntity<>("Users deleted", HttpStatus.OK);
-    }
-
-    //dev method, must be deleted
-    @DeleteMapping("/deleteAllContent")
-    public ResponseEntity<String> deleteAllContent() {
-        log.info("user - deleteAllContent");
-        userService.deleteAllContent();
-        return new ResponseEntity<>("All content deleted", HttpStatus.OK);
-    }
-
+    /**
+     * TODO Not used method
+     * @param userId
+     * @param email
+     * @return string
+     */
     @PostMapping("/updateUserEmail")
     public ResponseEntity<String> updateUserEmail(
             @RequestParam("userId") String userId,
@@ -110,6 +117,40 @@ public class UserController {
         }
         userService.save(new User(userId, userToUpdate.getFirstName(), userToUpdate.getLastName(), email));
         return new ResponseEntity<>("Email updated", HttpStatus.OK);
+    }
+
+    /**
+     * Manager method
+     *
+     * @return ResponseEntity
+     */
+    @RequestMapping(value = "all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UserDTO>> getAllUsers() {
+        log.info("user - getAllUsers");
+
+        return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);
+    }
+
+    /**
+     * Manager method
+     * @return string
+     */
+    @DeleteMapping("/deleteAllUsers")
+    public ResponseEntity<String> deleteAllUsers() {
+        log.info("user - deleteAllUsers");
+        userService.deleteAll();
+        return new ResponseEntity<>("Users deleted", HttpStatus.OK);
+    }
+
+    /**
+     * Manager method
+     * @return string
+     */
+    @DeleteMapping("/deleteAllContent")
+    public ResponseEntity<String> deleteAllContent() {
+        log.info("user - deleteAllContent");
+        userService.deleteAllContent();
+        return new ResponseEntity<>("All content deleted", HttpStatus.OK);
     }
 
 }

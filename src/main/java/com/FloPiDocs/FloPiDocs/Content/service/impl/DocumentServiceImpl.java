@@ -49,6 +49,11 @@ public class DocumentServiceImpl implements DocumentService {
     @Autowired
     private ConversionService conversionService;
 
+    /**
+     * Create document
+     * @param documentDTO
+     * @return documentDto
+     */
     @Override
     public DocumentDTO createDocument(DocumentDTO documentDTO) {
         DateTimeFormatter formmat1 = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH);
@@ -59,6 +64,13 @@ public class DocumentServiceImpl implements DocumentService {
         return conversionService.convert(doc, DocumentDTO.class);
     }
 
+    /**
+     * Export document
+     * @param documentId
+     * @return ByteArrayInputStream
+     * @throws FileNotFoundException
+     * @throws DocumentException
+     */
     @Override
     public ByteArrayInputStream exportDocument(String documentId) throws FileNotFoundException, DocumentException {
         Document document = documentRepository.findById(documentId).orElseThrow();
@@ -97,7 +109,6 @@ public class DocumentServiceImpl implements DocumentService {
         userDatatable.setWidthPercentage(60);
         userDatatable.setWidths(new int[]{3, 3});
 
-
         PdfPCell hcell;
         hcell = new PdfPCell(new Phrase("USER NAME", headFont));
         hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
@@ -116,7 +127,6 @@ public class DocumentServiceImpl implements DocumentService {
         userDatatable.addCell(hcell);
 
         pdf.add(userDatatable);
-
         pdf.add(new Paragraph("                                          "));
 
         //DOCUMENT DATA
@@ -164,7 +174,6 @@ public class DocumentServiceImpl implements DocumentService {
         hcell.setHorizontalAlignment(Element.ALIGN_CENTER);
         fieldDatatable.addCell(hcell);
 
-
         fieldList.forEach(field -> {
             PdfPCell hcell1;
             hcell1 = new PdfPCell(new Phrase(field.getFieldName()));
@@ -207,10 +216,9 @@ public class DocumentServiceImpl implements DocumentService {
         return new ByteArrayInputStream(out.toByteArray());
     }
 
-
     @Override
-    public List<Document> findByTitle(String title) {
-        return documentRepository.findByTitle(title);
+    public List<DocumentDTO> findByTitle(String title) {
+        return documentRepository.findByTitle(title).stream().map(doc -> conversionService.convert(doc, DocumentDTO.class)).collect(Collectors.toList());
     }
 
     @Override
@@ -220,8 +228,8 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public List<Document> findByPurpose(String purpose) {
-        return documentRepository.findByPurpose(purpose);
+    public List<DocumentDTO> findByPurpose(String purpose) {
+        return documentRepository.findByPurpose(purpose).stream().map(doc -> conversionService.convert(doc , DocumentDTO.class)).collect(Collectors.toList());
     }
 
     @Override
@@ -290,16 +298,22 @@ public class DocumentServiceImpl implements DocumentService {
         return documentRepository.countByUserId(userId);
     }
 
+    /**
+     * Find documents by User and Title
+     * @param userId
+     * @param key
+     * @return List<DocumentDto>
+     */
     @Override
-    public List<Document> findByUserIdAndTitle(String userId, String key) {
+    public List<DocumentDTO> findByUserIdAndTitle(String userId, String key) {
         List<Document> documentList = documentRepository.findByUserIdAndTitleContainsIgnoreCase(userId, key);
-        return documentList;
+        return documentList.stream().map(doc -> conversionService.convert(doc , DocumentDTO.class)).collect(Collectors.toList());
     }
 
     @Override
-    public List<Document> findByUserIdAndPurpose(String userId, String purpose) {
+    public List<DocumentDTO> findByUserIdAndPurpose(String userId, String purpose) {
         List<Document> documentList = documentRepository.findByUserIdAndPurposeContainsIgnoreCase(userId, purpose);
-        return documentList;
+        return documentList.stream().map(doc -> conversionService.convert(doc, DocumentDTO.class)).collect(Collectors.toList());
     }
 
     @Override

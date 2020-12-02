@@ -44,6 +44,15 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private ConversionService conversionService;
 
+    /**
+     * Create User
+     * This method encrypts the provided password.
+     * Save the new user
+     * Save the new user account Options
+     * @param userDTO
+     * @return userDto
+     * @throws Exception encryptor exception
+     */
     @Override
     public ResponseEntity createUser(UserDTO userDTO) throws Exception {
         userDTO.setPassword(encryptor.encrypt(userDTO.getPassword()));
@@ -59,7 +68,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Boolean emailAlreadyExists(String email) throws Exception {
+    public Boolean emailAlreadyExists(String email) {
         return userRepository.findByEmail(email).isPresent();
     }
 
@@ -81,11 +90,15 @@ public class UserServiceImpl implements UserService {
         return userRepository.findByUserId(id);
     }
 
+    /**
+     * Delete all user data
+     * @param user
+     */
     @Override
-    public void deleteUser(String id) {
-        documentService.deleteAllByUserId(id);
-        accountOptionsService.deleteByUserId(id);
-        userRepository.deleteById(id);
+    public void deleteUser(String userId) {
+        documentService.deleteAllByUserId(userId);
+        accountOptionsService.deleteByUserId(userId);
+        userRepository.deleteById(userId);
     }
 
     @Override

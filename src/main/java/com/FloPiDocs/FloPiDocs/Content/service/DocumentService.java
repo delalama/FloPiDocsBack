@@ -16,9 +16,9 @@ public interface DocumentService {
 
     public ByteArrayInputStream exportDocument(String documentId) throws FileNotFoundException, DocumentException;
 
-    public abstract List<Document> findByTitle(String title);
+    public abstract List<DocumentDTO> findByTitle(String title);
     public abstract DocumentDTO findById(String documentId) throws Exception;
-    public abstract List<Document> findByPurpose(String purpose);
+    public abstract List<DocumentDTO> findByPurpose(String purpose);
     public abstract List<Document> findAll();
     public abstract List<Document> findByUserId(String userId, Pageable pageable);
     public abstract boolean emailExists(String email);
@@ -30,8 +30,8 @@ public interface DocumentService {
 
     abstract List<DocumentDTO> findAllByUserId(String userId);
     public abstract Long countByUserId(String userId);
-    public abstract List<Document> findByUserIdAndTitle(String userId, String title);
-    public abstract List<Document> findByUserIdAndPurpose(String userId, String title);
+    public abstract List<DocumentDTO> findByUserIdAndTitle(String userId, String title);
+    public abstract List<DocumentDTO> findByUserIdAndPurpose(String userId, String title);
 
     void update(DocumentDTO documentDTO) throws Exception;
 

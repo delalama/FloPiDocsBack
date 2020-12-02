@@ -29,6 +29,7 @@ public class Encryptor {
         return strData;
     }
 
+    //TODO use this method to let user change the password
     public String decrypt(String strEncrypted,String strKey) throws Exception{
         String strData="";
 

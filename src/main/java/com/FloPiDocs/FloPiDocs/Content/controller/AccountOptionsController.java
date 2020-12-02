@@ -19,6 +19,23 @@ public class AccountOptionsController {
         private AccountOptionsService accountOptionsService;
 
 
+        /**
+        * Returns the options of the user account
+        * @Param userId
+        * @return requested account options
+         */
+        @GetMapping
+        public ResponseEntity<AccountOptionsDTO> getAccountOptions(
+                @RequestParam("userId") String userId) {
+                log.info("AccountOptions- getAccountOptions by ID");
+                return new ResponseEntity<>(accountOptionsService.findByUserId(userId),HttpStatus.OK);
+        }
+
+        /**
+         * Create new user
+         * @param userId
+         * @return httpStatus
+         */
         @PostMapping(value = "/createByUserId" ,produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity<String> createInitOptions(
                 @RequestParam("userId") String userId) {
@@ -27,6 +44,12 @@ public class AccountOptionsController {
                 return new ResponseEntity<>(HttpStatus.OK);
         }
 
+        /**
+         * Change safe delete option
+         * @param userId
+         * @param safeDelete
+         * @return HttpStatus
+         */
         @PostMapping(value = "/changeSafeDelete" ,produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity<String> changeSafeDelete(
                 @RequestParam("userId") String userId,
@@ -36,13 +59,10 @@ public class AccountOptionsController {
                 return new ResponseEntity<>(HttpStatus.OK);
         }
 
-        @GetMapping
-        public ResponseEntity<AccountOptionsDTO> getAccountOptions(
-                @RequestParam("userId") String userId) {
-                log.info("AccountOptions- getAccountOptions by ID");
-                return new ResponseEntity<>(accountOptionsService.findByUserId(userId),HttpStatus.OK);
-        }
-
+        /**
+         * Manager method
+         * @return
+         */
         @DeleteMapping(value = "/all" ,produces = MediaType.APPLICATION_JSON_VALUE)
         public ResponseEntity<String> deleteAllAccountOptions() {
                 log.info("AccountOptions- Delete All");

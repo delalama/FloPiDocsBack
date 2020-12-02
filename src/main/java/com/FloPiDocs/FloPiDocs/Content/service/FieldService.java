@@ -13,8 +13,7 @@ public interface FieldService {
     public abstract FieldDTO deleteById(String id);
     public abstract void deleteAll();
     public long count();
-    @SuppressWarnings("rawtypes")
-    public abstract ResponseEntity save(FieldDTO field);
+    public FieldDTO save(FieldDTO field);
 
     public abstract void deleteByDocumentId(String id);
 

@@ -54,10 +54,10 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public ResponseEntity<FieldDTO> save (FieldDTO fieldDTO) {
+    public FieldDTO save (FieldDTO fieldDTO) {
         Field field = modelMapper.map(fieldDTO, Field.class);
         FieldDTO savedFieldDTO = modelMapper.map(fieldRepository.save(field), FieldDTO.class);
-        return new ResponseEntity<>(savedFieldDTO, HttpStatus.OK);
+        return savedFieldDTO;
     }
 
     @Override

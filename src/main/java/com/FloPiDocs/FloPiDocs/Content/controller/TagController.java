@@ -20,10 +20,11 @@ public class TagController {
     @Autowired
     private TagService tagService;
 
-    /*TODO REPASAR TODOS LOS NOMBRE DE LOS MAPPINGS
-    GET
-    POST create/update data
-    * */
+    /**
+     * Create tag
+     * @param tagDTO
+     * @return tagDto
+     */
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<TagDTO> createTag(
             @RequestBody TagDTO tagDTO) {
@@ -31,6 +32,11 @@ public class TagController {
         return new ResponseEntity<>(tagService.save(tagDTO), HttpStatus.OK);
     }
 
+    /**
+     * Get tags by documentId
+     * @param documentId
+     * @return List<TagDto>
+     */
     @GetMapping
     public ResponseEntity<List<TagDTO>> getTagByDocumentId(
             @RequestParam("documentId") String documentId) {
@@ -38,7 +44,11 @@ public class TagController {
         return new ResponseEntity<>(tagService.findByDocumentId(documentId), HttpStatus.OK);
     }
 
-    //TODO
+    /**
+     * Delete Tag by tagId
+     * @param tagId
+     * @return tagDto
+     */
     @DeleteMapping
     public ResponseEntity<TagDTO> deleteByTagId(
             @RequestParam("tagId") String tagId) {
@@ -46,7 +56,10 @@ public class TagController {
         return new ResponseEntity<>(tagService.deleteByTagId(tagId), HttpStatus.OK);
     }
 
-    //TODO
+    /**
+     * Manager method
+     * @return
+     */
     @DeleteMapping("/deleteAll")
     public ResponseEntity<String> deleteAll() {
         log.info("tag - deleteAll");

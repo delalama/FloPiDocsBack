@@ -35,9 +35,12 @@ public class DocumentController {
     private TagService tagService;
     @Autowired
     private FieldService fieldService;
-    ModelMapper modelMapper = new ModelMapper();
 
-    // https://graphql.org/
+    /**
+     * Create Document
+     * @param documentDTO
+     * @return documentDto
+     */
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DocumentDTO> createDocument(
             @RequestBody DocumentDTO documentDTO) {
@@ -46,22 +49,13 @@ public class DocumentController {
         return new ResponseEntity<>(documentDTO1, HttpStatus.OK);
     }
 
-
-    @GetMapping("/getDocumentByTitle")
-    public ResponseEntity<List<Document>> getDocumentByTitle(
-            @RequestParam("title") String title) {
-        log.info("document - getDocumentByTitle");
-        return new ResponseEntity<>(documentService.findByTitle(title), HttpStatus.OK);
-    }
-
-    @GetMapping(value = "findByTitle")
-    public ResponseEntity<List<Document>> findByUserIdAndTitle(
-            @RequestParam("key") String key,
-            @RequestParam("userId") String userId) {
-        List<Document> documentList = documentService.findByUserIdAndTitle(userId, key);
-        return new ResponseEntity<>(documentList, HttpStatus.OK);
-    }
-
+    /**
+     * Export Document
+     * @param documentId
+     * @return
+     * @throws FileNotFoundException
+     * @throws DocumentException
+     */
     @GetMapping(value = "exportDocument")
     public ResponseEntity<InputStreamResource> exportDocument(
             @RequestParam("documentId") String documentId) throws FileNotFoundException, DocumentException {
@@ -76,14 +70,41 @@ public class DocumentController {
                 .body(new InputStreamResource(documentService.exportDocument(documentId)));
     }
 
-    @GetMapping(value = "findByPurpose")
-    public ResponseEntity<List<Document>> findByUserIdAndPurpose(
-            @RequestParam("key") String key,
+    /**
+     * Find documents by title
+     * @param title Title of document
+     * @param userId
+     * @return List<DocumentDto>
+     */
+    @GetMapping(value = "findByTitle")
+    public ResponseEntity<List<DocumentDTO>> findByUserIdAndTitle(
+            @RequestParam("key") String title,
             @RequestParam("userId") String userId) {
-        List<Document> documentList = documentService.findByUserIdAndPurpose(userId, key);
+        List<DocumentDTO> documentList = documentService.findByUserIdAndTitle(userId, title);
         return new ResponseEntity<>(documentList, HttpStatus.OK);
     }
 
+    /**
+     * Find documents By Purpose
+     * @param key
+     * @param userId
+     * @return
+     */
+    @GetMapping(value = "findByPurpose")
+    public ResponseEntity<List<DocumentDTO>> findByUserIdAndPurpose(
+            @RequestParam("key") String key,
+            @RequestParam("userId") String userId) {
+        List<DocumentDTO> documentList = documentService.findByUserIdAndPurpose(userId, key);
+        return new ResponseEntity<>(documentList, HttpStatus.OK);
+    }
+
+    /**
+     * Find documents By Tag
+     * @param key
+     * @param userId
+     * @return List<DocumentDto>
+     * @throws Exception
+     */
     @GetMapping(value = "findByTag")
     public ResponseEntity<List<DocumentDTO>> findByUserIdAndTag(
             @RequestParam("key") String key,
@@ -91,6 +112,12 @@ public class DocumentController {
         return new ResponseEntity<>(documentService.findByUserIdAndTag(userId, key), HttpStatus.OK);
     }
 
+    /**
+     * Delete document by documentID
+     * @param documentDTO
+     * @return
+     * @throws Exception
+     */
     @DeleteMapping
     public ResponseEntity<DocumentDTO> deleteDocumentById(
             @RequestBody DocumentDTO documentDTO) throws Exception {
@@ -98,16 +125,50 @@ public class DocumentController {
         return new ResponseEntity<>(documentService.deleteById(documentDTO), HttpStatus.OK);
     }
 
-//    TODO ACTUAL
+    /**
+     * Get documents by purpose
+     * @param purpose
+     * @return List<DocumentDto>
+     */
     @GetMapping("/getDocumentByPurpose")
-    public ResponseEntity<List<Document>> getDocumentByPurpose(
+    public ResponseEntity<List<DocumentDTO>> getDocumentByPurpose(
             @RequestParam("purpose") String purpose) {
         log.info("document - getDocumentByPurpose");
-        List<Document> documentList = documentService.findByPurpose(purpose);
+        List<DocumentDTO> documentList = documentService.findByPurpose(purpose);
         return new ResponseEntity<>(documentList, HttpStatus.OK);
     }
 
-    //TODO page por parámetro
+    /**
+     * Update document data
+     * @param documentDTO
+     * @return updated documentDto
+     * @throws Exception
+     */
+    @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity updateDocumentContent(
+            @RequestBody DocumentDTO documentDTO) throws Exception {
+        log.info("document - updateDocument");
+        documentService.update(documentDTO);
+        return new ResponseEntity<>("Content updated: ", HttpStatus.OK);
+    }
+
+    /**
+     * Get Document By Title
+     * @param title
+     * @return
+     */
+    @GetMapping("/getDocumentByTitle")
+    public ResponseEntity<List<DocumentDTO>> getDocumentByTitle(
+            @RequestParam("title") String title) {
+        log.info("document - getDocumentByTitle");
+        return new ResponseEntity<>(documentService.findByTitle(title), HttpStatus.OK);
+    }
+
+    /**
+     * Get documents by userId
+     * @param userId
+     * @return List<DocumentDto>
+     */
     @GetMapping
     public ResponseEntity<List<DocumentDTO>> getDocumentsByUserId(
             @RequestParam("userId") String userId) {
@@ -115,7 +176,22 @@ public class DocumentController {
         return new ResponseEntity<>(documentService.findAllByUserId(userId), HttpStatus.OK);
     }
 
-    //TODO
+    /**
+     * Manager method
+     * @return
+     */
+    @DeleteMapping("/deleteAll")
+    public ResponseEntity<String> deleteAll() {
+        log.info("document - deleteAll");
+        documentService.deleteAll();
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * Not used
+     * @param userId
+     * @return
+     */
     @GetMapping("/countByUserId")
     public ResponseEntity<Long> countByUserId(
             @RequestParam("userId") String userId) {
@@ -124,14 +200,11 @@ public class DocumentController {
         return new ResponseEntity<>(documentsCount, HttpStatus.OK);
     }
 
-    //TODO
-    @DeleteMapping("/deleteAll")
-    public ResponseEntity<String> deleteAll() {
-        log.info("document - deleteAll");
-        documentService.deleteAll();
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
+    /**
+     * Not used
+     * @param title
+     * @return
+     */
     @DeleteMapping("/deleteByTitle")
     public ResponseEntity<String> deleteAllByTitle(
             @RequestParam("title") String title) {
@@ -140,11 +213,4 @@ public class DocumentController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateDocumentContent(
-            @RequestBody DocumentDTO documentDTO) throws Exception {
-        log.info("document - updateDocument");
-        documentService.update(documentDTO);
-        return new ResponseEntity<>("Content updated: ", HttpStatus.OK);
-    }
 }

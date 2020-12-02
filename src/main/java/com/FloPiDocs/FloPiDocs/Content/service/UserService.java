@@ -20,7 +20,7 @@ public interface UserService {
 
     public abstract List<UserDTO> findAll();
 
-    public abstract Boolean emailAlreadyExists(String email) throws Exception;
+    public abstract Boolean emailAlreadyExists(String email) ;
 
     public abstract void deleteAll();
 
