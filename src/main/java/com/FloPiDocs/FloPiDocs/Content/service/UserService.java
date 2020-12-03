@@ -19,7 +19,7 @@ public interface UserService {
      * @return the response entity
      * @throws Exception the exception
      */
-    public abstract ResponseEntity createUser(com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto userDTO) throws Exception;
+    public abstract com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto createUser(com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto userDTO) throws Exception;
 
     /**
      * Delete user.

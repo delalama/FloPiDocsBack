@@ -1,6 +1,7 @@
 package com.FloPiDocs.FloPiDocs.Content.service.converter;
 
 import com.FloPiDocs.FloPiDocs.Content.model.persistence.User;
+import com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -24,7 +25,7 @@ class UserDtoToUserConverterTest {
      */
     @Test
     void convertShouldConvert() {
-        com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto userDto = new com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto();
+        UserDto userDto = new UserDto();
 
         userDto.setUserId(ID);
         userDto.setFirstName(FIRST_NAME);

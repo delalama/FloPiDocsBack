@@ -52,10 +52,10 @@ public class UserController {
      */
     @RequestMapping(method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
     @JsonIgnoreProperties(value = {"userId", "token"})
-    public ResponseEntity createUser(
+    public ResponseEntity<com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto> createUser(
             @RequestBody com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto userDTO) throws Exception {
         log.info("user - createUser");
-        return userService.createUser(userDTO);
+        return new ResponseEntity<>(userService.createUser(userDTO), org.springframework.http.HttpStatus.OK);
     }
 
     /**

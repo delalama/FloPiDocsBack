@@ -9,7 +9,6 @@ import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
 import com.FloPiDocs.FloPiDocs.Content.service.encryptor.Encryptor;
 import org.apache.commons.lang3.StringUtils;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.http.HttpStatus;
@@ -25,15 +24,6 @@ import java.util.stream.Collectors;
 @Service
 public class UserServiceImpl implements UserService {
 
-    /**
-     * The Model mapper.
-     */
-//TODO ACTUAL, APRENDER A USAR JASYPT
-    final ModelMapper modelMapper = new ModelMapper();
-
-    /**
-     * The User repository.
-     */
     @Autowired
     UserRepository userRepository;
 
@@ -43,28 +33,26 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private Encryptor encryptor;
 
-    /**
-     * The Password.
-     */
-    final String password = "Test!email30#password";
-
     @Autowired
     private AccountOptionsService accountOptionsService;
 
     @Autowired
     private ConversionService conversionService;
 
+    public UserServiceImpl() {
+    }
+
     /**
      * Create User
      * This method encrypts the provided password.
      * Save the new user
      * Save the new user account Options
-     * @param userDTO
+     * @param userDTO userDto
      * @return userDto
      * @throws Exception encryptor exception
      */
     @Override
-    public ResponseEntity createUser(com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto userDTO) throws Exception {
+    public com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto createUser(com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto userDTO) throws Exception {
         userDTO.setPassword(encryptor.encrypt(userDTO.getPassword()));
         // Create user
         User userCreated = userRepository.save(conversionService.convert(userDTO, User.class));
@@ -72,9 +60,9 @@ public class UserServiceImpl implements UserService {
         com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto userCreatedDto = conversionService.convert(userCreated, com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto.class);
 
         // Create new user AccountOptions
-        accountOptionsService.save(new com.FloPiDocs.FloPiDocs.Content.model.dto.AccountOptionsDto(userCreatedDto.getUserId()));
+        accountOptionsService.save(new com.FloPiDocs.FloPiDocs.Content.model.dto.AccountOptionsDto(userCreatedDto != null ? userCreatedDto.getUserId() : null));
 
-        return new ResponseEntity<>(userCreatedDto, HttpStatus.OK);
+        return userCreatedDto;
     }
 
     @Override
@@ -102,7 +90,7 @@ public class UserServiceImpl implements UserService {
 
     /**
      * Delete all user data
-     * @param user
+     * @param userId userId
      */
     @Override
     public void deleteUser(String userId) {

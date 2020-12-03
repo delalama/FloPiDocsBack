@@ -1,6 +1,7 @@
 package com.FloPiDocs.FloPiDocs.Content.service.impl;
 
 import com.FloPiDocs.FloPiDocs.Content.model.persistence.AccountOptions;
+import com.FloPiDocs.FloPiDocs.Content.model.dto.AccountOptionsDto;
 import com.FloPiDocs.FloPiDocs.Content.repository.AccountOptionsRepository;
 import com.FloPiDocs.FloPiDocs.Content.service.AccountOptionsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,7 @@ public class AccountOptionsServiceImpl implements AccountOptionsService {
     private ConversionService conversionService;
 
     @Override
-    public void save(com.FloPiDocs.FloPiDocs.Content.model.dto.AccountOptionsDto accountOptionsDTO) {
+    public void save(AccountOptionsDto accountOptionsDTO) {
         accountOptionsRepository.save(conversionService.convert(accountOptionsDTO,AccountOptions.class));
     }
 
@@ -44,7 +45,7 @@ public class AccountOptionsServiceImpl implements AccountOptionsService {
     }
 
     @Override
-    public com.FloPiDocs.FloPiDocs.Content.model.dto.AccountOptionsDto findByUserId(String userId) {
+    public AccountOptionsDto findByUserId(String userId) {
         return conversionService.convert(accountOptionsRepository.findByUserId(userId).get(0), com.FloPiDocs.FloPiDocs.Content.model.dto.AccountOptionsDto.class);
     }
 }

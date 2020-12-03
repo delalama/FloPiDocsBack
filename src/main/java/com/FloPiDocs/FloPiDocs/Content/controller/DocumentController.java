@@ -153,11 +153,11 @@ public class DocumentController {
      * @throws Exception the exception
      */
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity updateDocumentContent(
+    public ResponseEntity<String> updateDocumentContent(
             @RequestBody com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto documentDTO) throws Exception {
         log.info("document - updateDocument");
         documentService.update(documentDTO);
-        return new ResponseEntity<>("Content updated: ", HttpStatus.OK);
+        return new ResponseEntity<>("Document updated: ", HttpStatus.OK);
     }
 
     /**

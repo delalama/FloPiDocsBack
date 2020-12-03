@@ -20,7 +20,6 @@ public class AccountOptionsController {
         @Autowired
         private AccountOptionsService accountOptionsService;
 
-
         /**
          * Returns the options of the user account
          *
