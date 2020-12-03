@@ -2,6 +2,8 @@ package com.FloPiDocs.FloPiDocs.Content.service.impl;
 
 import com.FloPiDocs.FloPiDocs.Content.controller.utils.MailAndPass;
 import com.FloPiDocs.FloPiDocs.Content.model.persistence.User;
+import com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto;
+import com.FloPiDocs.FloPiDocs.Content.model.dto.AccountOptionsDto;
 import com.FloPiDocs.FloPiDocs.Content.exception.InvalidLoginException;
 import com.FloPiDocs.FloPiDocs.Content.repository.UserRepository;
 import com.FloPiDocs.FloPiDocs.Content.service.AccountOptionsService;
@@ -11,8 +13,6 @@ import com.FloPiDocs.FloPiDocs.Content.service.encryptor.Encryptor;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -52,15 +52,15 @@ public class UserServiceImpl implements UserService {
      * @throws Exception encryptor exception
      */
     @Override
-    public com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto createUser(com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto userDTO) throws Exception {
+    public com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto createUser(UserDto userDTO) throws Exception {
         userDTO.setPassword(encryptor.encrypt(userDTO.getPassword()));
         // Create user
         User userCreated = userRepository.save(conversionService.convert(userDTO, User.class));
 
-        com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto userCreatedDto = conversionService.convert(userCreated, com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto.class);
+        UserDto userCreatedDto = conversionService.convert(userCreated, UserDto.class);
 
         // Create new user AccountOptions
-        accountOptionsService.save(new com.FloPiDocs.FloPiDocs.Content.model.dto.AccountOptionsDto(userCreatedDto != null ? userCreatedDto.getUserId() : null));
+        accountOptionsService.save(new AccountOptionsDto(userCreatedDto != null ? userCreatedDto.getUserId() : null));
 
         return userCreatedDto;
     }
@@ -76,11 +76,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto> findByEmail(String email) {
-
+    public Optional<UserDto> findByEmail(String email) {
         Optional<User> user = userRepository.findByEmail(email);
 
-        return user.map(value -> conversionService.convert(value, com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto.class));
+        return user.map(value -> conversionService.convert(value, UserDto.class));
     }
 
     @Override
@@ -100,10 +99,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto> findAll() {
+    public List<UserDto> findAll() {
         return userRepository.findAll()
                 .stream()
-                .map(u -> conversionService.convert(u, com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto.class))
+                .map(u -> conversionService.convert(u, UserDto.class))
                 .collect(Collectors.toList());
     }
 
@@ -118,10 +117,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto login(MailAndPass mailAndPass) throws Exception {
+    public UserDto login(MailAndPass mailAndPass) throws Exception {
         mailAndPass.setPassword(encryptor.encrypt(mailAndPass.getPassword()));
 
-        Optional<com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto> user = findByEmail(mailAndPass.getEmail());
+        Optional<UserDto> user = findByEmail(mailAndPass.getEmail());
 
         if (user.isPresent() && StringUtils.equals(user.get().getPassword(), mailAndPass.getPassword())) {
             return user.get();

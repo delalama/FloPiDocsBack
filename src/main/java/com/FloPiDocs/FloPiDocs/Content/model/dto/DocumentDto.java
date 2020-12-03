@@ -15,7 +15,6 @@ public class DocumentDto {
     private String userId;
     private String title;
     private String purpose;
-    private String content;
     private String date;
 
 
@@ -37,14 +36,12 @@ public class DocumentDto {
      * @param userId  the user id
      * @param title   the title
      * @param purpose the purpose
-     * @param content the content
      * @param date    the date
      */
-    public DocumentDto(String userId, String title, String purpose, String content, String date) {
+    public DocumentDto(String userId, String title, String purpose, String date) {
         this.userId = userId;
         this.title = title;
         this.purpose = purpose;
-        this.content = content;
         this.date = date;
     }
 
@@ -54,13 +51,11 @@ public class DocumentDto {
      * @param userId  the user id
      * @param title   the title
      * @param purpose the purpose
-     * @param content the content
      */
-    public DocumentDto(String userId, String title, String purpose, String content) {
+    public DocumentDto(String userId, String title, String purpose) {
         this.userId = userId;
         this.title = title;
         this.purpose = purpose;
-        this.content = content;
     }
 
 }

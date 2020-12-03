@@ -20,6 +20,7 @@ public class AccountOptionsController {
         @Autowired
         private AccountOptionsService accountOptionsService;
 
+        // TODO MARCEL GMAIL TEMPLATE
         /**
          * Returns the options of the user account
          *

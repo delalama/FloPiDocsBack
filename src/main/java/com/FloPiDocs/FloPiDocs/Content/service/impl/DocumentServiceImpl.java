@@ -2,6 +2,9 @@ package com.FloPiDocs.FloPiDocs.Content.service.impl;
 
 import com.FloPiDocs.FloPiDocs.Content.model.persistence.Document;
 import com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto;
+import com.FloPiDocs.FloPiDocs.Content.model.dto.FieldDto;
+import com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto;
+import com.FloPiDocs.FloPiDocs.Content.model.dto.TagDto;
 import com.FloPiDocs.FloPiDocs.Content.repository.DocumentRepository;
 import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import com.FloPiDocs.FloPiDocs.Content.service.FieldService;
@@ -19,6 +22,7 @@ import com.itextpdf.text.pdf.PdfPTable;
 import java.io.*;
 import java.util.List;
 import java.util.stream.Collectors;
+import lombok.*;
 
 import static com.FloPiDocs.FloPiDocs.Content.service.utils.utils.actualDate;
 
@@ -75,15 +79,141 @@ public class DocumentServiceImpl implements DocumentService {
      */
     @Override
     public ByteArrayInputStream exportDocument(String documentId) throws DocumentException {
-        Document document = documentRepository.findById(documentId).orElseThrow();
-        List<com.FloPiDocs.FloPiDocs.Content.model.dto.FieldDto> fieldList = fieldService.findByDocumentId(documentId);
+        ExportData exportData = new ExportData(documentId);
+        return createPdf(exportData);
+    }
 
-        com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto userDTO = conversionService.convert(userService.findByUserId(document.getUserId()), com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto.class);
-        String userName = userDTO != null ? userDTO.getFirstName() : null;
-        String lastName = userDTO.getLastName();
-        String email = userDTO.getEmail();
+    @Override
+    public List<DocumentDto> findByTitle(String title) {
+        return documentRepository.findByTitle(title).stream().map(doc -> conversionService.convert(doc, DocumentDto.class)).collect(Collectors.toList());
+    }
 
-        //SETTINGS
+    @Override
+    public DocumentDto findById(String documentId) {
+        Document optDocument = documentRepository.findById(documentId).orElseThrow();
+        return conversionService.convert(optDocument, DocumentDto.class);
+    }
+
+    @Override
+    public List<DocumentDto> findByPurpose(String purpose) {
+        return documentRepository.findByPurpose(purpose).stream().map(doc -> conversionService.convert(doc , DocumentDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<Document> findAll() {
+        return null;
+    }
+
+    @Override
+    public List<Document> findByUserId(String userId, Pageable pageable) {
+        return documentRepository.findByUserId(userId, pageable);
+    }
+
+    @Override
+    public List<DocumentDto> findAllByUserId(String userId) {
+        List<Document> documentList = documentRepository.findAllByUserId(userId);
+        return documentList.stream().map(doc -> conversionService.convert(doc, DocumentDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean emailExists(String email) {
+        return false;
+    }
+
+    @Override
+    public DocumentDto deleteById(DocumentDto documentDTO) {
+        DocumentDto documentDTO1 = findById(documentDTO.getId());
+        documentRepository.deleteById(documentDTO1.getId());
+        tagService.deleteByDocumentId(documentDTO.getId());
+        fieldService.deleteByDocumentId(documentDTO.getId());
+        return conversionService.convert(documentDTO1, DocumentDto.class);
+    }
+
+    @Override
+    public void deleteByUserId(String userId) {
+        documentRepository.deleteByUserId(userId);
+    }
+
+    @Override
+    public void deleteByTitle(String title) {
+        documentRepository.deleteByTitle(title);
+    }
+
+    @Override
+    public void deleteAll() {
+        documentRepository.deleteAll();
+    }
+
+    @Override
+    public void save(Document document) {
+        documentRepository.save(document);
+    }
+
+    @Override
+    public void deleteAllByUserId(String userId) {
+        List<DocumentDto> documentList = findAllByUserId(userId);
+        documentList.forEach(documentDTO -> {
+                    fieldService.deleteByDocumentId(documentDTO.getId());
+                    tagService.deleteByDocumentId(documentDTO.getId());
+                }
+        );
+        deleteByUserId(userId);
+    }
+
+    @Override
+    public Long countByUserId(String userId) {
+        return documentRepository.countByUserId(userId);
+    }
+
+    /**
+     * Find documents by User and Title
+     * @param userId user Id
+     * @param title Title
+     * @return List<DocumentDto>
+     */
+    @Override
+    public List<DocumentDto> findByUserIdAndTitle(String userId, String title) {
+        List<Document> documentList = documentRepository.findByUserIdAndTitleContainsIgnoreCase(userId, title);
+        return documentList.stream().map(doc -> conversionService.convert(doc , DocumentDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<DocumentDto> findByUserIdAndPurpose(String userId, String purpose) {
+        List<Document> documentList = documentRepository.findByUserIdAndPurposeContainsIgnoreCase(userId, purpose);
+        return documentList.stream().map(doc -> conversionService.convert(doc, DocumentDto.class)).collect(Collectors.toList());
+    }
+
+    @Override
+    public void update(DocumentDto documentDTO) {
+        Document document = conversionService.convert(documentDTO, Document.class);
+        save(document);
+    }
+
+    @Override
+    public List<DocumentDto> findByUserIdAndTag(String userId, String key) {
+        List<TagDto> tagDTO = tagService.findByUserIdAndTagName(userId, key);
+
+        List<Document> documentList = tagDTO.stream().map(tag -> {
+                    if (documentRepository.findById(tag.getDocumentId()).isPresent()) {
+                        return documentRepository.findById(tag.getDocumentId()).get();
+                    } else return new Document();
+                }
+        ).collect(Collectors.toList());
+
+        return documentList.stream().map(document -> conversionService.convert(document, DocumentDto.class)).collect(Collectors.toList());
+    }
+
+    private ByteArrayInputStream createPdf(ExportData exportData) throws com.itextpdf.text.DocumentException {
+        //Destructure exportData object
+        UserDto userDto = exportData.getUserDto();
+        Document document = exportData.getDocument();
+        List<FieldDto> fieldList = exportData.getFieldList();
+
+        String userName =  userDto != null ? userDto.getFirstName() : null;
+        String lastName = userDto.getLastName();
+        String email = userDto.getEmail();
+
+        //PDF SETTINGS
         Font headFont = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
         ByteArrayOutputStream out = new ByteArrayOutputStream();
         com.itextpdf.text.Document pdf = new com.itextpdf.text.Document();
@@ -200,133 +330,23 @@ public class DocumentServiceImpl implements DocumentService {
 
             }
         });
-
         pdf.add(fieldDatatable);
-//        pdf.add(new Paragraph("                                          "));
 
         pdf.close();
-
         return new ByteArrayInputStream(out.toByteArray());
     }
 
-    @Override
-    public List<DocumentDto> findByTitle(String title) {
-        return documentRepository.findByTitle(title).stream().map(doc -> conversionService.convert(doc, DocumentDto.class)).collect(Collectors.toList());
+    @AllArgsConstructor
+    @Getter
+    private class ExportData{
+        Document document;
+        List<FieldDto> fieldList;
+        UserDto userDto;
+
+        public ExportData(String documentId) {
+            document = documentRepository.findById(documentId).orElseThrow();
+            fieldList = fieldService.findByDocumentId(documentId);
+            userDto = conversionService.convert(userService.findByUserId(document.getUserId()), UserDto.class);
+        }
     }
-
-    @Override
-    public DocumentDto findById(String documentId) {
-        Document optDocument = documentRepository.findById(documentId).orElseThrow();
-        return conversionService.convert(optDocument, DocumentDto.class);
-    }
-
-    @Override
-    public List<DocumentDto> findByPurpose(String purpose) {
-        return documentRepository.findByPurpose(purpose).stream().map(doc -> conversionService.convert(doc , DocumentDto.class)).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<Document> findAll() {
-        return null;
-    }
-
-    @Override
-    public List<Document> findByUserId(String userId, Pageable pageable) {
-        return documentRepository.findByUserId(userId, pageable);
-    }
-
-    @Override
-    public List<DocumentDto> findAllByUserId(String userId) {
-        List<Document> documentList = documentRepository.findAllByUserId(userId);
-        return documentList.stream().map(doc -> conversionService.convert(doc, DocumentDto.class)).collect(Collectors.toList());
-    }
-
-    @Override
-    public boolean emailExists(String email) {
-        return false;
-    }
-
-    @Override
-    public DocumentDto deleteById(DocumentDto documentDTO) {
-        DocumentDto documentDTO1 = findById(documentDTO.getId());
-        documentRepository.deleteById(documentDTO1.getId());
-        tagService.deleteByDocumentId(documentDTO.getId());
-        fieldService.deleteByDocumentId(documentDTO.getId());
-        return conversionService.convert(documentDTO1, DocumentDto.class);
-    }
-
-    @Override
-    public void deleteByUserId(String userId) {
-        documentRepository.deleteByUserId(userId);
-    }
-
-    @Override
-    public void deleteByTitle(String title) {
-        documentRepository.deleteByTitle(title);
-    }
-
-    @Override
-    public void deleteAll() {
-        documentRepository.deleteAll();
-    }
-
-    @Override
-    public void save(Document document) {
-        documentRepository.save(document);
-    }
-
-    @Override
-    public void deleteAllByUserId(String userId) {
-        List<DocumentDto> documentList = findAllByUserId(userId);
-        documentList.forEach(documentDTO -> {
-                    fieldService.deleteByDocumentId(documentDTO.getId());
-                    tagService.deleteByDocumentId(documentDTO.getId());
-                }
-        );
-        deleteByUserId(userId);
-    }
-
-    @Override
-    public Long countByUserId(String userId) {
-        return documentRepository.countByUserId(userId);
-    }
-
-    /**
-     * Find documents by User and Title
-     * @param userId user Id
-     * @param title Title
-     * @return List<DocumentDto>
-     */
-    @Override
-    public List<DocumentDto> findByUserIdAndTitle(String userId, String title) {
-        List<Document> documentList = documentRepository.findByUserIdAndTitleContainsIgnoreCase(userId, title);
-        return documentList.stream().map(doc -> conversionService.convert(doc , DocumentDto.class)).collect(Collectors.toList());
-    }
-
-    @Override
-    public List<DocumentDto> findByUserIdAndPurpose(String userId, String purpose) {
-        List<Document> documentList = documentRepository.findByUserIdAndPurposeContainsIgnoreCase(userId, purpose);
-        return documentList.stream().map(doc -> conversionService.convert(doc, DocumentDto.class)).collect(Collectors.toList());
-    }
-
-    @Override
-    public void update(DocumentDto documentDTO) {
-        Document document = conversionService.convert(documentDTO, Document.class);
-        save(document);
-    }
-
-    @Override
-    public List<DocumentDto> findByUserIdAndTag(String userId, String key) {
-        List<com.FloPiDocs.FloPiDocs.Content.model.dto.TagDto> tagDTO = tagService.findByUserIdAndTagName(userId, key);
-
-        List<Document> documentList = tagDTO.stream().map(tag -> {
-                    if (documentRepository.findById(tag.getDocumentId()).isPresent()) {
-                        return documentRepository.findById(tag.getDocumentId()).get();
-                    } else return new Document();
-                }
-        ).collect(Collectors.toList());
-
-        return documentList.stream().map(document -> conversionService.convert(document, DocumentDto.class)).collect(Collectors.toList());
-    }
-
 }

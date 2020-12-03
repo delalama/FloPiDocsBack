@@ -4,6 +4,7 @@ import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import com.FloPiDocs.FloPiDocs.Content.service.FieldService;
 import com.FloPiDocs.FloPiDocs.Content.service.TagService;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
+import com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto;
 import com.itextpdf.text.DocumentException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,10 +44,10 @@ public class DocumentController {
      * @return documentDto response entity
      */
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto> createDocument(
-            @RequestBody com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto documentDTO) {
+    public ResponseEntity<DocumentDto> createDocument(
+            @RequestBody DocumentDto documentDTO) {
         log.info("document - createDocument");
-        com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto documentDTO1 = documentService.createDocument(documentDTO);
+        DocumentDto documentDTO1 = documentService.createDocument(documentDTO);
         return new ResponseEntity<>(documentDTO1, HttpStatus.OK);
     }
 
@@ -80,10 +81,10 @@ public class DocumentController {
      * @return List<DocumentDto>  response entity
      */
     @GetMapping(value = "findByTitle")
-    public ResponseEntity<List<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto>> findByUserIdAndTitle(
+    public ResponseEntity<List<DocumentDto>> findByUserIdAndTitle(
             @RequestParam("key") String title,
             @RequestParam("userId") String userId) {
-        List<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto> documentList = documentService.findByUserIdAndTitle(userId, title);
+        List<DocumentDto> documentList = documentService.findByUserIdAndTitle(userId, title);
         return new ResponseEntity<>(documentList, HttpStatus.OK);
     }
 
@@ -95,10 +96,10 @@ public class DocumentController {
      * @return response entity
      */
     @GetMapping(value = "findByPurpose")
-    public ResponseEntity<List<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto>> findByUserIdAndPurpose(
+    public ResponseEntity<List<DocumentDto>> findByUserIdAndPurpose(
             @RequestParam("key") String key,
             @RequestParam("userId") String userId) {
-        List<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto> documentList = documentService.findByUserIdAndPurpose(userId, key);
+        List<DocumentDto> documentList = documentService.findByUserIdAndPurpose(userId, key);
         return new ResponseEntity<>(documentList, HttpStatus.OK);
     }
 
@@ -111,7 +112,7 @@ public class DocumentController {
      * @throws Exception the exception
      */
     @GetMapping(value = "findByTag")
-    public ResponseEntity<List<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto>> findByUserIdAndTag(
+    public ResponseEntity<List<DocumentDto>> findByUserIdAndTag(
             @RequestParam("key") String key,
             @RequestParam("userId") String userId) throws Exception {
         return new ResponseEntity<>(documentService.findByUserIdAndTag(userId, key), HttpStatus.OK);
@@ -125,8 +126,8 @@ public class DocumentController {
      * @throws Exception the exception
      */
     @DeleteMapping
-    public ResponseEntity<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto> deleteDocumentById(
-            @RequestBody com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto documentDTO) throws Exception {
+    public ResponseEntity<DocumentDto> deleteDocumentById(
+            @RequestBody DocumentDto documentDTO) throws Exception {
         log.info("document - deleteDocumentById");
         return new ResponseEntity<>(documentService.deleteById(documentDTO), HttpStatus.OK);
     }
@@ -138,10 +139,10 @@ public class DocumentController {
      * @return List<DocumentDto>  document by purpose
      */
     @GetMapping("/getDocumentByPurpose")
-    public ResponseEntity<List<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto>> getDocumentByPurpose(
+    public ResponseEntity<List<DocumentDto>> getDocumentByPurpose(
             @RequestParam("purpose") String purpose) {
         log.info("document - getDocumentByPurpose");
-        List<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto> documentList = documentService.findByPurpose(purpose);
+        List<DocumentDto> documentList = documentService.findByPurpose(purpose);
         return new ResponseEntity<>(documentList, HttpStatus.OK);
     }
 
@@ -154,7 +155,7 @@ public class DocumentController {
      */
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> updateDocumentContent(
-            @RequestBody com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto documentDTO) throws Exception {
+            @RequestBody DocumentDto documentDTO) throws Exception {
         log.info("document - updateDocument");
         documentService.update(documentDTO);
         return new ResponseEntity<>("Document updated: ", HttpStatus.OK);
@@ -167,7 +168,7 @@ public class DocumentController {
      * @return document by title
      */
     @GetMapping("/getDocumentByTitle")
-    public ResponseEntity<List<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto>> getDocumentByTitle(
+    public ResponseEntity<List<DocumentDto>> getDocumentByTitle(
             @RequestParam("title") String title) {
         log.info("document - getDocumentByTitle");
         return new ResponseEntity<>(documentService.findByTitle(title), HttpStatus.OK);
@@ -180,7 +181,7 @@ public class DocumentController {
      * @return List<DocumentDto>  documents by user id
      */
     @GetMapping
-    public ResponseEntity<List<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto>> getDocumentsByUserId(
+    public ResponseEntity<List<DocumentDto>> getDocumentsByUserId(
             @RequestParam("userId") String userId) {
         log.info("document - getAllDocumentsByUserId");
         return new ResponseEntity<>(documentService.findAllByUserId(userId), HttpStatus.OK);
