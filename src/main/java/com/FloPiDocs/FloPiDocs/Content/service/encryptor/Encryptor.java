@@ -51,7 +51,6 @@ public class Encryptor {
      * @return the string
      * @throws Exception the exception
      */
-//TODO use this method to let user change the password
     public String decrypt(String strEncrypted,String strKey) throws Exception{
         String strData="";
 
