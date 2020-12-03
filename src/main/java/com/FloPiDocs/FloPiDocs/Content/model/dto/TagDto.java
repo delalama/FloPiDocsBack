@@ -10,7 +10,7 @@ import lombok.*;
 @ToString
 @Getter
 @Setter
-public class TagDTO {
+public class TagDto {
     private String tagId;
     private String userId;
     private String tagName;
@@ -23,7 +23,7 @@ public class TagDTO {
      * @param tagName    the tag name
      * @param documentId the document id
      */
-    public TagDTO(String userId, String tagName, String documentId) {
+    public TagDto(String userId, String tagName, String documentId) {
         this.userId = userId;
         this.tagName = tagName;
         this.documentId = documentId;

@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class AccountOptionsDTO {
+public class AccountOptionsDto {
     private String userId;
     private boolean safeDelete = true;
 
@@ -22,7 +22,7 @@ public class AccountOptionsDTO {
      *
      * @param userId the user id
      */
-    public AccountOptionsDTO(String userId) {
+    public AccountOptionsDto(String userId) {
         this.userId = userId;
     }
 }

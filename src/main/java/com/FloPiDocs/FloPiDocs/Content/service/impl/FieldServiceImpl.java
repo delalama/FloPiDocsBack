@@ -1,10 +1,8 @@
 package com.FloPiDocs.FloPiDocs.Content.service.impl;
 
 import com.FloPiDocs.FloPiDocs.Content.model.persistence.Field;
-import com.FloPiDocs.FloPiDocs.Content.model.dto.FieldDTO;
 import com.FloPiDocs.FloPiDocs.Content.repository.FieldRepository;
 import com.FloPiDocs.FloPiDocs.Content.service.FieldService;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.stereotype.Service;
@@ -12,8 +10,14 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * The type Field service.
+ */
 @Service
 public class FieldServiceImpl implements FieldService {
+    /**
+     * The Field repository.
+     */
     @Autowired
     FieldRepository fieldRepository;
 
@@ -26,15 +30,15 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public List<FieldDTO> findByDocumentId(String documentId) {
+    public List<com.FloPiDocs.FloPiDocs.Content.model.dto.FieldDto> findByDocumentId(String documentId) {
         List<Field> fieldList = fieldRepository.findByDocumentId(documentId);
-        return fieldList.stream().map( field -> conversionService.convert(field, FieldDTO.class)).collect(Collectors.toList());
+        return fieldList.stream().map( field -> conversionService.convert(field, com.FloPiDocs.FloPiDocs.Content.model.dto.FieldDto.class)).collect(Collectors.toList());
     }
 
     @Override
-    public FieldDTO deleteById(String id) {
+    public com.FloPiDocs.FloPiDocs.Content.model.dto.FieldDto deleteById(String id) {
         Field field = fieldRepository.findById(id).orElseThrow() ;
-        FieldDTO fieldDTO = conversionService.convert(field, FieldDTO.class);
+        com.FloPiDocs.FloPiDocs.Content.model.dto.FieldDto fieldDTO = conversionService.convert(field, com.FloPiDocs.FloPiDocs.Content.model.dto.FieldDto.class);
         fieldRepository.deleteById(id);
         return fieldDTO;
     }
@@ -50,9 +54,9 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public FieldDTO save (FieldDTO fieldDTO) {
+    public com.FloPiDocs.FloPiDocs.Content.model.dto.FieldDto save (com.FloPiDocs.FloPiDocs.Content.model.dto.FieldDto fieldDTO) {
         Field field = conversionService.convert(fieldDTO, Field.class);
-        FieldDTO savedFieldDTO = conversionService.convert(fieldRepository.save(field), FieldDTO.class);
+        com.FloPiDocs.FloPiDocs.Content.model.dto.FieldDto savedFieldDTO = conversionService.convert(fieldRepository.save(field), com.FloPiDocs.FloPiDocs.Content.model.dto.FieldDto.class);
         return savedFieldDTO;
     }
 
@@ -62,13 +66,13 @@ public class FieldServiceImpl implements FieldService {
     }
 
     @Override
-    public FieldDTO update(FieldDTO fieldDTO) {
+    public com.FloPiDocs.FloPiDocs.Content.model.dto.FieldDto update(com.FloPiDocs.FloPiDocs.Content.model.dto.FieldDto fieldDTO) {
         Field field = fieldRepository.findById(fieldDTO.getId()).get();
 
         field.setFieldName(fieldDTO.getFieldName());
         field.setFieldValue(fieldDTO.getFieldValue());
 
         Field field1 = fieldRepository.save(field);
-        return conversionService.convert(field1, FieldDTO.class);
+        return conversionService.convert(field1, com.FloPiDocs.FloPiDocs.Content.model.dto.FieldDto.class);
     }
 }

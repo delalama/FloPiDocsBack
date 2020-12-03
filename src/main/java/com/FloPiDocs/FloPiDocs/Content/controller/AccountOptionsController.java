@@ -1,6 +1,5 @@
 package com.FloPiDocs.FloPiDocs.Content.controller;
 
-import com.FloPiDocs.FloPiDocs.Content.model.dto.AccountOptionsDTO;
 import com.FloPiDocs.FloPiDocs.Content.service.AccountOptionsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,7 @@ public class AccountOptionsController {
          * @Param userId
          */
         @GetMapping
-        public ResponseEntity<AccountOptionsDTO> getAccountOptions(
+        public ResponseEntity<com.FloPiDocs.FloPiDocs.Content.model.dto.AccountOptionsDto> getAccountOptions(
                 @RequestParam("userId") String userId) {
                 log.info("AccountOptions- getAccountOptions by ID");
                 return new ResponseEntity<>(accountOptionsService.findByUserId(userId),HttpStatus.OK);
@@ -46,7 +45,7 @@ public class AccountOptionsController {
         public ResponseEntity<String> createInitOptions(
                 @RequestParam("userId") String userId) {
                 log.info("AccountOptions- created initial options");
-                accountOptionsService.save(new AccountOptionsDTO(userId));
+                accountOptionsService.save(new com.FloPiDocs.FloPiDocs.Content.model.dto.AccountOptionsDto(userId));
                 return new ResponseEntity<>(HttpStatus.OK);
         }
 

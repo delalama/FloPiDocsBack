@@ -10,7 +10,7 @@ import lombok.*;
 @ToString
 @Getter
 @Setter
-public class FieldDTO {
+public class FieldDto {
     private String id;
     private String documentId;
     private String fieldName;

@@ -6,11 +6,25 @@ import org.springframework.stereotype.Component;
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
 
+/**
+ * The type Encryptor.
+ */
 //GUILLE , esto se puede hacer mejor?
 @Component
 public class Encryptor {
+    /**
+     * The Key.
+     */
     @Value("${encryptor.key}")
     String key;
+
+    /**
+     * Encrypt string.
+     *
+     * @param strClearText the str clear text
+     * @return the string
+     * @throws Exception the exception
+     */
     public String encrypt(String strClearText) throws Exception{
 
         String strData="";
@@ -29,7 +43,15 @@ public class Encryptor {
         return strData;
     }
 
-    //TODO use this method to let user change the password
+    /**
+     * Decrypt string.
+     *
+     * @param strEncrypted the str encrypted
+     * @param strKey       the str key
+     * @return the string
+     * @throws Exception the exception
+     */
+//TODO use this method to let user change the password
     public String decrypt(String strEncrypted,String strKey) throws Exception{
         String strData="";
 

@@ -1,6 +1,5 @@
 package com.FloPiDocs.FloPiDocs.Content.controller;
 
-import com.FloPiDocs.FloPiDocs.Content.model.dto.UserDTO;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,8 +18,8 @@ public class TokenController {
      * @return the user dto
      */
     @PostMapping("token")
-        public UserDTO login(@RequestParam("email") String email, @RequestParam("password") String pwd) {
-            UserDTO user = new UserDTO();
+        public com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto login(@RequestParam("email") String email, @RequestParam("password") String pwd) {
+            com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto user = new com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto();
             user.setEmail(email);
             return user;
         }

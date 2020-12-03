@@ -2,7 +2,6 @@ package com.FloPiDocs.FloPiDocs.Content.controller;
 
 import com.FloPiDocs.FloPiDocs.Content.controller.utils.MailAndPass;
 import com.FloPiDocs.FloPiDocs.Content.model.persistence.User;
-import com.FloPiDocs.FloPiDocs.Content.model.dto.UserDTO;
 import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -38,7 +37,7 @@ public class UserController {
      */
     @PostMapping("login")
     @ResponseBody
-    public UserDTO login(
+    public com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto login(
             @RequestBody MailAndPass mailAndPass) throws Exception {
         log.info("user - login");
         return userService.login(mailAndPass);
@@ -54,7 +53,7 @@ public class UserController {
     @RequestMapping(method = RequestMethod.PUT, produces = "application/json", consumes = "application/json")
     @JsonIgnoreProperties(value = {"userId", "token"})
     public ResponseEntity createUser(
-            @RequestBody UserDTO userDTO) throws Exception {
+            @RequestBody com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto userDTO) throws Exception {
         log.info("user - createUser");
         return userService.createUser(userDTO);
     }
@@ -134,7 +133,7 @@ public class UserController {
      * @return ResponseEntity all users
      */
     @RequestMapping(value = "all", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<UserDTO>> getAllUsers() {
+    public ResponseEntity<List<com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto>> getAllUsers() {
         log.info("user - getAllUsers");
 
         return new ResponseEntity<>(userService.findAll(), HttpStatus.OK);

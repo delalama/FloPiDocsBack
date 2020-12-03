@@ -1,8 +1,6 @@
 package com.FloPiDocs.FloPiDocs.Content.service.impl;
 
 import com.FloPiDocs.FloPiDocs.Content.controller.utils.MailAndPass;
-import com.FloPiDocs.FloPiDocs.Content.model.dto.AccountOptionsDTO;
-import com.FloPiDocs.FloPiDocs.Content.model.dto.UserDTO;
 import com.FloPiDocs.FloPiDocs.Content.model.persistence.User;
 import com.FloPiDocs.FloPiDocs.Content.exception.InvalidLoginException;
 import com.FloPiDocs.FloPiDocs.Content.repository.UserRepository;
@@ -21,12 +19,21 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * The type User service.
+ */
 @Service
 public class UserServiceImpl implements UserService {
 
-    //TODO ACTUAL, APRENDER A USAR JASYPT
+    /**
+     * The Model mapper.
+     */
+//TODO ACTUAL, APRENDER A USAR JASYPT
     final ModelMapper modelMapper = new ModelMapper();
 
+    /**
+     * The User repository.
+     */
     @Autowired
     UserRepository userRepository;
 
@@ -36,6 +43,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private Encryptor encryptor;
 
+    /**
+     * The Password.
+     */
     final String password = "Test!email30#password";
 
     @Autowired
@@ -54,15 +64,15 @@ public class UserServiceImpl implements UserService {
      * @throws Exception encryptor exception
      */
     @Override
-    public ResponseEntity createUser(UserDTO userDTO) throws Exception {
+    public ResponseEntity createUser(com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto userDTO) throws Exception {
         userDTO.setPassword(encryptor.encrypt(userDTO.getPassword()));
         // Create user
         User userCreated = userRepository.save(conversionService.convert(userDTO, User.class));
 
-        UserDTO userCreatedDto = conversionService.convert(userCreated, UserDTO.class);
+        com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto userCreatedDto = conversionService.convert(userCreated, com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto.class);
 
         // Create new user AccountOptions
-        accountOptionsService.save(new AccountOptionsDTO(userCreatedDto.getUserId()));
+        accountOptionsService.save(new com.FloPiDocs.FloPiDocs.Content.model.dto.AccountOptionsDto(userCreatedDto.getUserId()));
 
         return new ResponseEntity<>(userCreatedDto, HttpStatus.OK);
     }
@@ -78,11 +88,11 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Optional<UserDTO> findByEmail(String email) {
+    public Optional<com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto> findByEmail(String email) {
 
         Optional<User> user = userRepository.findByEmail(email);
 
-        return user.map(value -> conversionService.convert(value, UserDTO.class));
+        return user.map(value -> conversionService.convert(value, com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto.class));
     }
 
     @Override
@@ -102,10 +112,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<UserDTO> findAll() {
+    public List<com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto> findAll() {
         return userRepository.findAll()
                 .stream()
-                .map(u -> conversionService.convert(u, UserDTO.class))
+                .map(u -> conversionService.convert(u, com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto.class))
                 .collect(Collectors.toList());
     }
 
@@ -120,10 +130,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO login(MailAndPass mailAndPass) throws Exception {
+    public com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto login(MailAndPass mailAndPass) throws Exception {
         mailAndPass.setPassword(encryptor.encrypt(mailAndPass.getPassword()));
 
-        Optional<UserDTO> user = findByEmail(mailAndPass.getEmail());
+        Optional<com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto> user = findByEmail(mailAndPass.getEmail());
 
         if (user.isPresent() && StringUtils.equals(user.get().getPassword(), mailAndPass.getPassword())) {
             return user.get();

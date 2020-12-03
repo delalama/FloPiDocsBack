@@ -1,10 +1,6 @@
 package com.FloPiDocs.FloPiDocs.Content.service.impl;
 
-import com.FloPiDocs.FloPiDocs.Content.model.dto.FieldDTO;
-import com.FloPiDocs.FloPiDocs.Content.model.dto.TagDTO;
-import com.FloPiDocs.FloPiDocs.Content.model.dto.UserDTO;
 import com.FloPiDocs.FloPiDocs.Content.model.persistence.Document;
-import com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDTO;
 import com.FloPiDocs.FloPiDocs.Content.repository.DocumentRepository;
 import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import com.FloPiDocs.FloPiDocs.Content.service.FieldService;
@@ -30,18 +26,33 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
 
+/**
+ * The type Document service.
+ */
 @Service
 public class DocumentServiceImpl implements DocumentService {
 
+    /**
+     * The Document repository.
+     */
     @Autowired
     DocumentRepository documentRepository;
 
+    /**
+     * The Tag service.
+     */
     @Autowired
     TagService tagService;
 
+    /**
+     * The Field service.
+     */
     @Autowired
     FieldService fieldService;
 
+    /**
+     * The User service.
+     */
     @Autowired
     UserService userService;
 
@@ -54,13 +65,13 @@ public class DocumentServiceImpl implements DocumentService {
      * @return documentDto
      */
     @Override
-    public DocumentDTO createDocument(DocumentDTO documentDTO) {
+    public com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto createDocument(com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto documentDTO) {
         DateTimeFormatter formmat1 = DateTimeFormatter.ofPattern("yyyy-MM-dd", Locale.ENGLISH);
         LocalDateTime ldt = LocalDateTime.now();
         String formatedDate = formmat1.format(ldt);
         documentDTO.setDate(formatedDate);
         Document doc = documentRepository.save(conversionService.convert(documentDTO, Document.class));
-        return conversionService.convert(doc, DocumentDTO.class);
+        return conversionService.convert(doc, com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto.class);
     }
 
     /**
@@ -73,9 +84,9 @@ public class DocumentServiceImpl implements DocumentService {
     @Override
     public ByteArrayInputStream exportDocument(String documentId) throws FileNotFoundException, DocumentException {
         Document document = documentRepository.findById(documentId).orElseThrow();
-        List<FieldDTO> fieldList = fieldService.findByDocumentId(documentId);
+        List<com.FloPiDocs.FloPiDocs.Content.model.dto.FieldDto> fieldList = fieldService.findByDocumentId(documentId);
 
-        UserDTO userDTO = conversionService.convert(userService.findByUserId(document.getUserId()), UserDTO.class);
+        com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto userDTO = conversionService.convert(userService.findByUserId(document.getUserId()), com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto.class);
         String userName = userDTO.getFirstName();
         String lastName = userDTO.getLastName();
         String email = userDTO.getEmail();
@@ -214,19 +225,19 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public List<DocumentDTO> findByTitle(String title) {
-        return documentRepository.findByTitle(title).stream().map(doc -> conversionService.convert(doc, DocumentDTO.class)).collect(Collectors.toList());
+    public List<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto> findByTitle(String title) {
+        return documentRepository.findByTitle(title).stream().map(doc -> conversionService.convert(doc, com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto.class)).collect(Collectors.toList());
     }
 
     @Override
-    public DocumentDTO findById(String documentId) {
+    public com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto findById(String documentId) {
         Document optDocument = documentRepository.findById(documentId).orElseThrow();
-        return conversionService.convert(optDocument, DocumentDTO.class);
+        return conversionService.convert(optDocument, com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto.class);
     }
 
     @Override
-    public List<DocumentDTO> findByPurpose(String purpose) {
-        return documentRepository.findByPurpose(purpose).stream().map(doc -> conversionService.convert(doc , DocumentDTO.class)).collect(Collectors.toList());
+    public List<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto> findByPurpose(String purpose) {
+        return documentRepository.findByPurpose(purpose).stream().map(doc -> conversionService.convert(doc , com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto.class)).collect(Collectors.toList());
     }
 
     @Override
@@ -240,9 +251,9 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public List<DocumentDTO> findAllByUserId(String userId) {
+    public List<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto> findAllByUserId(String userId) {
         List<Document> documentList = documentRepository.findAllByUserId(userId);
-        return documentList.stream().map(doc -> conversionService.convert(doc, DocumentDTO.class)).collect(Collectors.toList());
+        return documentList.stream().map(doc -> conversionService.convert(doc, com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto.class)).collect(Collectors.toList());
     }
 
     @Override
@@ -251,12 +262,12 @@ public class DocumentServiceImpl implements DocumentService {
     }
 
     @Override
-    public DocumentDTO deleteById(DocumentDTO documentDTO) {
-        DocumentDTO documentDTO1 = findById(documentDTO.getId());
+    public com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto deleteById(com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto documentDTO) {
+        com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto documentDTO1 = findById(documentDTO.getId());
         documentRepository.deleteById(documentDTO1.getId());
         tagService.deleteByDocumentId(documentDTO.getId());
         fieldService.deleteByDocumentId(documentDTO.getId());
-        return conversionService.convert(documentDTO1, DocumentDTO.class);
+        return conversionService.convert(documentDTO1, com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto.class);
     }
 
     @Override
@@ -281,7 +292,7 @@ public class DocumentServiceImpl implements DocumentService {
 
     @Override
     public void deleteAllByUserId(String userId) {
-        List<DocumentDTO> documentList = findAllByUserId(userId);
+        List<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto> documentList = findAllByUserId(userId);
         documentList.forEach(documentDTO -> {
                     fieldService.deleteByDocumentId(documentDTO.getId());
                     tagService.deleteByDocumentId(documentDTO.getId());
@@ -302,26 +313,26 @@ public class DocumentServiceImpl implements DocumentService {
      * @return List<DocumentDto>
      */
     @Override
-    public List<DocumentDTO> findByUserIdAndTitle(String userId, String key) {
+    public List<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto> findByUserIdAndTitle(String userId, String key) {
         List<Document> documentList = documentRepository.findByUserIdAndTitleContainsIgnoreCase(userId, key);
-        return documentList.stream().map(doc -> conversionService.convert(doc , DocumentDTO.class)).collect(Collectors.toList());
+        return documentList.stream().map(doc -> conversionService.convert(doc , com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto.class)).collect(Collectors.toList());
     }
 
     @Override
-    public List<DocumentDTO> findByUserIdAndPurpose(String userId, String purpose) {
+    public List<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto> findByUserIdAndPurpose(String userId, String purpose) {
         List<Document> documentList = documentRepository.findByUserIdAndPurposeContainsIgnoreCase(userId, purpose);
-        return documentList.stream().map(doc -> conversionService.convert(doc, DocumentDTO.class)).collect(Collectors.toList());
+        return documentList.stream().map(doc -> conversionService.convert(doc, com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto.class)).collect(Collectors.toList());
     }
 
     @Override
-    public void update(DocumentDTO documentDTO) {
+    public void update(com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto documentDTO) {
         Document document = conversionService.convert(documentDTO, Document.class);
         save(document);
     }
 
     @Override
-    public List<DocumentDTO> findByUserIdAndTag(String userId, String key) {
-        List<TagDTO> tagDTO = tagService.findByUserIdAndTagName(userId, key);
+    public List<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto> findByUserIdAndTag(String userId, String key) {
+        List<com.FloPiDocs.FloPiDocs.Content.model.dto.TagDto> tagDTO = tagService.findByUserIdAndTagName(userId, key);
 
         List<Document> documentList = tagDTO.stream().map(tag -> {
                     if (documentRepository.findById(tag.getDocumentId()).isPresent()) {
@@ -330,7 +341,7 @@ public class DocumentServiceImpl implements DocumentService {
                 }
         ).collect(Collectors.toList());
 
-        return documentList.stream().map(document -> conversionService.convert(document, DocumentDTO.class)).collect(Collectors.toList());
+        return documentList.stream().map(document -> conversionService.convert(document, com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto.class)).collect(Collectors.toList());
     }
 
 }

@@ -2,7 +2,6 @@ package com.FloPiDocs.FloPiDocs.Content.service;
 
 import com.FloPiDocs.FloPiDocs.Content.controller.utils.MailAndPass;
 import com.FloPiDocs.FloPiDocs.Content.model.persistence.User;
-import com.FloPiDocs.FloPiDocs.Content.model.dto.UserDTO;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -20,7 +19,7 @@ public interface UserService {
      * @return the response entity
      * @throws Exception the exception
      */
-    public abstract ResponseEntity createUser(UserDTO userDTO) throws Exception;
+    public abstract ResponseEntity createUser(com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto userDTO) throws Exception;
 
     /**
      * Delete user.
@@ -35,7 +34,7 @@ public interface UserService {
      * @param s the s
      * @return the optional
      */
-    public Optional<UserDTO> findByEmail(String s);
+    public Optional<com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto> findByEmail(String s);
 
     /**
      * Find by user id user.
@@ -50,7 +49,7 @@ public interface UserService {
      *
      * @return the list
      */
-    public abstract List<UserDTO> findAll();
+    public abstract List<com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto> findAll();
 
     /**
      * Email already exists boolean.
@@ -86,7 +85,7 @@ public interface UserService {
      * @return the user dto
      * @throws Exception the exception
      */
-    UserDTO login(MailAndPass mailAndPass) throws Exception;
+    com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto login(MailAndPass mailAndPass) throws Exception;
 
     /**
      * Delete all content.

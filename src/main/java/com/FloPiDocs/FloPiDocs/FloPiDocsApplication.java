@@ -14,16 +14,29 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 import java.util.Collections;
 
+/**
+ * The type Flo pi docs application.
+ */
 @EnableSwagger2
 @SpringBootApplication
 public class FloPiDocsApplication {
 
+    /**
+     * The entry point of application.
+     *
+     * @param args the input arguments
+     */
     public static void main(String[] args) {
         SpringApplication.run(FloPiDocsApplication.class, args);
     }
 
 
-    //	SWAGGER
+    /**
+     * Swagger configuration docket.
+     *
+     * @return the docket
+     */
+//	SWAGGER
     @Bean
     public Docket swaggerConfiguration() {
         return new Docket(DocumentationType.SWAGGER_2)

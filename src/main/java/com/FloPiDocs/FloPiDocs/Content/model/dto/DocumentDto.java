@@ -10,7 +10,7 @@ import lombok.*;
 @ToString
 @Getter
 @Setter
-public class DocumentDTO {
+public class DocumentDto {
     private String id;
     private String userId;
     private String title;
@@ -25,7 +25,7 @@ public class DocumentDTO {
      * @param id     the id
      * @param userId the user id
      */
-    public DocumentDTO(String id, String userId) {
+    public DocumentDto(String id, String userId) {
         this.id = id;
         this.userId = userId;
     }
@@ -40,7 +40,7 @@ public class DocumentDTO {
      * @param content the content
      * @param date    the date
      */
-    public DocumentDTO(String userId, String title, String purpose, String content, String date) {
+    public DocumentDto(String userId, String title, String purpose, String content, String date) {
         this.userId = userId;
         this.title = title;
         this.purpose = purpose;
@@ -56,7 +56,7 @@ public class DocumentDTO {
      * @param purpose the purpose
      * @param content the content
      */
-    public DocumentDTO(String userId, String title, String purpose, String content) {
+    public DocumentDto(String userId, String title, String purpose, String content) {
         this.userId = userId;
         this.title = title;
         this.purpose = purpose;

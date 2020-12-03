@@ -6,9 +6,24 @@ import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
+/**
+ * The interface Account options repository.
+ */
 @Repository
 public interface AccountOptionsRepository extends MongoRepository<AccountOptions, String> {
+    /**
+     * Find by user id list.
+     *
+     * @param userId the user id
+     * @return the list
+     */
     List<AccountOptions> findByUserId(String userId);
+
+    /**
+     * Delete by user id.
+     *
+     * @param id the id
+     */
     void deleteByUserId(String id);
 
 }

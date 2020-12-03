@@ -1,6 +1,5 @@
 package com.FloPiDocs.FloPiDocs.Content.controller;
 
-import com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDTO;
 import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import com.FloPiDocs.FloPiDocs.Content.service.FieldService;
 import com.FloPiDocs.FloPiDocs.Content.service.TagService;
@@ -44,10 +43,10 @@ public class DocumentController {
      * @return documentDto response entity
      */
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DocumentDTO> createDocument(
-            @RequestBody DocumentDTO documentDTO) {
+    public ResponseEntity<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto> createDocument(
+            @RequestBody com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto documentDTO) {
         log.info("document - createDocument");
-        DocumentDTO documentDTO1 = documentService.createDocument(documentDTO);
+        com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto documentDTO1 = documentService.createDocument(documentDTO);
         return new ResponseEntity<>(documentDTO1, HttpStatus.OK);
     }
 
@@ -78,13 +77,13 @@ public class DocumentController {
      *
      * @param title  Title of document
      * @param userId the user id
-     * @return List<DocumentDto> response entity
+     * @return List<DocumentDto>  response entity
      */
     @GetMapping(value = "findByTitle")
-    public ResponseEntity<List<DocumentDTO>> findByUserIdAndTitle(
+    public ResponseEntity<List<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto>> findByUserIdAndTitle(
             @RequestParam("key") String title,
             @RequestParam("userId") String userId) {
-        List<DocumentDTO> documentList = documentService.findByUserIdAndTitle(userId, title);
+        List<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto> documentList = documentService.findByUserIdAndTitle(userId, title);
         return new ResponseEntity<>(documentList, HttpStatus.OK);
     }
 
@@ -96,10 +95,10 @@ public class DocumentController {
      * @return response entity
      */
     @GetMapping(value = "findByPurpose")
-    public ResponseEntity<List<DocumentDTO>> findByUserIdAndPurpose(
+    public ResponseEntity<List<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto>> findByUserIdAndPurpose(
             @RequestParam("key") String key,
             @RequestParam("userId") String userId) {
-        List<DocumentDTO> documentList = documentService.findByUserIdAndPurpose(userId, key);
+        List<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto> documentList = documentService.findByUserIdAndPurpose(userId, key);
         return new ResponseEntity<>(documentList, HttpStatus.OK);
     }
 
@@ -108,11 +107,11 @@ public class DocumentController {
      *
      * @param key    the key
      * @param userId the user id
-     * @return List<DocumentDto> response entity
+     * @return List<DocumentDto>  response entity
      * @throws Exception the exception
      */
     @GetMapping(value = "findByTag")
-    public ResponseEntity<List<DocumentDTO>> findByUserIdAndTag(
+    public ResponseEntity<List<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto>> findByUserIdAndTag(
             @RequestParam("key") String key,
             @RequestParam("userId") String userId) throws Exception {
         return new ResponseEntity<>(documentService.findByUserIdAndTag(userId, key), HttpStatus.OK);
@@ -126,8 +125,8 @@ public class DocumentController {
      * @throws Exception the exception
      */
     @DeleteMapping
-    public ResponseEntity<DocumentDTO> deleteDocumentById(
-            @RequestBody DocumentDTO documentDTO) throws Exception {
+    public ResponseEntity<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto> deleteDocumentById(
+            @RequestBody com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto documentDTO) throws Exception {
         log.info("document - deleteDocumentById");
         return new ResponseEntity<>(documentService.deleteById(documentDTO), HttpStatus.OK);
     }
@@ -136,13 +135,13 @@ public class DocumentController {
      * Get documents by purpose
      *
      * @param purpose the purpose
-     * @return List<DocumentDto> document by purpose
+     * @return List<DocumentDto>  document by purpose
      */
     @GetMapping("/getDocumentByPurpose")
-    public ResponseEntity<List<DocumentDTO>> getDocumentByPurpose(
+    public ResponseEntity<List<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto>> getDocumentByPurpose(
             @RequestParam("purpose") String purpose) {
         log.info("document - getDocumentByPurpose");
-        List<DocumentDTO> documentList = documentService.findByPurpose(purpose);
+        List<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto> documentList = documentService.findByPurpose(purpose);
         return new ResponseEntity<>(documentList, HttpStatus.OK);
     }
 
@@ -155,7 +154,7 @@ public class DocumentController {
      */
     @RequestMapping(method = RequestMethod.PUT, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity updateDocumentContent(
-            @RequestBody DocumentDTO documentDTO) throws Exception {
+            @RequestBody com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto documentDTO) throws Exception {
         log.info("document - updateDocument");
         documentService.update(documentDTO);
         return new ResponseEntity<>("Content updated: ", HttpStatus.OK);
@@ -168,7 +167,7 @@ public class DocumentController {
      * @return document by title
      */
     @GetMapping("/getDocumentByTitle")
-    public ResponseEntity<List<DocumentDTO>> getDocumentByTitle(
+    public ResponseEntity<List<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto>> getDocumentByTitle(
             @RequestParam("title") String title) {
         log.info("document - getDocumentByTitle");
         return new ResponseEntity<>(documentService.findByTitle(title), HttpStatus.OK);
@@ -178,10 +177,10 @@ public class DocumentController {
      * Get documents by userId
      *
      * @param userId the user id
-     * @return List<DocumentDto> documents by user id
+     * @return List<DocumentDto>  documents by user id
      */
     @GetMapping
-    public ResponseEntity<List<DocumentDTO>> getDocumentsByUserId(
+    public ResponseEntity<List<com.FloPiDocs.FloPiDocs.Content.model.dto.DocumentDto>> getDocumentsByUserId(
             @RequestParam("userId") String userId) {
         log.info("document - getAllDocumentsByUserId");
         return new ResponseEntity<>(documentService.findAllByUserId(userId), HttpStatus.OK);

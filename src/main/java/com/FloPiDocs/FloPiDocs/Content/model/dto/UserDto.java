@@ -10,7 +10,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @Builder
-public class UserDTO {
+public class UserDto {
     private String userId;
     private String firstName;
     private String lastName;
@@ -27,7 +27,7 @@ public class UserDTO {
      * @param email     the email
      * @param password  the password
      */
-    public UserDTO(String firstName, String lastName, String email, String password) {
+    public UserDto(String firstName, String lastName, String email, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;

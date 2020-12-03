@@ -1,6 +1,5 @@
 package com.FloPiDocs.FloPiDocs.Content.controller;
 
-import com.FloPiDocs.FloPiDocs.Content.model.dto.UserDTO;
 import com.FloPiDocs.FloPiDocs.Content.service.DocumentService;
 import com.FloPiDocs.FloPiDocs.Content.service.UserService;
 import org.junit.jupiter.api.Test;
@@ -13,9 +12,15 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * The type User controller test.
+ */
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest {
 
+    /**
+     * Test controller.
+     */
     @Test
     void testController() {
         UserService userService = Mockito.mock(UserService.class);
@@ -23,7 +28,7 @@ class UserControllerTest {
 
         UserController controller = new UserController(userService, documentService);
 
-        ResponseEntity<List<UserDTO>> userList = controller.getAllUsers();
+        ResponseEntity<List<com.FloPiDocs.FloPiDocs.Content.model.dto.UserDto>> userList = controller.getAllUsers();
 
         assertEquals(userList.getStatusCode().value(), 200);
 
